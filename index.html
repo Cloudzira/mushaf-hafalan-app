@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mushaf Hafalan Pro - Advanced AI Tashih</title>
+    <title>Mushaf Tahfidz Per Halaman - Pro Edition</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -11,160 +11,186 @@
             theme: {
                 extend: {
                     colors: {
-                        mushafBg: '#FBF9F1',
-                        mushafCard: '#F4EFEA',
+                        mushafBg: '#F7F4EA', // Warna kertas krem klasik mushaf
+                        mushafBorder: '#C2A669', // Warna bingkai emas kecoklatan
+                        mushafCard: '#FAF7F0',
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-mushafBg text-gray-800 font-sans min-h-screen flex flex-col">
+<body class="bg-stone-900 text-gray-800 font-sans min-h-screen flex flex-col items-center justify-between py-2 md:py-6">
 
-    <!-- Header / Navbar & Status Login -->
-    <header class="bg-amber-800 text-white shadow-md p-4 flex justify-between items-center">
+    <!-- Header / Navbar Minimalis -->
+    <header class="w-full max-w-3xl bg-amber-900 text-white shadow-md px-4 py-3 rounded-t-xl flex justify-between items-center">
         <div>
-            <h1 class="text-lg font-bold tracking-wide">📖 Mushaf Tahfidz Pro</h1>
+            <h1 class="text-base font-bold tracking-wide">📖 Mushaf Tahfidz Per Halaman</h1>
             <span class="text-xs text-amber-200" id="userStatus">Belum Masuk</span>
         </div>
         <div class="flex items-center gap-2">
-            <div class="text-xs bg-amber-900 px-3 py-1 rounded-full hidden md:block">Surah Al-Fatihah (Juz 1)</div>
+            <div class="text-xs bg-amber-950 px-3 py-1 rounded-full hidden md:block">Juz 1 • Halaman 1</div>
             <button id="authBtn" onclick="toggleAuth()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-3 py-1.5 rounded-lg transition">
                 Masuk (Google)
             </button>
         </div>
     </header>
 
-    <!-- Konten Utama Mushaf -->
-    <main class="flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col gap-4">
+    <!-- KONTROL UTAMA MUSHAF -->
+    <main class="w-full max-w-3xl bg-mushafBg shadow-2xl border-x-4 border-b-4 border-mushafBorder p-4 md:p-8 flex flex-col gap-6 rounded-b-xl">
         
-        <!-- Panel Kontrol Fitur Hafalan -->
-        <div class="bg-mushafCard p-4 rounded-xl shadow-sm border border-amber-200 flex flex-wrap justify-between items-center gap-3">
-            <div class="text-sm font-medium text-amber-900">
+        <!-- Bar Navigasi Lembar & Mode Fokus -->
+        <div class="bg-mushafCard p-3 rounded-lg shadow-sm border border-amber-200/60 flex flex-wrap justify-between items-center gap-3">
+            <div class="text-xs font-medium text-amber-900">
                 🎯 Mode Fokus: <span id="statusMode" class="font-bold text-green-700">Tampil Normal</span>
             </div>
-            <div class="flex gap-2">
-                <button onclick="toggleMasking()" class="bg-amber-700 hover:bg-amber-800 text-white text-xs px-3 py-2 rounded-lg transition">
-                    👁️ Sembunyikan/Tampilkan Ayat (Blur)
-                </button>
-            </div>
+            <button onclick="toggleMasking()" class="bg-amber-800 hover:bg-amber-900 text-white text-xs px-3 py-1.5 rounded-md transition shadow-sm">
+                👁️ Sembunyikan/Tampilkan Ayat (Blur)
+            </button>
         </div>
 
-        <!-- Lembar Halaman Mushaf (Ayat-Ayat) -->
-        <div id="mushafSheet" class="bg-white p-6 rounded-2xl shadow-md border border-amber-100 flex flex-col gap-6">
+        <!-- LEMBAR HALAMAN MUSHAF (Gaya Cetak Standar Madinah) -->
+        <div class="bg-[#FCF9F1] p-6 md:p-10 rounded-lg border-2 border-amber-800/20 shadow-inner flex flex-col gap-6 relative">
             
-            <!-- Ayat 1 -->
-            <div class="p-4 rounded-xl border border-gray-100 hover:bg-amber-50/50 transition flex flex-col gap-3" data-ayah="1">
-                <div class="flex justify-between items-center text-xs text-gray-400 font-semibold">
-                    <span>Ayat 1</span>
-                    <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Tikrar: <span class="count">0</span>x</span>
-                </div>
-                
-                <p id="text-1" class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
-                    بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-                </p>
-
-                <!-- Box Laporan Detail Koreksi AI -->
-                <div id="aiResult-1" class="hidden text-xs p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 flex flex-col gap-2">
-                    <div class="flex justify-between font-bold border-b border-amber-200 pb-1">
-                        <span>📊 Laporan Tashih AI:</span>
-                        <span id="score-1" class="text-emerald-700">Akurasi: 0%</span>
-                    </div>
-                    <div><span class="font-semibold">Suara Anda:</span> <span class="user-speech italic"></span></div>
-                    <div id="detail-feedback-1" class="font-semibold text-rose-700"></div>
-                </div>
-
-                <div class="flex flex-wrap justify-between items-center mt-2 pt-2 border-t border-gray-100 gap-2">
-                    <div class="flex gap-2">
-                        <button onclick="playAudio('001001')" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
-                            🔊 Audio
-                        </button>
-                        <button onclick="startAiRecord('1', 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1">
-                            🎙️ Setoran AI (Detail)
-                        </button>
-                    </div>
-                    <button onclick="tambahTikrar('1', this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
-                        + Hitung Tikrar
-                    </button>
-                </div>
+            <!-- Header Halaman Al-Qur'an (Kepala Halaman) -->
+            <div class="flex justify-between items-center border-b-2 border-amber-800/30 pb-3 text-amber-900 font-serif text-sm">
+                <span>الجزء ١ (Juz 1)</span>
+                <span class="font-bold text-base tracking-wider">سُورَةُ الْفَاتِحَةِ</span>
+                <span>صفحة ١ (Hal 1)</span>
             </div>
 
-            <!-- Ayat 2 -->
-            <div class="p-4 rounded-xl border border-gray-100 hover:bg-amber-50/50 transition flex flex-col gap-3" data-ayah="2">
-                <div class="flex justify-between items-center text-xs text-gray-400 font-semibold">
-                    <span>Ayat 2</span>
-                    <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Tikrar: <span class="count">0</span>x</span>
-                </div>
+            <!-- ISI AYAT-AYAT DALAM 1 HALAMAN -->
+            <div id="mushafSheet" class="flex flex-col gap-6">
                 
-                <p id="text-2" class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
-                    الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
-                </p>
+                <!-- Basmalah Khusus / Pembuka -->
+                <div class="text-center py-2">
+                    <p class="ayah-text text-2xl md:text-3xl font-serif text-amber-950 leading-loose select-none transition-all duration-300">
+                        بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                    </p>
+                </div>
 
-                <div id="aiResult-2" class="hidden text-xs p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 flex flex-col gap-2">
-                    <div class="flex justify-between font-bold border-b border-amber-200 pb-1">
-                        <span>📊 Laporan Tashih AI:</span>
-                        <span id="score-2" class="text-emerald-700">Akurasi: 0%</span>
+                <!-- Ayat 1 -->
+                <div class="p-3 rounded-lg hover:bg-amber-100/40 transition flex flex-col gap-2 border-b border-amber-800/10" data-ayah="1">
+                    <div class="flex justify-between items-center text-xs text-amber-800/70 font-semibold">
+                        <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono">Tikrar: <span class="count">0</span>x</span>
+                        <span>Ayat 1</span>
                     </div>
-                    <div><span class="font-semibold">Suara Anda:</span> <span class="user-speech italic"></span></div>
-                    <div id="detail-feedback-2" class="font-semibold text-rose-700"></div>
-                </div>
-
-                <div class="flex flex-wrap justify-between items-center mt-2 pt-2 border-t border-gray-100 gap-2">
-                    <div class="flex gap-2">
-                        <button onclick="playAudio('001002')" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
-                            🔊 Audio
+                    <p class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
+                        الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ۝١
+                    </p>
+                    <div class="flex justify-between items-center pt-1">
+                        <button onclick="playAudio('001001')" class="text-xs text-amber-800 hover:underline flex items-center gap-1 font-semibold">
+                            🔊 Dengar Audio
                         </button>
-                        <button onclick="startAiRecord('2', 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1">
-                            🎙️ Setoran AI (Detail)
-                        </button>
-                    </div>
-                    <button onclick="tambahTikrar('2', this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
-                        + Hitung Tikrar
-                    </button>
-                </div>
-            </div>
-
-            <!-- Ayat 3 -->
-            <div class="p-4 rounded-xl border border-gray-100 hover:bg-amber-50/50 transition flex flex-col gap-3" data-ayah="3">
-                <div class="flex justify-between items-center text-xs text-gray-400 font-semibold">
-                    <span>Ayat 3</span>
-                    <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Tikrar: <span class="count">0</span>x</span>
-                </div>
-                
-                <p id="text-3" class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
-                    الرَّحْمَٰنِ الرَّحِيمِ
-                </p>
-
-                <div id="aiResult-3" class="hidden text-xs p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 flex flex-col gap-2">
-                    <div class="flex justify-between font-bold border-b border-amber-200 pb-1">
-                        <span>📊 Laporan Tashih AI:</span>
-                        <span id="score-3" class="text-emerald-700">Akurasi: 0%</span>
-                    </div>
-                    <div><span class="font-semibold">Suara Anda:</span> <span class="user-speech italic"></span></div>
-                    <div id="detail-feedback-3" class="font-semibold text-rose-700"></div>
-                </div>
-
-                <div class="flex flex-wrap justify-between items-center mt-2 pt-2 border-t border-gray-100 gap-2">
-                    <div class="flex gap-2">
-                        <button onclick="playAudio('001003')" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
-                            🔊 Audio
-                        </button>
-                        <button onclick="startAiRecord('3', 'الرَّحْمَٰنِ الرَّحِيمِ')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1">
-                            🎙️ Setoran AI (Detail)
+                        <button onclick="tambahTikrar('1', this)" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs px-3 py-1 rounded shadow-sm">
+                            + Hitung Tikrar
                         </button>
                     </div>
-                    <button onclick="tambahTikrar('3', this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
-                        + Hitung Tikrar
-                    </button>
                 </div>
+
+                <!-- Ayat 2 -->
+                <div class="p-3 rounded-lg hover:bg-amber-100/40 transition flex flex-col gap-2 border-b border-amber-800/10" data-ayah="2">
+                    <div class="flex justify-between items-center text-xs text-amber-800/70 font-semibold">
+                        <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono">Tikrar: <span class="count">0</span>x</span>
+                        <span>Ayat 2</span>
+                    </div>
+                    <p class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
+                        الرَّحْمَٰنِ الرَّحِيمِ ۝٢
+                    </p>
+                    <div class="flex justify-between items-center pt-1">
+                        <button onclick="playAudio('001002')" class="text-xs text-amber-800 hover:underline flex items-center gap-1 font-semibold">
+                            🔊 Dengar Audio
+                        </button>
+                        <button onclick="tambahTikrar('2', this)" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs px-3 py-1 rounded shadow-sm">
+                            + Hitung Tikrar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ayat 3 -->
+                <div class="p-3 rounded-lg hover:bg-amber-100/40 transition flex flex-col gap-2 border-b border-amber-800/10" data-ayah="3">
+                    <div class="flex justify-between items-center text-xs text-amber-800/70 font-semibold">
+                        <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono">Tikrar: <span class="count">0</span>x</span>
+                        <span>Ayat 3</span>
+                    </div>
+                    <p class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
+                        مَالِكِ يَوْمِ الدِّينِ ۝٣
+                    </p>
+                    <div class="flex justify-between items-center pt-1">
+                        <button onclick="playAudio('001003')" class="text-xs text-amber-800 hover:underline flex items-center gap-1 font-semibold">
+                            🔊 Dengar Audio
+                        </button>
+                        <button onclick="tambahTikrar('3', this)" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs px-3 py-1 rounded shadow-sm">
+                            + Hitung Tikrar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ayat 4 -->
+                <div class="p-3 rounded-lg hover:bg-amber-100/40 transition flex flex-col gap-2 border-b border-amber-800/10" data-ayah="4">
+                    <div class="flex justify-between items-center text-xs text-amber-800/70 font-semibold">
+                        <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono">Tikrar: <span class="count">0</span>x</span>
+                        <span>Ayat 4</span>
+                    </div>
+                    <p class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
+                        إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ۝٤
+                    </p>
+                    <div class="flex justify-between items-center pt-1">
+                        <button onclick="playAudio('001004')" class="text-xs text-amber-800 hover:underline flex items-center gap-1 font-semibold">
+                            🔊 Dengar Audio
+                        </button>
+                        <button onclick="tambahTikrar('4', this)" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs px-3 py-1 rounded shadow-sm">
+                            + Hitung Tikrar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ayat 5 -->
+                <div class="p-3 rounded-lg hover:bg-amber-100/40 transition flex flex-col gap-2 border-b border-amber-800/10" data-ayah="5">
+                    <div class="flex justify-between items-center text-xs text-amber-800/70 font-semibold">
+                        <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono">Tikrar: <span class="count">0</span>x</span>
+                        <span>Ayat 5</span>
+                    </div>
+                    <p class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
+                        اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ۝٥
+                    </p>
+                    <div class="flex justify-between items-center pt-1">
+                        <button onclick="playAudio('001005')" class="text-xs text-amber-800 hover:underline flex items-center gap-1 font-semibold">
+                            🔊 Dengar Audio
+                        </button>
+                        <button onclick="tambahTikrar('5', this)" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs px-3 py-1 rounded shadow-sm">
+                            + Hitung Tikrar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ayat 6 -->
+                <div class="p-3 rounded-lg hover:bg-amber-100/40 transition flex flex-col gap-2 border-b border-amber-800/10" data-ayah="6">
+                    <div class="flex justify-between items-center text-xs text-amber-800/70 font-semibold">
+                        <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono">Tikrar: <span class="count">0</span>x</span>
+                        <span>Ayat 6</span>
+                    </div>
+                    <p class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
+                        صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ ۝٧
+                    </p>
+                    <div class="flex justify-between items-center pt-1">
+                        <button onclick="playAudio('001007')" class="text-xs text-amber-800 hover:underline flex items-center gap-1 font-semibold">
+                            🔊 Dengar Audio
+                        </button>
+                        <button onclick="tambahTikrar('7', this)" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs px-3 py-1 rounded shadow-sm">
+                            + Hitung Tikrar
+                        </button>
+                    </div>
+                </div>
+
             </div>
 
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="text-center py-4 text-xs text-gray-500">
-        Mushaf Tahfidz Digital • Advanced AI Token Matcher
+    <footer class="text-center py-3 text-xs text-stone-400">
+        Mushaf Tahfidz Digital • Format Halaman Madinah Standard
     </footer>
 
     <!-- Firebase SDK & Konfigurasi -->
@@ -173,7 +199,6 @@
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Konfigurasi Firebase Anda
         const firebaseConfig = {
             apiKey: "AIzaSyCDU5f4iBXSwlKYYJUO6bb72r1VBVLAg3I",
             authDomain: "mushafpro-e80e1.firebaseapp.com",
@@ -248,7 +273,7 @@
                             if (savedCount >= 20) {
                                 const badge = el.querySelector('.tikrar-badge');
                                 badge.className = "tikrar-badge bg-amber-500 text-white px-2 py-0.5 rounded font-bold";
-                                badge.innerText = `Tikrar Selesai (${savedCount}x) ✨`;
+                                badge.innerText = `Selesai (${savedCount}x) ✨`;
                             }
                         }
                     });
@@ -259,7 +284,7 @@
         }
     </script>
 
-    <!-- JavaScript Interaktif & Advanced AI Token Matcher -->
+    <!-- JavaScript Interaktif -->
     <script>
         let isBlurred = false;
         function toggleMasking() {
@@ -269,10 +294,10 @@
             
             texts.forEach(el => {
                 if (isBlurred) {
-                    el.classList.add('blur-sm', 'bg-gray-200', 'cursor-pointer');
+                    el.classList.add('blur-sm', 'bg-stone-300', 'cursor-pointer');
                     el.title = "Klik untuk intip ayat";
                 } else {
-                    el.classList.remove('blur-sm', 'bg-gray-200', 'cursor-pointer');
+                    el.classList.remove('blur-sm', 'bg-stone-300', 'cursor-pointer');
                     el.title = "";
                 }
             });
@@ -298,7 +323,7 @@
             if(currentCount >= 20) {
                 const badge = container.querySelector('.tikrar-badge');
                 badge.className = "tikrar-badge bg-amber-500 text-white px-2 py-0.5 rounded font-bold";
-                badge.innerText = `Tikrar Selesai (${currentCount}x) ✨`;
+                badge.innerText = `Selesai (${currentCount}x) ✨`;
             }
 
             if (typeof window.saveProgressToCloud === 'function') {
@@ -312,85 +337,6 @@
             audio.play().catch(error => {
                 alert("Gagal memutar audio. Pastikan terhubung ke internet.");
             });
-        }
-
-        // --- ALGORITMA AI ANALISIS DETAIL KATA (TOKEN MATCHER) ---
-        window.startAiRecord = function(ayahNum, originalText) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-            if (!SpeechRecognition) {
-                alert("Browser Anda belum mendukung fitur AI Speech Recognition. Gunakan Google Chrome.");
-                return;
-            }
-
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'ar-SA';
-            recognition.interimResults = false;
-
-            const resultBox = document.getElementById(`aiResult-${ayahNum}`);
-            const speechSpan = resultBox.querySelector('.user-speech');
-            const scoreSpan = document.getElementById(`score-${ayahNum}`);
-            const detailBox = document.getElementById(`detail-feedback-${ayahNum}`);
-            const textElement = document.getElementById(`text-${ayahNum}`);
-
-            resultBox.classList.remove('hidden');
-            speechSpan.innerText = "🎙️ Mendengarkan bacaan Anda...";
-            scoreSpan.innerText = "Menganalisis...";
-            detailBox.innerText = "";
-
-            recognition.start();
-
-            recognition.onresult = function(event) {
-                const spokenText = event.results[0][0].transcript;
-                speechSpan.innerText = spokenText;
-
-                // 1. Bersihkan teks dari harakat untuk pencocokan token murni
-                const cleanOriginal = originalText.replace(/[\u064B-\u0652]/g, "").trim();
-                const cleanSpoken = spokenText.replace(/[\u064B-\u0652]/g, "").trim();
-
-                const originalWords = cleanOriginal.split(/\s+/);
-                const spokenWords = cleanSpoken.split(/\s+/);
-
-                // 2. Bandingkan kata per kata (Token Level Comparison)
-                let matchedCount = 0;
-                let missingWords = [];
-
-                originalWords.forEach((oWord, index) => {
-                    if (spokenWords.includes(oWord)) {
-                        matchedCount++;
-                    } else {
-                        missingWords.push(`"${oWord}" (Kata ke-${index + 1})`);
-                    }
-                });
-
-                // Hitung akurasi persentase
-                const accuracy = Math.round((matchedCount / originalWords.length) * 100);
-                scoreSpan.innerText = `Akurasi: ${accuracy}%`;
-
-                // 3. Berikan feedback detail
-                textElement.classList.remove('bg-green-100', 'bg-yellow-100', 'bg-rose-100');
-                
-                if (accuracy === 100) {
-                    textElement.classList.add('bg-green-100', 'p-2', 'rounded-lg');
-                    scoreSpan.className = "text-emerald-700 font-bold";
-                    detailBox.className = "font-semibold text-emerald-700";
-                    detailBox.innerHTML = "✅ Masya Allah! Hafalan sempurna dan sangat akurat.";
-                } else if (accuracy >= 60) {
-                    textElement.classList.add('bg-yellow-100', 'p-2', 'rounded-lg');
-                    scoreSpan.className = "text-amber-700 font-bold";
-                    detailBox.className = "font-semibold text-amber-800";
-                    detailBox.innerHTML = `⚠️ Hampir lancar, tapi ada bagian yang terlewat:<br>• Kurang tepat/terlewat: ${missingWords.join(', ')}`;
-                } else {
-                    textElement.classList.add('bg-rose-100', 'p-2', 'rounded-lg');
-                    scoreSpan.className = "text-rose-700 font-bold";
-                    detailBox.className = "font-semibold text-rose-700";
-                    detailBox.innerHTML = `❌ Hafalan belum sesuai teks asli.<br>• Kata yang tidak terdeteksi: ${missingWords.join(', ')}`;
-                }
-            };
-
-            recognition.onerror = function(event) {
-                speechSpan.innerText = "Gagal mendeteksi suara. Pastikan mikrofon aktif.";
-            };
         }
     </script>
 </body>
