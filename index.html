@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mushaf Tahfidz Pro - Standar Madinah & Focus Masking</title>
+  <title>Mushaf Tahfidz Pro - Kata Pertama Ayat & Nomor Terbuka</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
@@ -111,13 +111,13 @@
     .banner span { white-space: nowrap; padding: 0 4%; }
     .kata { flex: none; line-height: normal; position: relative; z-index: 1; transition: filter .2s, opacity .2s; }
 
-    /* Pengaturan Masking Hafalan Tanpa Mengubah Posisi Standar */
+    /* Aturan Masking Hafalan */
     .blur-total .kata { filter: blur(7px); opacity: 0.15; cursor: pointer; }
     .blur-total .kata.terbuka { filter: none; opacity: 1; }
     
-    .kata-pertama-saja .kata { filter: blur(7px); opacity: 0.1; }
-    /* Membuka kata pertama di sisi kanan baris (elemen pertama dalam susunan DOM asli Madinah) */
-    .kata-pertama-saja .baris .kata:first-child { filter: none; opacity: 1; }
+    .kata-pertama-ayat-saja .kata { filter: blur(7px); opacity: 0.1; }
+    /* Kata pertama setelah nomor ayat dan nomor ayat itu sendiri selalu terbuka */
+    .kata-pertama-ayat-saja .kata.terbuka-selalu { filter: none; opacity: 1; }
 
     #info { text-align: center; margin: 14px 12px 0; font-size: .78rem; color: var(--redup); }
 
@@ -147,7 +147,7 @@
   <div class="toolbar">
     <button id="btnNormal" class="chip aktif-mode" onclick="aturModeHafalan('normal')">📖 Normal</button>
     <button id="btnBlur" class="chip" onclick="aturModeHafalan('blur')">👁️ Sembunyikan (Blur)</button>
-    <button id="btnFirst" class="chip" onclick="aturModeHafalan('first')">🔑 Kata Pertama Saja</button>
+    <button id="btnFirstAyat" class="chip" onclick="aturModeHafalan('firstAyat')">🔑 Kata Pertama Ayat Saja</button>
     <button id="tema" class="chip" aria-label="Ganti tema"></button>
     <div class="pilih-surah">
       <select id="pilihSurah">
@@ -178,7 +178,7 @@
       <div id="teks"></div>
       <div id="kaki"><span id="kNo"></span></div>
     </div>
-    <div id="info">Standar Madinah Original • Posisi ayat konsisten.</div>
+    <div id="info">Nomor ayat & kata pertama setiap ayat selalu terbuka.</div>
   </div>
 
   <!-- Firebase SDK -->
@@ -381,10 +381,14 @@
       if (my !== token) return;
 
       teks.innerHTML = "";
+      
+      let bukaKataBerikutnya = true; // Kata pertama di awal halaman selalu terbuka
+
       data.lines.forEach(line => {
         const baris = document.createElement("div");
         baris.className = "baris";
         const header = line.words.find(w => w.type === "surah_header");
+        
         if (header) {
           baris.classList.add("header");
           const b = document.createElement("div");
@@ -394,13 +398,24 @@
           b.appendChild(t);
           baris.appendChild(b);
         } else {
-          // Posisi asli standar (tanpa membalik urutan kata)
           line.words.forEach(w => {
             const k = document.createElement("span");
             k.className = "kata";
             k.style.fontFamily = `"${w.font}"`;
             k.textContent = w.char;
             k.onclick = () => k.classList.toggle("terbuka");
+
+            // Deteksi apakah ini nomor ayat (font QCF4 ayah number atau karakter khusus nomor) atau kata pertama ayat baru
+            const isAyahNumber = w.type === "ayah_number" || w.font.includes("QBSML") || /[\u06DD\u06E9]/.test(w.char);
+
+            if (isAyahNumber) {
+              k.classList.add("terbuka-selalu"); // Nomor ayat SELALU terbuka
+              bukaKataBerikutnya = true;         // Kata setelah nomor ayat ini akan ditandai sebagai kata pertama ayat baru
+            } else if (bukaKataBerikutnya) {
+              k.classList.add("terbuka-selalu"); // Kata pertama setiap ayat SELALU terbuka
+              bukaKataBerikutnya = false;
+            }
+
             baris.appendChild(k);
           });
         }
@@ -480,18 +495,18 @@
       modeHafalan = mode;
       document.getElementById("btnNormal").classList.toggle("aktif-mode", mode === "normal");
       document.getElementById("btnBlur").classList.toggle("aktif-mode", mode === "blur");
-      document.getElementById("btnFirst").classList.toggle("aktif-mode", mode === "first");
+      document.getElementById("btnFirstAyat").classList.toggle("aktif-mode", mode === "firstAyat");
       terapkanModeHafalanUI();
     }
 
     function terapkanModeHafalanUI() {
-      teks.classList.remove("blur-total", "kata-pertama-saja");
+      teks.classList.remove("blur-total", "kata-pertama-ayat-saja");
       if (modeHafalan === "blur") {
         teks.classList.add("blur-total");
         info.textContent = "Mode Blur: Klik kata apa saja untuk mengintip ayat.";
-      } else if (modeHafalan === "first") {
-        teks.classList.add("kata-pertama-saja");
-        info.textContent = "Mode Kata Pertama: Hanya petunjuk awal baris yang terbuka.";
+      } else if (modeHafalan === "firstAyat") {
+        teks.classList.add("kata-pertama-ayat-saja");
+        info.textContent = "Mode Kata Pertama Ayat: Nomor ayat & kata pertama tiap ayat terbuka sebagai petunjuk hafalan.";
       } else {
         info.textContent = "Mode Normal: Teks terbuka penuh.";
       }
