@@ -404,7 +404,6 @@
             k.style.fontFamily = `"${w.font}"`;
             k.textContent = w.char;
             
-            // Fitur Klik Interaktif untuk Membuka/Menyembunyikan Kata saat Diburamkan
             k.onclick = () => k.classList.toggle("terbuka");
 
             const isNomorAyat = w.type === "end" || w.type === "ayah_number" || w.font.includes("QBSML") || /[\u06DD\u06E9]/.test(w.char);
@@ -497,6 +496,12 @@
       document.getElementById("btnNormal").classList.toggle("aktif-mode", mode === "normal");
       document.getElementById("btnBlur").classList.toggle("aktif-mode", mode === "blur");
       document.getElementById("btnFirstAyat").classList.toggle("aktif-mode", mode === "firstAyat");
+      
+      // Reset semua kata yang sempat terbuka agar kembali tertutup/hidden saat tombol mode diklik
+      document.querySelectorAll("#teks .kata.terbuka").forEach(k => {
+        k.classList.remove("terbuka");
+      });
+
       terapkanModeHafalanUI();
     }
 
