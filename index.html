@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mushaf Tahfidz Pro - Interactive Focus Masking</title>
+  <title>Mushaf Tahfidz Pro - Professional Minimalist</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
@@ -40,36 +40,40 @@
       transition: color .25s;
     }
     button { font-family: inherit; cursor: pointer; }
-    svg.ik { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    svg.ik { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
     .auth-banner {
-      max-width: 760px; margin: 12px auto 0; padding: 0 12px; display: flex; justify-content: space-between; align-items: center;
+      max-width: 760px; margin: 10px auto 0; padding: 0 12px; display: flex; justify-content: space-between; align-items: center;
     }
     .auth-box {
-      font-size: .8rem; font-weight: 500; background: var(--kaca); padding: 6px 14px; border-radius: 999px;
-      border: 1px solid var(--tepi); backdrop-filter: blur(12px); display: flex; align-items: center; gap: 10px;
+      font-size: .75rem; font-weight: 500; background: var(--kaca); padding: 4px 12px; border-radius: 999px;
+      border: 1px solid var(--tepi); backdrop-filter: blur(12px); display: flex; align-items: center; gap: 8px;
     }
     .auth-box button {
-      background: var(--g1); color: #fff; border: 0; padding: 4px 10px; border-radius: 999px; font-size: .75rem; font-weight: 600;
+      background: var(--g1); color: #fff; border: 0; padding: 3px 8px; border-radius: 999px; font-size: .7rem; font-weight: 600;
     }
 
-    .judul { text-align: center; padding: 10px 12px 4px; }
+    .judul { text-align: center; padding: 6px 12px 2px; }
     .judul .arab {
-      display: inline-block; font-family: var(--f-arab); font-weight: 600; font-size: 1.7rem; line-height: 1.5;
+      display: inline-block; font-family: var(--f-arab); font-weight: 600; font-size: 1.4rem; line-height: 1.4;
       background: var(--grad-judul); -webkit-background-clip: text; background-clip: text; color: transparent;
     }
 
-    .toolbar { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 12px 12px 16px; }
+    /* Toolbar Minimalis Profesional */
+    .toolbar { display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 8px 12px 14px; }
     
-    .chip, .navhal, .pilih-surah {
-      height: 40px; display: inline-flex; align-items: center; border-radius: 999px;
+    .icon-btn, .navhal, .pilih-surah {
+      height: 36px; display: inline-flex; align-items: center; border-radius: 999px;
       background: var(--kaca); border: 1px solid var(--tepi); backdrop-filter: blur(16px);
     }
-    .chip { padding: 0 12px; gap: 6px; color: var(--teks-lembut); font-size: .76rem; font-weight: 500; }
-    .chip.aktif-mode { background: var(--g1); color: #fff; border-color: transparent; }
+    .icon-btn {
+      width: 36px; justify-content: center; padding: 0; color: var(--teks-lembut); transition: all .2s;
+    }
+    .icon-btn.aktif-mode { background: var(--g1); color: #fff; border-color: transparent; }
+    .icon-btn:hover { border-color: var(--aksen); }
 
-    .pilih-surah { padding: 0 12px; color: var(--teks-lembut); font-size: .76rem; font-weight: 500; }
-    .pilih-surah select { background: transparent; border: none; color: var(--teks); font-family: inherit; font-size: .76rem; outline: none; cursor: pointer; height: 100%; }
+    .pilih-surah { padding: 0 10px; color: var(--teks-lembut); font-size: .75rem; font-weight: 500; }
+    .pilih-surah select { background: transparent; border: none; color: var(--teks); font-family: inherit; font-size: .75rem; outline: none; cursor: pointer; height: 100%; }
     .pilih-surah select option { background: #292524; color: #f5f5f4; }
     body:not(.gelap) .pilih-surah select option { background: #fef3c7; color: #1c1917; }
 
@@ -89,12 +93,13 @@
     .c1 { top: 4px; left: 4px; } .c2 { top: 4px; right: 4px; transform: scaleX(-1); }
     .c3 { bottom: 4px; left: 4px; transform: scaleY(-1); } .c4 { bottom: 4px; right: 4px; transform: scale(-1, -1); }
 
-    #kepala { display: flex; justify-content: space-between; gap: 12px; margin: 0 4px 8px; font-size: .66rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--teks-lembut); }
+    #kepala { display: flex; justify-content: space-between; gap: 12px; margin: 0 4px 8px; font-size: .64rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--teks-lembut); }
     #kaki { text-align: center; margin-top: 12px; }
-    #kaki span { display: inline-block; min-width: 46px; padding: 3px 14px; border: 1px solid var(--tepi-aksen); border-radius: 999px; background: var(--kaca-halus); font-size: .78rem; font-weight: 600; color: var(--teks-lembut); }
+    #kaki span { display: inline-block; min-width: 44px; padding: 2px 12px; border: 1px solid var(--tepi-aksen); border-radius: 999px; background: var(--kaca-halus); font-size: .75rem; font-weight: 600; color: var(--teks-lembut); }
 
     #teks { --fs: 30px; --pitch: 2.2; display: flex; flex-direction: column; justify-content: center; min-height: calc(var(--fs) * var(--pitch) * 15); transition: opacity .15s; }
     #teks.memuat { opacity: .35; }
+    
     .baris {
       display: flex; direction: rtl; align-items: center; justify-content: space-between; gap: .12em;
       height: calc(var(--fs) * var(--pitch)); font-size: var(--fs); color: var(--teks);
@@ -103,6 +108,10 @@
     }
     .baris:last-child { background: none; }
     .baris.header { background: none; justify-content: center; }
+    
+    /* Basmalah Center */
+    .baris.basmalah { justify-content: center !important; }
+
     .banner {
       position: relative; width: 100%; height: 76%; display: grid; place-items: center; border-radius: 10px;
       font-family: var(--f-arab); font-size: calc(var(--fs) * .8); font-weight: 600; color: #fff;
@@ -112,30 +121,30 @@
     
     .kata { flex: none; line-height: normal; position: relative; z-index: 1; transition: filter .2s, opacity .2s; cursor: pointer; }
 
-    /* Mode Blur: semua diburamkan kecuali nomor ayat, bisa diklik untuk intip */
+    /* Masking Hafalan */
     .blur-total .kata:not(.is-nomor-ayat):not(.terbuka) { filter: blur(7px); opacity: 0.15; }
-    
-    /* Mode Kata Pertama: semua diburamkan kecuali nomor ayat & kata pertama, bisa diklik untuk intip */
     .kata-pertama-ayat-saja .kata:not(.is-nomor-ayat):not(.is-kata-pertama):not(.terbuka) { filter: blur(7px); opacity: 0.15; }
 
-    #info { text-align: center; margin: 14px 12px 0; font-size: .78rem; color: var(--redup); }
+    #info { text-align: center; margin: 12px 12px 0; font-size: .75rem; color: var(--redup); }
 
-    .navhal { padding: 3px; }
+    .navhal { padding: 2px; gap: 2px; }
     .navhal .bulat {
-      width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--tepi-aksen); display: grid; place-items: center;
-      background: linear-gradient(135deg, var(--g1), var(--g2)); color: #fff; cursor: pointer;
+      width: 32px; height: 32px; border-radius: 50%; border: none; display: grid; place-items: center;
+      background: transparent; color: var(--teks-lembut); cursor: pointer;
     }
-    .navhal .bulat:disabled { opacity: .4; cursor: not-allowed; }
-    .navhal .bulat svg.ik { width: 18px; height: 18px; stroke-width: 2.4; }
-    .pilih { display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; height: 100%; color: var(--teks-lembut); font-size: .76rem; }
-    .pilih input { width: 38px; text-align: center; font-family: inherit; font-size: .85rem; font-weight: 600; border: 0; border-bottom: 2px solid var(--aksen); background: transparent; color: var(--teks); outline: none; }
+    .navhal .bulat:hover { background: var(--kaca-halus); color: var(--aksen); }
+    .navhal .bulat:disabled { opacity: .3; cursor: not-allowed; }
+    .navhal .bulat svg.ik { width: 15px; height: 15px; stroke-width: 2.2; }
+    
+    .pilih { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px; height: 100%; color: var(--teks-lembut); font-size: .75rem; }
+    .pilih input { width: 34px; text-align: center; font-family: inherit; font-size: .8rem; font-weight: 600; border: 0; border-bottom: 2px solid var(--aksen); background: transparent; color: var(--teks); outline: none; }
   </style>
 </head>
 <body>
 
   <div class="auth-banner">
     <div class="judul" style="padding:0; text-align:left;">
-      <span class="arab" style="font-size: 1.3rem;">المصحف الشريف</span>
+      <span class="arab" style="font-size: 1.1rem;">المصحف الشريف</span>
     </div>
     <div class="auth-box">
       <span id="userStatus">Tamu</span>
@@ -144,23 +153,31 @@
   </div>
 
   <div class="toolbar">
-    <button id="btnNormal" class="chip aktif-mode" onclick="aturModeHafalan('normal')">📖 Normal</button>
-    <button id="btnBlur" class="chip" onclick="aturModeHafalan('blur')">👁️ Blur (Sembunyikan)</button>
-    <button id="btnFirstAyat" class="chip" onclick="aturModeHafalan('firstAyat')">🔑 Kata Pertama Ayat</button>
-    <button id="tema" class="chip" aria-label="Ganti tema"></button>
+    <!-- Tombol Mode Minimalis Profesional (Icon Only) -->
+    <button id="btnNormal" class="icon-btn aktif-mode" onclick="aturModeHafalan('normal')" title="Mode Normal">
+      <svg class="ik" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15C4 3.12 5.12 2 6.5 2Z"/></svg>
+    </button>
+    <button id="btnBlur" class="icon-btn" onclick="aturModeHafalan('blur')" title="Mode Blur (Sembunyikan)">
+      <svg class="ik" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+    </button>
+    <button id="btnFirstAyat" class="icon-btn" onclick="aturModeHafalan('firstAyat')" title="Kata Pertama Ayat">
+      <svg class="ik" viewBox="0 0 24 24"><path d="m15 5 4 4"/><path d="M13 7 8.7 11.3a1 1 0 0 0-.3.7V15h3a1 1 0 0 0 .7-.3L17 11"/><path d="m2 22 20-20"/></svg>
+    </button>
+    <button id="tema" class="icon-btn" aria-label="Ganti tema" title="Ganti Tema"></button>
+
     <div class="pilih-surah">
       <select id="pilihSurah">
         <option value="" disabled selected>Pilih Surat</option>
       </select>
     </div>
+
     <div class="navhal" role="group">
-      <button id="next" class="bulat" aria-label="Berikutnya"><svg class="ik" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button id="next" class="bulat" aria-label="Berikutnya" title="Halaman Berikutnya"><svg class="ik" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
       <label class="pilih" for="halaman">
         <span>Hal.</span>
         <input type="number" id="halaman" min="1" max="604" value="1">
-        <span>/ 604</span>
       </label>
-      <button id="prev" class="bulat" aria-label="Sebelumnya"><svg class="ik" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      <button id="prev" class="bulat" aria-label="Sebelumnya" title="Halaman Sebelumnya"><svg class="ik" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
   </div>
 
@@ -398,6 +415,12 @@
           baris.appendChild(b);
           tandaiKataPertama = true;
         } else {
+          // Deteksi apakah baris ini adalah baris Basmalah (biasanya mengandung teks bismillah/basmalah murni)
+          const isBasmalahLine = line.words.some(w => w.text && w.text.includes("بسم"));
+          if (isBasmalahLine) {
+            baris.classList.add("basmalah");
+          }
+
           line.words.forEach(w => {
             const k = document.createElement("span");
             k.className = "kata";
@@ -497,7 +520,6 @@
       document.getElementById("btnBlur").classList.toggle("aktif-mode", mode === "blur");
       document.getElementById("btnFirstAyat").classList.toggle("aktif-mode", mode === "firstAyat");
       
-      // Reset semua kata yang sempat terbuka agar kembali tertutup/hidden saat tombol mode diklik
       document.querySelectorAll("#teks .kata.terbuka").forEach(k => {
         k.classList.remove("terbuka");
       });
