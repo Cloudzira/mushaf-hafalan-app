@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mushaf Tahfidz Pro - Kata Pertama Ayat & Nomor Selalu Terbuka</title>
+  <title>Mushaf Tahfidz Pro - Interactive Focus Masking</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
@@ -79,7 +79,7 @@
       background: var(--kaca); border: 1px solid var(--tepi-aksen); border-radius: 14px;
       backdrop-filter: blur(16px); box-shadow: var(--bayang); user-select: none;
     }
-    .frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid rgba(180,83,9,.2); border-radius: 99px; pointer-events: none; }
+    .frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid rgba(180,83,9,.2); border-radius: 9px; pointer-events: none; }
     .edge { position: absolute; }
     .e-top    { top: 11px; left: 34px; right: 34px; height: 10px; background: var(--tile-h) repeat-x center; }
     .e-bottom { bottom: 11px; left: 34px; right: 34px; height: 10px; background: var(--tile-h) repeat-x center; }
@@ -109,21 +109,14 @@
       background: linear-gradient(90deg, #d97706, #b45309);
     }
     .banner span { white-space: nowrap; padding: 0 4%; }
-    .kata { flex: none; line-height: normal; position: relative; z-index: 1; transition: filter .2s, opacity .2s; }
+    
+    .kata { flex: none; line-height: normal; position: relative; z-index: 1; transition: filter .2s, opacity .2s; cursor: pointer; }
 
-    /* Control Masking Hafalan */
-    .blur-total .kata { filter: blur(7px); opacity: 0.15; cursor: pointer; }
-    .blur-total .kata.terbuka { filter: none; opacity: 1; }
+    /* Mode Blur: semua diburamkan kecuali nomor ayat, bisa diklik untuk intip */
+    .blur-total .kata:not(.is-nomor-ayat):not(.terbuka) { filter: blur(7px); opacity: 0.15; }
     
-    .kata-pertama-ayat-saja .kata { filter: blur(7px); opacity: 0.15; cursor: pointer; }
-    .kata-pertama-ayat-saja .kata.terbuka { filter: none; opacity: 1; }
-    
-    /* Nomor ayat dan kata pertama ayat SELALU TERBUKA */
-    .kata-pertama-ayat-saja .kata.is-nomor-ayat,
-    .kata-pertama-ayat-saja .kata.is-kata-pertama { 
-      filter: none !important; 
-      opacity: 1 !important; 
-    }
+    /* Mode Kata Pertama: semua diburamkan kecuali nomor ayat & kata pertama, bisa diklik untuk intip */
+    .kata-pertama-ayat-saja .kata:not(.is-nomor-ayat):not(.is-kata-pertama):not(.terbuka) { filter: blur(7px); opacity: 0.15; }
 
     #info { text-align: center; margin: 14px 12px 0; font-size: .78rem; color: var(--redup); }
 
@@ -152,8 +145,8 @@
 
   <div class="toolbar">
     <button id="btnNormal" class="chip aktif-mode" onclick="aturModeHafalan('normal')">📖 Normal</button>
-    <button id="btnBlur" class="chip" onclick="aturModeHafalan('blur')">👁️ Sembunyikan (Blur)</button>
-    <button id="btnFirstAyat" class="chip" onclick="aturModeHafalan('firstAyat')">🔑 Kata Pertama Ayat Saja</button>
+    <button id="btnBlur" class="chip" onclick="aturModeHafalan('blur')">👁️ Blur (Sembunyikan)</button>
+    <button id="btnFirstAyat" class="chip" onclick="aturModeHafalan('firstAyat')">🔑 Kata Pertama Ayat</button>
     <button id="tema" class="chip" aria-label="Ganti tema"></button>
     <div class="pilih-surah">
       <select id="pilihSurah">
@@ -184,7 +177,7 @@
       <div id="teks"></div>
       <div id="kaki"><span id="kNo"></span></div>
     </div>
-    <div id="info">Nomor ayat & kata pertama tiap ayat selalu terbuka.</div>
+    <div id="info">Klik kata yang buram untuk memunculkan teks.</div>
   </div>
 
   <!-- Firebase SDK -->
@@ -388,7 +381,7 @@
 
       teks.innerHTML = "";
       
-      let tandaiKataPertama = true; // Kata pertama di awal halaman selalu terbuka
+      let tandaiKataPertama = true;
 
       data.lines.forEach(line => {
         const baris = document.createElement("div");
@@ -410,16 +403,17 @@
             k.className = "kata";
             k.style.fontFamily = `"${w.font}"`;
             k.textContent = w.char;
+            
+            // Fitur Klik Interaktif untuk Membuka/Menyembunyikan Kata saat Diburamkan
             k.onclick = () => k.classList.toggle("terbuka");
 
-            // Semak jika elemen ini adalah NOMBOR AYAT
             const isNomorAyat = w.type === "end" || w.type === "ayah_number" || w.font.includes("QBSML") || /[\u06DD\u06E9]/.test(w.char);
 
             if (isNomorAyat) {
-              k.classList.add("is-nomor-ayat"); // Diberi kelas nombor ayat (Pasti Terbuka)
-              tandaiKataPertama = true;           // Mengarahkan kata berikut sebagai KATA PERTAMA ayat baharu
+              k.classList.add("is-nomor-ayat");
+              tandaiKataPertama = true;
             } else if (tandaiKataPertama) {
-              k.classList.add("is-kata-pertama"); // Diberi kelas kata pertama ayat (Pasti Terbuka)
+              k.classList.add("is-kata-pertama");
               tandaiKataPertama = false;
             }
 
@@ -510,10 +504,10 @@
       teks.classList.remove("blur-total", "kata-pertama-ayat-saja");
       if (modeHafalan === "blur") {
         teks.classList.add("blur-total");
-        info.textContent = "Mode Blur: Klik kata apa saja untuk mengintip ayat.";
+        info.textContent = "Mode Blur: Semua ayat buram kecuali nomor ayat. Ketuk kata apa saja untuk mengintip.";
       } else if (modeHafalan === "firstAyat") {
         teks.classList.add("kata-pertama-ayat-saja");
-        info.textContent = "Mode Kata Pertama Ayat: Nomor ayat & kata pertama tiap ayat terbuka sebagai petunjuk hafalan.";
+        info.textContent = "Mode Kata Pertama: Hanya nomor ayat dan kata pertama tiap ayat yang terbuka.";
       } else {
         info.textContent = "Mode Normal: Teks terbuka penuh.";
       }
