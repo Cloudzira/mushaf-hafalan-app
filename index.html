@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mushaf Tahfidz Pro - Focus Masking Edition</title>
+  <title>Mushaf Tahfidz Pro - Standar Madinah & Focus Masking</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
       --g1: #d97706; --g2: #b45309;
       --aksen: #d97706;
       --teks: #1c1917; --teks-lembut: #78350f; --redup: rgba(120,53,15,.75);
-      --kaca: rgba(255,255,255,.85); --kaca-kuat: rgba(255,255,255,.95); --kaca-halus: rgba(0,0,0,.04);
+      --kaca: rgba(255,255,255,.85); --kaca-halus: rgba(0,0,0,.04);
       --tepi: rgba(180,83,9,.2); --tepi-aksen: rgba(217,119,6,.4);
       --garis-baris: rgba(217,119,6,.25);
       --latar: linear-gradient(135deg, #fef3c7 0%, #f7f4ea 50%, #fef3c7 100%);
@@ -25,7 +25,7 @@
     }
     body.gelap {
       --teks: #f5f5f4; --teks-lembut: #fcd34d; --redup: rgba(252,211,77,.75);
-      --kaca: rgba(28,25,23,.85); --kaca-kuat: rgba(28,25,23,.95); --kaca-halus: rgba(255,255,255,.04);
+      --kaca: rgba(28,25,23,.85); --kaca-halus: rgba(255,255,255,.04);
       --tepi: rgba(252,211,77,.15); --tepi-aksen: rgba(251,191,36,.4);
       --garis-baris: rgba(251,191,36,.25); --aksen: #fbbf24;
       --latar: linear-gradient(135deg, #1c1917 0%, #0c0a09 50%, #1c1917 100%);
@@ -59,17 +59,12 @@
       background: var(--grad-judul); -webkit-background-clip: text; background-clip: text; color: transparent;
     }
 
-    /* Toolbar & Panel Hafalan */
     .toolbar { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 12px 12px 16px; }
     
-    .segmen, .chip, .navhal, .pilih-surah {
+    .chip, .navhal, .pilih-surah {
       height: 40px; display: inline-flex; align-items: center; border-radius: 999px;
       background: var(--kaca); border: 1px solid var(--tepi); backdrop-filter: blur(16px);
     }
-    .segmen { padding: 3px; }
-    .segmen button { border: 0; background: transparent; color: var(--teks-lembut); height: 100%; padding: 0 14px; border-radius: 999px; font-size: .76rem; font-weight: 500; }
-    .segmen button.aktif { color: #fff; background: linear-gradient(90deg, var(--g1), var(--g2)); }
-    
     .chip { padding: 0 12px; gap: 6px; color: var(--teks-lembut); font-size: .76rem; font-weight: 500; }
     .chip.aktif-mode { background: var(--g1); color: #fff; border-color: transparent; }
 
@@ -78,7 +73,6 @@
     .pilih-surah select option { background: #292524; color: #f5f5f4; }
     body:not(.gelap) .pilih-surah select option { background: #fef3c7; color: #1c1917; }
 
-    /* Bingkai */
     #wrap { padding: 0 12px; }
     .frame {
       position: relative; max-width: 760px; margin: 0 auto; padding: 32px 34px 30px;
@@ -117,13 +111,13 @@
     .banner span { white-space: nowrap; padding: 0 4%; }
     .kata { flex: none; line-height: normal; position: relative; z-index: 1; transition: filter .2s, opacity .2s; }
 
-    /* Kelas khusus Fitur Hafalan (Blur / Sembunyikan & Petunjuk Kata Pertama) */
+    /* Pengaturan Masking Hafalan Tanpa Mengubah Posisi Standar */
     .blur-total .kata { filter: blur(7px); opacity: 0.15; cursor: pointer; }
     .blur-total .kata.terbuka { filter: none; opacity: 1; }
     
     .kata-pertama-saja .kata { filter: blur(7px); opacity: 0.1; }
-    /* Membuka kata pertama di setiap awal baris */
-    .kata-pertama-saja .baris .kata:last-child { filter: none; opacity: 1; }
+    /* Membuka kata pertama di sisi kanan baris (elemen pertama dalam susunan DOM asli Madinah) */
+    .kata-pertama-saja .baris .kata:first-child { filter: none; opacity: 1; }
 
     #info { text-align: center; margin: 14px 12px 0; font-size: .78rem; color: var(--redup); }
 
@@ -184,7 +178,7 @@
       <div id="teks"></div>
       <div id="kaki"><span id="kNo"></span></div>
     </div>
-    <div id="info">Klik pada kata yang diburamkan untuk mengintip ayat saat menghafal.</div>
+    <div id="info">Standar Madinah Original • Posisi ayat konsisten.</div>
   </div>
 
   <!-- Firebase SDK -->
@@ -339,7 +333,7 @@
     let halaman = Number(localStorage.getItem("quran_halaman")) || 1;
     window.halamanAktif = halaman;
     let tema = localStorage.getItem("quran_tema") === "light" ? "light" : "dark";  
-    let modeHafalan = "normal"; // normal | blur | first
+    let modeHafalan = "normal"; 
     let token = 0;
 
     function hitungJuz(no) { return no < 22 ? 1 : Math.min(30, Math.floor((no - 2) / 20) + 1); }
@@ -400,14 +394,12 @@
           b.appendChild(t);
           baris.appendChild(b);
         } else {
-          // Urutan kata dibalik (karena bahasa Arab dibaca kanan ke kiri) agar indeks kata pertama berada di posisi awal kanan baris
-          const reversedWords = [...line.words].reverse();
-          reversedWords.forEach(w => {
+          // Posisi asli standar (tanpa membalik urutan kata)
+          line.words.forEach(w => {
             const k = document.createElement("span");
             k.className = "kata";
             k.style.fontFamily = `"${w.font}"`;
             k.textContent = w.char;
-            // Event klik untuk mengintip kata spesifik saat mode blur aktif
             k.onclick = () => k.classList.toggle("terbuka");
             baris.appendChild(k);
           });
@@ -471,7 +463,7 @@
       const my = ++token;
 
       input.value = no;
-      info.textContent = `Halaman ${no} dari 604 — Klik kata yang buram untuk mengintip.`;
+      info.textContent = `Halaman ${no} dari 604 — Standar Madinah.`;
       document.getElementById("prev").disabled = no <= 1;
       document.getElementById("next").disabled = no >= 604;
       localStorage.setItem("quran_halaman", no);
@@ -484,7 +476,6 @@
     }
     window.tampilHalaman = tampil;
 
-    // --- PENGATURAN FITUR HAFALAN (BLUR & KATA PERTAMA) ---
     window.aturModeHafalan = function(mode) {
       modeHafalan = mode;
       document.getElementById("btnNormal").classList.toggle("aktif-mode", mode === "normal");
@@ -497,10 +488,10 @@
       teks.classList.remove("blur-total", "kata-pertama-saja");
       if (modeHafalan === "blur") {
         teks.classList.add("blur-total");
-        info.textContent = "Mode Sembunyi: Seluruh ayat buram. Klik pada kata untuk membuka/mengintip.";
+        info.textContent = "Mode Blur: Klik kata apa saja untuk mengintip ayat.";
       } else if (modeHafalan === "first") {
         teks.classList.add("kata-pertama-saja");
-        info.textContent = "Mode Kata Pertama: Hanya petunjuk awal baris/kata pertama yang terbuka.";
+        info.textContent = "Mode Kata Pertama: Hanya petunjuk awal baris yang terbuka.";
       } else {
         info.textContent = "Mode Normal: Teks terbuka penuh.";
       }
