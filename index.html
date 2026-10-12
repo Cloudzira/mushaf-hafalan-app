@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mushaf Hafalan Pro - Tikrar & Focus Mode</title>
+    <!-- Tailwind CSS untuk Desain Modern yang Cantik & Responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mushafBg: '#FBF9F1', // Warna kertas sepian/krem ramah mata
+                        mushafCard: '#F4EFEA',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-mushafBg text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="bg-amber-800 text-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-lg font-bold tracking-wide">📖 Mushaf Tahfidz Pro</h1>
+        <div class="text-sm bg-amber-900 px-3 py-1 rounded-full">Surah Al-Fatihah (Juz 1)</div>
+    </header>
+
+    <!-- Konten Utama Mushaf -->
+    <main class="flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col gap-4">
+        
+        <!-- Panel Kontrol Fitur Hafalan -->
+        <div class="bg-mushafCard p-4 rounded-xl shadow-sm border border-amber-200 flex flex-wrap justify-between items-center gap-3">
+            <div class="text-sm font-medium text-amber-900">
+                🎯 Mode Fokus: <span id="statusMode" class="font-bold text-green-700">Tampil Normal</span>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="toggleMasking()" class="bg-amber-700 hover:bg-amber-800 text-white text-xs px-3 py-2 rounded-lg transition">
+                    👁️ Sembunyikan/Tampilkan Ayat (Blur)
+                </button>
+            </div>
+        </div>
+
+        <!-- Lembar Halaman Mushaf (Ayat-Ayat) -->
+        <div id="mushafSheet" class="bg-white p-6 rounded-2xl shadow-md border border-amber-100 flex flex-col gap-6">
+            
+            <!-- Ayat 1 -->
+            <div class="p-4 rounded-xl border border-gray-100 hover:bg-amber-50/50 transition flex flex-col gap-3">
+                <div class="flex justify-between items-center text-xs text-gray-400 font-semibold">
+                    <span>Ayat 1</span>
+                    <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Tikrar: <span class="count">0</span>x</span>
+                </div>
+                <!-- Teks Arab -->
+                <p class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
+                    بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                </p>
+                <!-- Tombol Tikrar & Audio per Ayat -->
+                <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
+                    <button onclick="playAudio('1')" class="text-xs text-amber-700 hover:underline flex items-center gap-1">
+                        🔊 Dengar Audio
+                    </button>
+                    <button onclick="tambahTikrar(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
+                        + Hitung Tikrar (Ulang)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ayat 2 -->
+            <div class="p-4 rounded-xl border border-gray-100 hover:bg-amber-50/50 transition flex flex-col gap-3">
+                <div class="flex justify-between items-center text-xs text-gray-400 font-semibold">
+                    <span>Ayat 2</span>
+                    <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Tikrar: <span class="count">0</span>x</span>
+                </div>
+                <p class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
+                    الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
+                </p>
+                <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
+                    <button onclick="playAudio('2')" class="text-xs text-amber-700 hover:underline flex items-center gap-1">
+                        🔊 Dengar Audio
+                    </button>
+                    <button onclick="tambahTikrar(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
+                        + Hitung Tikrar (Ulang)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ayat 3 -->
+            <div class="p-4 rounded-xl border border-gray-100 hover:bg-amber-50/50 transition flex flex-col gap-3">
+                <div class="flex justify-between items-center text-xs text-gray-400 font-semibold">
+                    <span>Ayat 3</span>
+                    <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Tikrar: <span class="count">0</span>x</span>
+                </div>
+                <p class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
+                    الرَّحْمَٰنِ الرَّحِيمِ
+                </p>
+                <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
+                    <button onclick="playAudio('3')" class="text-xs text-amber-700 hover:underline flex items-center gap-1">
+                        🔊 Dengar Audio
+                    </button>
+                    <button onclick="tambahTikrar(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
+                        + Hitung Tikrar (Ulang)
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 text-xs text-gray-500">
+        Mushaf Tahfidz Digital • 100% Free & Open Source
+    </footer>
+
+    <!-- JavaScript Interaktif -->
+    <script>
+        // 1. Fungsi Fitur Masking (Sembunyikan/Blur Teks untuk Uji Hafalan)
+        let isBlurred = false;
+        function toggleMasking() {
+            isBlurred = !isBlurred;
+            const texts = document.querySelectorAll('.ayah-text');
+            const statusMode = document.getElementById('statusMode');
+            
+            texts.forEach(el => {
+                if (isBlurred) {
+                    el.classList.add('blur-sm', 'bg-gray-200', 'cursor-pointer');
+                    el.title = "Klik untuk intip ayat";
+                } else {
+                    el.classList.remove('blur-sm', 'bg-gray-200', 'cursor-pointer');
+                    el.title = "";
+                }
+            });
+
+            statusMode.innerText = isBlurred ? "Mode Sembunyi (Blur Aktif)" : "Tampil Normal";
+            statusMode.className = isBlurred ? "font-bold text-amber-600" : "font-bold text-green-700";
+        }
+
+        // Interaksi klik untuk intip ayat saat mode blur aktif
+        document.querySelectorAll('.ayah-text').forEach(el => {
+            el.addEventListener('click', function() {
+                if (isBlurred) {
+                    this.classList.toggle('blur-sm');
+                }
+            });
+        });
+
+        // 2. Fungsi Hitung Tikrar (Repetisi)
+        function tambahTikrar(btn) {
+            const container = btn.closest('div').parentElement;
+            const countSpan = container.querySelector('.count');
+            let currentCount = parseInt(countSpan.innerText);
+            currentCount++;
+            countSpan.innerText = currentCount;
+
+            if(currentCount >= 20) {
+                const badge = container.querySelector('.tikrar-badge');
+                badge.className = "tikrar-badge bg-amber-500 text-white px-2 py-0.5 rounded font-bold";
+                badge.innerText = `Tikrar Selesai (${currentCount}x) ✨`;
+            }
+        }
+
+        // 3. Fungsi Audio Gratis via Quran.com API CDN
+        function playAudio(ayahNumber) {
+            // Menggunakan audio resmi Syeikh Al-Husary (Standar Tahfidz) dari quran.com CDN
+            let audioMap = {
+                '1': 'https://verses.quran.com/Afsay/mp3/001001.mp3',
+                '2': 'https://verses.quran.com/Afsay/mp3/001002.mp3',
+                '3': 'https://verses.quran.com/Afsay/mp3/001003.mp3'
+            };
+            let audioUrl = audioMap[ayahNumber];
+            if(audioUrl) {
+                let audio = new Audio(audioUrl);
+                audio.play();
+            }
+        }
+    </script>
+</body>
+</html>
