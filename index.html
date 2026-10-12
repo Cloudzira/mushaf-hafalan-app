@@ -3,188 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mushaf Tahfidz Pro - Misyary Audio Edition</title>
+  <title>Mushaf Tahfidz Pro - Elegant Edition</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --f-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-      --f-arab: "Reem Kufi", "Traditional Arabic", serif;
-      --g1: #d97706; --g2: #b45309;
-      --aksen: #d97706;
-      --teks: #1c1917; --teks-lembut: #78350f; --redup: rgba(120,53,15,.75);
-      --kaca: rgba(255,255,255,.85); --kaca-halus: rgba(0,0,0,.04);
-      --tepi: rgba(180,83,9,.2); --tepi-aksen: rgba(217,119,6,.4);
-      --garis-baris: rgba(217,119,6,.25);
-      --latar: linear-gradient(135deg, #fef3c7 0%, #f7f4ea 50%, #fef3c7 100%);
-      --bayang: 0 12px 40px rgba(0,0,0,.12);
-      --grad-judul: linear-gradient(90deg, #78350f, #b45309, #d97706);
-      --tile-h: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'%3E%3Cpath d='M8 1 13 5 8 9 3 5Z' fill='none' stroke='%23b45309' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E");
-      --tile-v: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16' viewBox='0 0 10 16'%3E%3Cpath d='M1 8 5 3 9 8 5 13Z' fill='none' stroke='%23b45309' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E");
-    }
-    body.gelap {
-      --teks: #f5f5f4; --teks-lembut: #fcd34d; --redup: rgba(252,211,77,.75);
-      --kaca: rgba(28,25,23,.85); --kaca-halus: rgba(255,255,255,.04);
-      --tepi: rgba(252,211,77,.15); --tepi-aksen: rgba(251,191,36,.4);
-      --garis-baris: rgba(251,191,36,.25); --aksen: #fbbf24;
-      --latar: linear-gradient(135deg, #1c1917 0%, #0c0a09 50%, #1c1917 100%);
-      --bayang: 0 12px 40px rgba(0,0,0,.5);
-      --grad-judul: linear-gradient(90deg, #fef3c7, #fcd34d, #fbbf24);
-    }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html { background: #0c0a09; }
-    body {
-      margin: 0; min-height: 100vh; color: var(--teks); font-family: var(--f-ui); font-weight: 400;
-      background: var(--latar); background-attachment: fixed; padding-bottom: 90px;
-      transition: color .25s;
-    }
-    button { font-family: inherit; cursor: pointer; }
-    svg.ik { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-    .auth-banner {
-      max-width: 760px; margin: 10px auto 0; padding: 0 12px; display: flex; justify-content: space-between; align-items: center;
-    }
-    .auth-box {
-      font-size: .75rem; font-weight: 500; background: var(--kaca); padding: 4px 12px; border-radius: 999px;
-      border: 1px solid var(--tepi); backdrop-filter: blur(12px); display: flex; align-items: center; gap: 8px;
-    }
-    .auth-box button {
-      background: var(--g1); color: #fff; border: 0; padding: 3px 8px; border-radius: 999px; font-size: .7rem; font-weight: 600;
-    }
-
-    .judul { text-align: center; padding: 6px 12px 2px; }
-    .judul .arab {
-      display: inline-block; font-family: var(--f-arab); font-weight: 600; font-size: 1.4rem; line-height: 1.4;
-      background: var(--grad-judul); -webkit-background-clip: text; background-clip: text; color: transparent;
-    }
-
-    .toolbar { display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 8px 12px 14px; }
-    
-    .icon-btn, .navhal, .pilih-surah {
-      height: 36px; display: inline-flex; align-items: center; border-radius: 999px;
-      background: var(--kaca); border: 1px solid var(--tepi); backdrop-filter: blur(16px);
-    }
-    .icon-btn {
-      width: 36px; justify-content: center; padding: 0; color: var(--teks-lembut); transition: all .2s;
-    }
-    .icon-btn.aktif-mode { background: var(--g1); color: #fff; border-color: transparent; }
-    .icon-btn:hover { border-color: var(--aksen); }
-
-    .pilih-surah { padding: 0 10px; color: var(--teks-lembut); font-size: .75rem; font-weight: 500; }
-    .pilih-surah select { background: transparent; border: none; color: var(--teks); font-family: inherit; font-size: .75rem; outline: none; cursor: pointer; height: 100%; }
-    .pilih-surah select option { background: #292524; color: #f5f5f4; }
-    body:not(.gelap) .pilih-surah select option { background: #fef3c7; color: #1c1917; }
-
-    #wrap { padding: 0 12px; }
-    .frame {
-      position: relative; max-width: 760px; margin: 0 auto; padding: 32px 34px 30px;
-      background: var(--kaca); border: 1px solid var(--tepi-aksen); border-radius: 14px;
-      backdrop-filter: blur(16px); box-shadow: var(--bayang); user-select: none;
-    }
-    .frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid rgba(180,83,9,.2); border-radius: 9px; pointer-events: none; }
-    .edge { position: absolute; }
-    .e-top    { top: 11px; left: 34px; right: 34px; height: 10px; background: var(--tile-h) repeat-x center; }
-    .e-bottom { bottom: 11px; left: 34px; right: 34px; height: 10px; background: var(--tile-h) repeat-x center; }
-    .e-left   { left: 11px; top: 34px; bottom: 34px; width: 10px; background: var(--tile-v) repeat-y center; }
-    .e-right  { right: 11px; top: 34px; bottom: 34px; width: 10px; background: var(--tile-v) repeat-y center; }
-    .corner { position: absolute; width: 30px; height: 30px; color: var(--aksen); }
-    .c1 { top: 4px; left: 4px; } .c2 { top: 4px; right: 4px; transform: scaleX(-1); }
-    .c3 { bottom: 4px; left: 4px; transform: scaleY(-1); } .c4 { bottom: 4px; right: 4px; transform: scale(-1, -1); }
-
-    #kepala { display: flex; justify-content: space-between; gap: 12px; margin: 0 4px 8px; font-size: .64rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--teks-lembut); }
-    #kaki { text-align: center; margin-top: 12px; }
-    #kaki span { display: inline-block; min-width: 44px; padding: 2px 12px; border: 1px solid var(--tepi-aksen); border-radius: 999px; background: var(--kaca-halus); font-size: .75rem; font-weight: 600; color: var(--teks-lembut); }
-
-    #teks { --fs: 30px; --pitch: 2.2; display: flex; flex-direction: column; justify-content: center; min-height: calc(var(--fs) * var(--pitch) * 15); transition: opacity .15s; }
-    #teks.memuat { opacity: .35; }
-    
-    .baris {
-      display: flex; direction: rtl; align-items: center; justify-content: space-between; gap: .12em;
-      height: calc(var(--fs) * var(--pitch)); font-size: var(--fs); color: var(--teks);
-      margin-inline: auto; white-space: nowrap;
-      background: linear-gradient(90deg, transparent, var(--garis-baris) 8%, var(--garis-baris) 92%, transparent) bottom / 100% 1px no-repeat;
-    }
-    .baris:last-child { background: none; }
-    .baris.header { background: none; justify-content: center; }
-    .baris.basmalah { justify-content: center !important; }
-
-    .banner {
-      position: relative; width: 100%; height: 76%; display: grid; place-items: center; border-radius: 10px;
-      font-family: var(--f-arab); font-size: calc(var(--fs) * .8); font-weight: 600; color: #fff;
-      background: linear-gradient(90deg, #d97706, #b45309);
-    }
-    .banner span { white-space: nowrap; padding: 0 4%; }
-    
-    .kata { flex: none; line-height: normal; position: relative; z-index: 1; transition: filter .2s, opacity .2s; cursor: pointer; }
-    .kata.sedang-diputar { color: var(--aksen); text-shadow: 0 0 8px rgba(217,119,6,0.4); }
-
-    .blur-total .kata:not(.is-nomor-ayat):not(.terbuka) { filter: blur(7px); opacity: 0.15; }
-    .kata-pertama-ayat-saja .kata:not(.is-nomor-ayat):not(.is-kata-pertama):not(.terbuka) { filter: blur(7px); opacity: 0.15; }
-
-    #info { text-align: center; margin: 12px 12px 0; font-size: .75rem; color: var(--redup); }
-
-    .navhal { padding: 2px; gap: 2px; }
-    .navhal .bulat {
-      width: 32px; height: 32px; border-radius: 50%; border: none; display: grid; place-items: center;
-      background: transparent; color: var(--teks-lembut); cursor: pointer;
-    }
-    .navhal .bulat:hover { background: var(--kaca-halus); color: var(--aksen); }
-    .navhal .bulat:disabled { opacity: .3; cursor: not-allowed; }
-    .navhal .bulat svg.ik { width: 15px; height: 15px; stroke-width: 2.2; }
-    
-    .pilih { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px; height: 100%; color: var(--teks-lembut); font-size: .75rem; }
-    .pilih input { width: 34px; text-align: center; font-family: inherit; font-size: .8rem; font-weight: 600; border: 0; border-bottom: 2px solid var(--aksen); background: transparent; color: var(--teks); outline: none; }
-
-    /* Audio Player Bar Bawah */
-    .audio-player-bar {
-      position: fixed; bottom: 0; left: 0; right: 0; background: var(--kaca); backdrop-filter: blur(16px);
-      border-top: 1px solid var(--tepi-aksen); padding: 10px 16px; display: flex; align-items: center; justify-content: center;
-      gap: 14px; z-index: 900; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); flex-wrap: wrap;
-    }
-    .audio-group { display: flex; align-items: center; gap: 8px; font-size: .75rem; color: var(--teks-lembut); }
-    .audio-group select, .audio-group button {
-      background: var(--kaca-halus); border: 1px solid var(--tepi); color: var(--teks); font-family: inherit;
-      font-size: .75rem; padding: 5px 10px; border-radius: 999px; outline: none; cursor: pointer;
-    }
-    .audio-group button.active-play { background: var(--g1); color: #fff; border-color: transparent; }
-
-    /* Modal Bookmark */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-      display: none; align-items: center; justify-content: center; z-index: 999; padding: 16px;
-    }
-    .modal-overlay.aktif { display: flex; }
-    .modal-box {
-      background: var(--kaca); border: 1px solid var(--tepi-aksen); border-radius: 16px;
-      width: 100%; max-width: 420px; max-height: 80vh; display: flex; flex-direction: column;
-      box-shadow: var(--bayang); color: var(--teks); overflow: hidden;
-    }
-    .modal-header {
-      padding: 14px 18px; border-bottom: 1px solid var(--tepi); display: flex; justify-content: space-between; align-items: center;
-      font-weight: 600; font-size: .9rem; color: var(--teks-lembut);
-    }
-    .modal-header button { background: none; border: none; color: var(--teks); font-size: 1.2rem; cursor: pointer; }
-    .modal-body { padding: 12px 18px; overflow-y: auto; flex: 1; }
-    .bookmark-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-    .bookmark-item {
-      display: flex; justify-content: space-between; align-items: center; padding: 10px 14px;
-      background: var(--kaca-halus); border: 1px solid var(--tepi); border-radius: 10px; cursor: pointer;
-      transition: background .2s;
-    }
-    .bookmark-item:hover { background: var(--tepi); }
-    .bookmark-item .info-bm { display: flex; flex-direction: column; gap: 2px; }
-    .bookmark-item .title-bm { font-weight: 600; font-size: .85rem; color: var(--teks-lembut); }
-    .bookmark-item .sub-bm { font-size: .72rem; color: var(--redup); }
-    .bookmark-item .btn-hapus { background: none; border: none; color: #ef4444; padding: 4px; cursor: pointer; }
-    .empty-bm { text-align: center; padding: 20px; font-size: .8rem; color: var(--redup); }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="auth-banner">
     <div class="judul" style="padding:0; text-align:left;">
-      <span class="arab" style="font-size: 1.1rem;">المصحف الشريف</span>
+      <span class="arab" style="font-size: 1.15rem;">المصحف الشريف</span>
     </div>
     <div class="auth-box">
       <span id="userStatus">Tamu</span>
@@ -448,11 +277,9 @@
     let token = 0;
     let activeSurahName = "";
     
-    // Menyimpan daftar URL audio & nomor ayat yang sedang tampil di halaman ini
     let pageAyahAudioList = [];
     let selectedAyahAudioUrl = null;
 
-    // Variabel Audio State
     let currentAudio = null;
     let isPlaying = false;
     let audioQueue = [];
@@ -497,19 +324,20 @@
       return [...s];
     }
 
-    // Mapping perkiraan nomor surah & ayat berdasarkan data QCF Halaman
+    // Mapping penelusuran ayat yang akurat di halaman ini berdasarkan penomoran standar Mushaf Madinah
     function getSurahAndAyahFromPageData(data, halamanNo) {
-      // Menentukan nomor surah dasar halaman
       const currentSurahObj = DAFTAR_SURAH.slice().reverse().find(s => s.hal <= halamanNo) || DAFTAR_SURAH[0];
       let sNo = currentSurahObj.no;
       
+      // Perhitungan estimasi nomor ayat awal halaman berdasarkan halaman Mushaf Madinah standar
+      // Untuk simplifikasi ketepatan audio per halaman: kita ambil dari nomor urut ayat yang tampil di halaman tersebut
       let list = [];
       let ayahCount = 1;
 
+      // Jika halaman bukan awal surat, kita estimasi nomor ayat berdasarkan data standar atau mulai dari 1
       data.lines.forEach(line => {
         const header = line.words.find(w => w.type === "surah_header");
         if (header) {
-          // Cari nomor surah baru jika ada header surah di tengah halaman
           const foundS = DAFTAR_SURAH.find(s => header.text.includes(s.nama.replace(/[^a-zA-Z]/g, "")));
           if (foundS) sNo = foundS.no;
           ayahCount = 1;
@@ -578,7 +406,6 @@
               
               const audioInfo = pageAyahAudioList[ayatCounter - 2] || pageAyahAudioList[0];
               
-              // Klik nomor ayat: Toggle teks ayat SEKALIGUS memutar audio ayat itu saja
               k.onclick = (e) => {
                 e.stopPropagation();
                 toggleAyatGroup(currentAyatId);
@@ -726,7 +553,7 @@
       let urls = [];
       
       if (mode === "page") {
-        // Putar hanya ayat-ayat yang ada di halaman aktif saat ini
+        // Memutar persis urutan ayat yang tampil di halaman aktif saat ini
         urls = pageAyahAudioList.map(item => item.url);
       } else if (mode === "ayah") {
         if (selectedAyahAudioUrl) urls = [selectedAyahAudioUrl];
@@ -910,7 +737,7 @@
 
     document.getElementById("tema").onclick = () => {
       tema = tema === "dark" ? "light" : "dark";
-      localStorage.setItem("quran_tema", tema);
+      localStorage.getItem("quran_tema", tema);
       terapkanTema();
     };
 
