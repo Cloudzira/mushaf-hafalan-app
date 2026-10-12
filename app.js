@@ -275,7 +275,10 @@ function loadPage(no) {
 function loadFont(nama) {
   if (!fontCache.has(nama)) {
     const file = nama === "QCF4_QBSML" ? "QCF4_QBSML.woff2" : nama + "_W.woff2";
-    const p = new FontFace(nama, `url(${FONT_URL}${file})`).load().then(ff => { document.fonts.add(ff); return ff; });
+    const p = new FontFace(nama, `url(${FONT_URL}${file})`).load()
+      .then(ff => { document.fonts.add(ff); return ff; })
+      // pastikan font benar-benar aktif sebelum teks dibuat dan diukur
+      .then(ff => document.fonts.load(`100px "${nama}"`).then(() => ff, () => ff));
     p.catch(() => fontCache.delete(nama));
     fontCache.set(nama, p);
   }
@@ -359,10 +362,12 @@ async function render(no, tk) {
   }
 
   fit();
+  watchKata();
   applyHideMode();
   reapplyMarks();
   updateChrome();
   fillRangeControls();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (tk === token) fitSoon(); });
   return true;
 }
 
@@ -396,14 +401,17 @@ function fit() {
   semua.forEach(b => { b.style.width = W + "px"; b.classList.remove("pendek"); });
   if (!isi.length) return;
 
-  els.teks.style.setProperty("--fs", "100px");
-  const maks = Math.max(...isi.map(b => lebarAlami(b, 100)));
-  if (!maks) return;
-  let fs = (100 * W / maks) * 0.995;
+  // Lingkar tertutup: ukur lebar nyata pada ukuran saat ini, skalakan, ulangi sampai pas.
+  // Lebar kata adalah fungsi linear dari ukuran font, jadi biasanya cukup 1–2 putaran;
+  // bila font masih bertukar di tengah jalan, putaran berikutnya mengoreksinya.
+  let fs = 100;
   els.teks.style.setProperty("--fs", fs + "px");
-  for (let i = 0; i < 20; i++) {
-    if (!isi.some(b => lebarAlami(b, fs) > W - 0.5)) break;
-    fs *= 0.985;
+  for (let i = 0; i < 8; i++) {
+    const maks = Math.max(...isi.map(b => lebarAlami(b, fs)));
+    if (!maks) return;
+    const isi2 = maks / W;                                   // 1 = tepat penuh
+    if (isi2 >= 0.985 && isi2 <= 1) break;                   // sudah pas (muat, longgar < 1,5%)
+    fs = clamp(fs * (W / maks) * 0.995, 4, 200);
     els.teks.style.setProperty("--fs", fs + "px");
   }
 
@@ -416,6 +424,18 @@ function fit() {
   });
 }
 const fitSoon = (() => { let raf = 0; return () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(fit); }; })();
+// Pengamat lebar kata: bila font mushaf baru aktif / berganti SETELAH render (tanpa event apa pun),
+// lebar kata berubah → ukur ulang. fit() idempoten, jadi tidak berputar tanpa henti.
+const kataRO = new ResizeObserver(() => { if (cur.page) fitSoon(); });
+function watchKata() {
+  kataRO.disconnect();
+  const ks = els.teks.querySelectorAll(".kata");
+  for (let i = 0; i < ks.length; i += 9) kataRO.observe(ks[i]);
+}
+// Font mushaf bisa baru benar-benar aktif setelah render pertama: ukur ulang begitu selesai dimuat.
+if (document.fonts) {
+  document.fonts.addEventListener("loadingdone", () => { if (cur.page) fitSoon(); });
+}
 
 new ResizeObserver(() => {
   if (els.teks.clientWidth !== lastFitW && cur.page) fitSoon();

@@ -207,6 +207,7 @@ svg.ik.f { fill: currentColor; }
   background: var(--kaca); border: 1px solid var(--tepi-aksen); border-radius: 16px;
   backdrop-filter: blur(20px); box-shadow: var(--bayang);
   user-select: none; -webkit-user-select: none; touch-action: pan-y;
+  overflow: clip;   /* jaring pengaman: teks tidak pernah meluber keluar bingkai */
 }
 .frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--tepi); border-radius: 10px; pointer-events: none; }
 .edge { position: absolute; pointer-events: none; }
