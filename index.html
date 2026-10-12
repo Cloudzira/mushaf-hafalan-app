@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mushaf Tahfidz Pro - Bookmark & Alignment</title>
+  <title>Mushaf Tahfidz Pro - Professional Minimalist</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
@@ -59,7 +59,7 @@
       background: var(--grad-judul); -webkit-background-clip: text; background-clip: text; color: transparent;
     }
 
-    /* Toolbar Minimalis */
+    /* Toolbar Minimalis Profesional */
     .toolbar { display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 8px 12px 14px; }
     
     .icon-btn, .navhal, .pilih-surah {
@@ -109,13 +109,8 @@
     .baris:last-child { background: none; }
     .baris.header { background: none; justify-content: center; }
     
-    /* Basmalah Center Persis */
-    .baris.basmalah { 
-      justify-content: center !important; 
-    }
-    .baris.basmalah .kata {
-      margin: 0 0.15em;
-    }
+    /* Basmalah Center Mutlak */
+    .baris.basmalah { justify-content: center !important; }
 
     .banner {
       position: relative; width: 100%; height: 76%; display: grid; place-items: center; border-radius: 10px;
@@ -143,6 +138,36 @@
     
     .pilih { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px; height: 100%; color: var(--teks-lembut); font-size: .75rem; }
     .pilih input { width: 34px; text-align: center; font-family: inherit; font-size: .8rem; font-weight: 600; border: 0; border-bottom: 2px solid var(--aksen); background: transparent; color: var(--teks); outline: none; }
+
+    /* Modal Popup Bookmark */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; z-index: 999; padding: 16px;
+    }
+    .modal-overlay.aktif { display: flex; }
+    .modal-box {
+      background: var(--kaca); border: 1px solid var(--tepi-aksen); border-radius: 16px;
+      width: 100%; max-width: 420px; max-height: 80vh; display: flex; flex-direction: column;
+      box-shadow: var(--bayang); color: var(--teks); overflow: hidden;
+    }
+    .modal-header {
+      padding: 14px 18px; border-bottom: 1px solid var(--tepi); display: flex; justify-content: space-between; align-items: center;
+      font-weight: 600; font-size: .9rem; color: var(--teks-lembut);
+    }
+    .modal-header button { background: none; border: none; color: var(--teks); font-size: 1.2rem; cursor: pointer; }
+    .modal-body { padding: 12px 18px; overflow-y: auto; flex: 1; }
+    .bookmark-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    .bookmark-item {
+      display: flex; justify-content: space-between; align-items: center; padding: 10px 14px;
+      background: var(--kaca-halus); border: 1px solid var(--tepi); border-radius: 10px; cursor: pointer;
+      transition: background .2s;
+    }
+    .bookmark-item:hover { background: var(--tepi); }
+    .bookmark-item .info-bm { display: flex; flex-direction: column; gap: 2px; }
+    .bookmark-item .title-bm { font-weight: 600; font-size: .85rem; color: var(--teks-lembut); }
+    .bookmark-item .sub-bm { font-size: .72rem; color: var(--redup); }
+    .bookmark-item .btn-hapus { background: none; border: none; color: #ef4444; padding: 4px; cursor: pointer; }
+    .empty-bm { text-align: center; padding: 20px; font-size: .8rem; color: var(--redup); }
   </style>
 </head>
 <body>
@@ -158,7 +183,7 @@
   </div>
 
   <div class="toolbar">
-    <!-- Tombol Mode Minimalis (Icon Only) -->
+    <!-- Tombol Mode Minimalis & Simpan -->
     <button id="btnNormal" class="icon-btn aktif-mode" onclick="aturModeHafalan('normal')" title="Mode Normal">
       <svg class="ik" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15C4 3.12 5.12 2 6.5 2Z"/></svg>
     </button>
@@ -169,12 +194,13 @@
       <svg class="ik" viewBox="0 0 24 24"><path d="m15 5 4 4"/><path d="M13 7 8.7 11.3a1 1 0 0 0-.3.7V15h3a1 1 0 0 0 .7-.3L17 11"/><path d="m2 22 20-20"/></svg>
     </button>
     
-    <!-- Fitur Bookmark Baru -->
-    <button id="btnSaveBookmark" class="icon-btn" onclick="simpanBookmark()" title="Simpan Bookmark Terakhir">
-      <svg class="ik" viewBox="0 0 24 24"><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    <!-- Tombol Fitur Simpan Surat & Ayat (Bookmark) -->
+    <button id="btnBookmark" class="icon-btn" onclick="bukaBookmarkModal()" title="Daftar Simpanan Ayat">
+      <svg class="ik" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
     </button>
-    <button id="btnGoBookmark" class="icon-btn" onclick="bukaBookmark()" title="Buka Bookmark Tersimpan">
-      <svg class="ik" viewBox="0 0 24 24" fill="currentColor"><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+
+    <button id="btnSaveCurrent" class="icon-btn" onclick="simpanHalamanIni()" title="Simpan Halaman/Ayat Ini">
+      <svg class="ik" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
     </button>
 
     <button id="tema" class="icon-btn" aria-label="Ganti tema" title="Ganti Tema"></button>
@@ -209,6 +235,19 @@
       <div id="kaki"><span id="kNo"></span></div>
     </div>
     <div id="info">Klik kata yang buram untuk memunculkan teks.</div>
+  </div>
+
+  <!-- Modal Overlay untuk Daftar Ayat Tersimpan -->
+  <div id="modalBookmark" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span>📌 Daftar Ayat Tersimpan</span>
+        <button onclick="tutupBookmarkModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <ul id="bookmarkList" class="bookmark-list"></ul>
+      </div>
+    </div>
   </div>
 
   <!-- Firebase SDK -->
@@ -256,11 +295,11 @@
       }
     }
 
-    window.savePageToCloud = async function(bookmarkData) {
+    window.savePageToCloud = async function(pageNo) {
       if (!currentUser) return;
       try {
         const ref = doc(db, "progres_hafalan", currentUser.uid);
-        await setDoc(ref, bookmarkData, { merge: true });
+        await setDoc(ref, { halaman_terakhir: pageNo, updated_at: new Date().toISOString() }, { merge: true });
       } catch(e) {}
     }
 
@@ -268,9 +307,9 @@
       try {
         const ref = doc(db, "progres_hafalan", uid);
         const snap = await getDoc(ref);
-        if (snap.exists() && snap.data().halaman) {
-          const bm = snap.data();
-          localStorage.setItem("mushaf_bookmark", JSON.stringify(bm));
+        if (snap.exists() && snap.data().halaman_terakhir) {
+          const hal = snap.data().halaman_terakhir;
+          if (hal !== window.halamanAktif) { window.tampilHalaman(hal); }
         }
       } catch(e) {}
     }
@@ -362,11 +401,10 @@
 
     let halaman = Number(localStorage.getItem("quran_halaman")) || 1;
     window.halamanAktif = halaman;
-    let currentSurahName = "Al-Fatihah";
-    let currentAyahNo = 1;
     let tema = localStorage.getItem("quran_tema") === "light" ? "light" : "dark";  
     let modeHafalan = "normal"; 
     let token = 0;
+    let activeSurahName = "";
 
     function hitungJuz(no) { return no < 22 ? 1 : Math.min(30, Math.floor((no - 2) / 20) + 1); }
 
@@ -415,7 +453,6 @@
       teks.innerHTML = "";
       
       let tandaiKataPertama = true;
-      let ayatPertamaDiHalaman = null;
 
       data.lines.forEach(line => {
         const baris = document.createElement("div");
@@ -432,8 +469,8 @@
           baris.appendChild(b);
           tandaiKataPertama = true;
         } else {
-          // Deteksi apakah baris ini Basmalah murni (biasanya berisi teks bismillah)
-          const isBasmalahLine = line.words.some(w => w.text && w.text.includes("بسم"));
+          // Deteksi presisi baris Basmalah di awal surat untuk dipaksa center
+          const isBasmalahLine = line.words.some(w => w.text && (w.text.includes("بِسْمِ") || w.text.includes("بسم") || w.font === "QCF4_QBSML"));
           if (isBasmalahLine) {
             baris.classList.add("basmalah");
           }
@@ -451,9 +488,6 @@
             if (isNomorAyat) {
               k.classList.add("is-nomor-ayat");
               tandaiKataPertama = true;
-              if (w.ayah && !ayatPertamaDiHalaman) {
-                ayatPertamaDiHalaman = w.ayah;
-              }
             } else if (tandaiKataPertama) {
               k.classList.add("is-kata-pertama");
               tandaiKataPertama = false;
@@ -466,12 +500,10 @@
       });
 
       const namaSurah = (data.surahs && data.surahs.length) ? data.surahs.map(s => s.name).join(" · ") : "";
+      activeSurahName = namaSurah;
       document.getElementById("kSurah").textContent = namaSurah;
       document.getElementById("kJuz").textContent = "Juz " + hitungJuz(no);
       document.getElementById("kNo").textContent = no;
-
-      currentSurahName = namaSurah || "Surah";
-      currentAyahNo = ayatPertamaDiHalaman || 1;
 
       if (data.surahs && data.surahs.length) {
         const surahAktif = DAFTAR_SURAH.slice().reverse().find(s => s.hal <= no);
@@ -528,36 +560,14 @@
       document.getElementById("prev").disabled = no <= 1;
       document.getElementById("next").disabled = no >= 604;
       localStorage.setItem("quran_halaman", no);
+      
+      if (typeof window.savePageToCloud === 'function') {
+        window.savePageToCloud(no);
+      }
 
       renderTeks(no, my);
     }
     window.tampilHalaman = tampil;
-
-    /* --- Fitur Simpan & Buka Bookmark --- */
-    window.simpanBookmark = function() {
-      const bm = {
-        halaman: halaman,
-        surah: currentSurahName,
-        ayat: currentAyahNo,
-        timestamp: new Date().toISOString()
-      };
-      localStorage.setItem("mushaf_bookmark", JSON.stringify(bm));
-      if (typeof window.savePageToCloud === 'function') {
-        window.savePageToCloud(bm);
-      }
-      alert(`Bookmark Berhasil Disimpan!\n📖 Surah: ${bm.surah}\n📌 Ayat: ${bm.ayat}\n📄 Halaman: ${bm.halaman}`);
-    };
-
-    window.bukaBookmark = function() {
-      const bmText = localStorage.getItem("mushaf_bookmark");
-      if (!bmText) {
-        alert("Belum ada bookmark yang disimpan.");
-        return;
-      }
-      const bm = JSON.parse(bmText);
-      tampil(bm.halaman);
-      alert(`Membuka Bookmark Tersimpan:\n📖 Surah: ${bm.surah}\n📌 Ayat: ${bm.ayat}\n📄 Halaman: ${bm.halaman}`);
-    };
 
     window.aturModeHafalan = function(mode) {
       modeHafalan = mode;
@@ -589,6 +599,71 @@
       const isGelap = tema === "dark";
       document.body.classList.toggle("gelap", isGelap);
       document.getElementById("tema").innerHTML = (isGelap ? IKON.matahari : IKON.bulan);
+    }
+
+    /* System Fitur Simpan Surat & Ayat (Bookmark) */
+    function ambilBookmarks() {
+      return JSON.parse(localStorage.getItem("quran_bookmarks") || "[]");
+    }
+
+    window.simpanHalamanIni = function() {
+      const list = ambilBookmarks();
+      const item = {
+        halaman: halaman,
+        surah: activeSurahName || "Surat",
+        waktu: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+      };
+      
+      const sudahAda = list.some(b => b.halaman === item.halaman);
+      if (!sudahAda) {
+        list.push(item);
+        localStorage.setItem("quran_bookmarks", JSON.stringify(list));
+        alert(`Halaman ${halaman} (${activeSurahName}) berhasil disimpan!`);
+      } else {
+        alert(`Halaman ${halaman} sudah ada di daftar simpanan.`);
+      }
+    }
+
+    window.bukaBookmarkModal = function() {
+      const modal = document.getElementById("modalBookmark");
+      const container = document.getElementById("bookmarkList");
+      const list = ambilBookmarks();
+      
+      container.innerHTML = "";
+      if (list.length === 0) {
+        container.innerHTML = `<li class="empty-bm">Belum ada ayat atau surat yang disimpan.</li>`;
+      } else {
+        list.forEach((bm, index) => {
+          const li = document.createElement("li");
+          li.className = "bookmark-item";
+          li.innerHTML = `
+            <div class="info-bm" onclick="lompatKeBookmark(${bm.halaman})">
+              <span class="title-bm">${bm.surah}</span>
+              <span class="sub-bm">Halaman ${bm.halaman} • ${bm.waktu}</span>
+            </div>
+            <button class="btn-hapus" onclick="hapusBookmark(${index}, event)">&times;</button>
+          `;
+          container.appendChild(li);
+        });
+      }
+      modal.classList.add("aktif");
+    }
+
+    window.tutupBookmarkModal = function() {
+      document.getElementById("modalBookmark").classList.remove("aktif");
+    }
+
+    window.lompatKeBookmark = function(hal) {
+      tampil(hal);
+      tutupBookmarkModal();
+    }
+
+    window.hapusBookmark = function(index, e) {
+      e.stopPropagation();
+      const list = ambilBookmarks();
+      list.splice(index, 1);
+      localStorage.setItem("quran_bookmarks", JSON.stringify(list));
+      bukaBookmarkModal();
     }
 
     document.getElementById("next").onclick = () => tampil(halaman + 1);
