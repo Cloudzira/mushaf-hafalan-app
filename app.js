@@ -275,7 +275,7 @@ function loadPage(no) {
 function loadFont(nama) {
   if (!fontCache.has(nama)) {
     const file = nama === "QCF4_QBSML" ? "QCF4_QBSML.woff2" : nama + "_W.woff2";
-    const p = new FontFace(nama, `url(${FONT_URL}${file})`).load()
+    const p = new FontFace(nama, `url(${FONT_URL}${file})`, { display: "block" }).load()
       .then(ff => { document.fonts.add(ff); return ff; })
       // pastikan font benar-benar aktif sebelum teks dibuat dan diukur
       .then(ff => document.fonts.load(`100px "${nama}"`).then(() => ff, () => ff));
@@ -361,8 +361,8 @@ async function render(no, tk) {
     cur.surahs = [{ id: s, from: 1, to: SURAH[s - 1][2] }];
   }
 
-  fit();
-  watchKata();
+  fitLog.length = 0;
+  fit(true);
   applyHideMode();
   reapplyMarks();
   updateChrome();
@@ -391,55 +391,57 @@ function lebarAlami(baris, fs) {
   return total + Math.max(0, kids.length - 1) * GAP_EM * fs;
 }
 
-let lastFitW = 0;
-function fit() {
+/* fit() bersifat IDEMPOTEN: dipanggil berkali-kali pun tidak menulis apa-apa ke halaman
+   selama ukuran font sudah pas. Tidak ada reset ke ukuran lain di tengah jalan, sehingga
+   tidak bisa memicu putaran umpan balik (kedipan). */
+const FILL_MIN = 0.965, FILL_MAX = 1;      // baris terpanjang harus mengisi 96,5%–100% lebar kolom
+let lastFs = 0;
+const fitLog = [];
+function fit(force) {
+  const now = performance.now();
+  while (fitLog.length && now - fitLog[0] > 1000) fitLog.shift();
+  if (fitLog.length >= 15) return;          // pemutus: terlalu sering dalam 1 detik → abaikan
+  fitLog.push(now);
+
   const W = els.teks.clientWidth;
   if (!W) return;
-  lastFitW = W;
   const semua = $$(".baris", els.teks);
   const isi = semua.filter(b => !b.classList.contains("header"));
-  semua.forEach(b => { b.style.width = W + "px"; b.classList.remove("pendek"); });
   if (!isi.length) return;
+  const wpx = W + "px";
+  semua.forEach(b => { if (b.style.width !== wpx) b.style.width = wpx; });
 
-  // Lingkar tertutup: ukur lebar nyata pada ukuran saat ini, skalakan, ulangi sampai pas.
-  // Lebar kata adalah fungsi linear dari ukuran font, jadi biasanya cukup 1–2 putaran;
-  // bila font masih bertukar di tengah jalan, putaran berikutnya mengoreksinya.
-  let fs = 100;
-  els.teks.style.setProperty("--fs", fs + "px");
+  let fs = parseFloat(els.teks.style.getPropertyValue("--fs")) || lastFs || 30;
+  const awal = fs;
   for (let i = 0; i < 8; i++) {
     const maks = Math.max(...isi.map(b => lebarAlami(b, fs)));
     if (!maks) return;
-    const isi2 = maks / W;                                   // 1 = tepat penuh
-    if (isi2 >= 0.985 && isi2 <= 1) break;                   // sudah pas (muat, longgar < 1,5%)
-    fs = clamp(fs * (W / maks) * 0.995, 4, 200);
-    els.teks.style.setProperty("--fs", fs + "px");
+    const isi2 = maks / W;                                  // 1 = tepat penuh
+    if (isi2 >= FILL_MIN && isi2 <= FILL_MAX) break;        // sudah pas
+    fs = clamp(fs * (W / maks) * 0.99, 4, 200);
+    els.teks.style.setProperty("--fs", fs.toFixed(3) + "px");
   }
+  lastFs = fs;
+  const berubah = Math.abs(fs - awal) > 0.001;
 
-  let hMaks = 0;
-  isi.forEach(b => b.querySelectorAll(".kata").forEach(k => { hMaks = Math.max(hMaks, k.getBoundingClientRect().height); }));
-  els.teks.style.setProperty("--pitch", Math.max(MIN_PITCH, (hMaks / fs) * 1.1).toFixed(3));
-
+  if (berubah || force) {
+    let hMaks = 0;
+    isi.forEach(b => b.querySelectorAll(".kata").forEach(k => { hMaks = Math.max(hMaks, k.getBoundingClientRect().height); }));
+    els.teks.style.setProperty("--pitch", Math.max(MIN_PITCH, (hMaks / fs) * 1.1).toFixed(3));
+  }
   isi.forEach(b => {
-    if (!b.classList.contains("basmalah") && lebarAlami(b, fs) < W * SHORT_LINE) b.classList.add("pendek");
+    const pendek = !b.classList.contains("basmalah") && lebarAlami(b, fs) < W * SHORT_LINE;
+    if (b.classList.contains("pendek") !== pendek) b.classList.toggle("pendek", pendek);
   });
 }
-const fitSoon = (() => { let raf = 0; return () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(fit); }; })();
-// Pengamat lebar kata: bila font mushaf baru aktif / berganti SETELAH render (tanpa event apa pun),
-// lebar kata berubah → ukur ulang. fit() idempoten, jadi tidak berputar tanpa henti.
-const kataRO = new ResizeObserver(() => { if (cur.page) fitSoon(); });
-function watchKata() {
-  kataRO.disconnect();
-  const ks = els.teks.querySelectorAll(".kata");
-  for (let i = 0; i < ks.length; i += 9) kataRO.observe(ks[i]);
-}
-// Font mushaf bisa baru benar-benar aktif setelah render pertama: ukur ulang begitu selesai dimuat.
-if (document.fonts) {
-  document.fonts.addEventListener("loadingdone", () => { if (cur.page) fitSoon(); });
-}
+const fitSoon = (() => { let raf = 0; return () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => fit()); }; })();
 
-new ResizeObserver(() => {
-  if (els.teks.clientWidth !== lastFitW && cur.page) fitSoon();
-}).observe(els.teks);
+// Jaring pengaman untuk font yang baru aktif / berganti setelah render: cek ringan tiap detik
+// (hanya MEMBACA; menulis hanya bila ukuran memang di luar toleransi) + saat font selesai dimuat.
+if (document.fonts) document.fonts.addEventListener("loadingdone", () => { if (cur.page) fitSoon(); });
+setInterval(() => { if (cur.page && !document.hidden) fitSoon(); }, 1000);
+
+new ResizeObserver(() => { if (cur.page) fitSoon(); }).observe(els.teks);
 
 /* ============================================================
    Navigasi halaman
