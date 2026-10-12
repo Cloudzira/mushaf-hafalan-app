@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mushaf Tahfidz Pro - Professional Minimalist</title>
+  <title>Mushaf Tahfidz Pro - Bookmark & Alignment</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
@@ -59,7 +59,7 @@
       background: var(--grad-judul); -webkit-background-clip: text; background-clip: text; color: transparent;
     }
 
-    /* Toolbar Minimalis Profesional */
+    /* Toolbar Minimalis */
     .toolbar { display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 8px 12px 14px; }
     
     .icon-btn, .navhal, .pilih-surah {
@@ -109,8 +109,13 @@
     .baris:last-child { background: none; }
     .baris.header { background: none; justify-content: center; }
     
-    /* Basmalah Center */
-    .baris.basmalah { justify-content: center !important; }
+    /* Basmalah Center Persis */
+    .baris.basmalah { 
+      justify-content: center !important; 
+    }
+    .baris.basmalah .kata {
+      margin: 0 0.15em;
+    }
 
     .banner {
       position: relative; width: 100%; height: 76%; display: grid; place-items: center; border-radius: 10px;
@@ -153,7 +158,7 @@
   </div>
 
   <div class="toolbar">
-    <!-- Tombol Mode Minimalis Profesional (Icon Only) -->
+    <!-- Tombol Mode Minimalis (Icon Only) -->
     <button id="btnNormal" class="icon-btn aktif-mode" onclick="aturModeHafalan('normal')" title="Mode Normal">
       <svg class="ik" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15C4 3.12 5.12 2 6.5 2Z"/></svg>
     </button>
@@ -163,6 +168,15 @@
     <button id="btnFirstAyat" class="icon-btn" onclick="aturModeHafalan('firstAyat')" title="Kata Pertama Ayat">
       <svg class="ik" viewBox="0 0 24 24"><path d="m15 5 4 4"/><path d="M13 7 8.7 11.3a1 1 0 0 0-.3.7V15h3a1 1 0 0 0 .7-.3L17 11"/><path d="m2 22 20-20"/></svg>
     </button>
+    
+    <!-- Fitur Bookmark Baru -->
+    <button id="btnSaveBookmark" class="icon-btn" onclick="simpanBookmark()" title="Simpan Bookmark Terakhir">
+      <svg class="ik" viewBox="0 0 24 24"><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    </button>
+    <button id="btnGoBookmark" class="icon-btn" onclick="bukaBookmark()" title="Buka Bookmark Tersimpan">
+      <svg class="ik" viewBox="0 0 24 24" fill="currentColor"><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    </button>
+
     <button id="tema" class="icon-btn" aria-label="Ganti tema" title="Ganti Tema"></button>
 
     <div class="pilih-surah">
@@ -242,11 +256,11 @@
       }
     }
 
-    window.savePageToCloud = async function(pageNo) {
+    window.savePageToCloud = async function(bookmarkData) {
       if (!currentUser) return;
       try {
         const ref = doc(db, "progres_hafalan", currentUser.uid);
-        await setDoc(ref, { halaman_terakhir: pageNo, updated_at: new Date().toISOString() }, { merge: true });
+        await setDoc(ref, bookmarkData, { merge: true });
       } catch(e) {}
     }
 
@@ -254,9 +268,9 @@
       try {
         const ref = doc(db, "progres_hafalan", uid);
         const snap = await getDoc(ref);
-        if (snap.exists() && snap.data().halaman_terakhir) {
-          const hal = snap.data().halaman_terakhir;
-          if (hal !== window.halamanAktif) { window.tampilHalaman(hal); }
+        if (snap.exists() && snap.data().halaman) {
+          const bm = snap.data();
+          localStorage.setItem("mushaf_bookmark", JSON.stringify(bm));
         }
       } catch(e) {}
     }
@@ -348,6 +362,8 @@
 
     let halaman = Number(localStorage.getItem("quran_halaman")) || 1;
     window.halamanAktif = halaman;
+    let currentSurahName = "Al-Fatihah";
+    let currentAyahNo = 1;
     let tema = localStorage.getItem("quran_tema") === "light" ? "light" : "dark";  
     let modeHafalan = "normal"; 
     let token = 0;
@@ -399,6 +415,7 @@
       teks.innerHTML = "";
       
       let tandaiKataPertama = true;
+      let ayatPertamaDiHalaman = null;
 
       data.lines.forEach(line => {
         const baris = document.createElement("div");
@@ -415,7 +432,7 @@
           baris.appendChild(b);
           tandaiKataPertama = true;
         } else {
-          // Deteksi apakah baris ini adalah baris Basmalah (biasanya mengandung teks bismillah/basmalah murni)
+          // Deteksi apakah baris ini Basmalah murni (biasanya berisi teks bismillah)
           const isBasmalahLine = line.words.some(w => w.text && w.text.includes("بسم"));
           if (isBasmalahLine) {
             baris.classList.add("basmalah");
@@ -434,6 +451,9 @@
             if (isNomorAyat) {
               k.classList.add("is-nomor-ayat");
               tandaiKataPertama = true;
+              if (w.ayah && !ayatPertamaDiHalaman) {
+                ayatPertamaDiHalaman = w.ayah;
+              }
             } else if (tandaiKataPertama) {
               k.classList.add("is-kata-pertama");
               tandaiKataPertama = false;
@@ -449,6 +469,9 @@
       document.getElementById("kSurah").textContent = namaSurah;
       document.getElementById("kJuz").textContent = "Juz " + hitungJuz(no);
       document.getElementById("kNo").textContent = no;
+
+      currentSurahName = namaSurah || "Surah";
+      currentAyahNo = ayatPertamaDiHalaman || 1;
 
       if (data.surahs && data.surahs.length) {
         const surahAktif = DAFTAR_SURAH.slice().reverse().find(s => s.hal <= no);
@@ -505,14 +528,36 @@
       document.getElementById("prev").disabled = no <= 1;
       document.getElementById("next").disabled = no >= 604;
       localStorage.setItem("quran_halaman", no);
-      
-      if (typeof window.savePageToCloud === 'function') {
-        window.savePageToCloud(no);
-      }
 
       renderTeks(no, my);
     }
     window.tampilHalaman = tampil;
+
+    /* --- Fitur Simpan & Buka Bookmark --- */
+    window.simpanBookmark = function() {
+      const bm = {
+        halaman: halaman,
+        surah: currentSurahName,
+        ayat: currentAyahNo,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem("mushaf_bookmark", JSON.stringify(bm));
+      if (typeof window.savePageToCloud === 'function') {
+        window.savePageToCloud(bm);
+      }
+      alert(`Bookmark Berhasil Disimpan!\n📖 Surah: ${bm.surah}\n📌 Ayat: ${bm.ayat}\n📄 Halaman: ${bm.halaman}`);
+    };
+
+    window.bukaBookmark = function() {
+      const bmText = localStorage.getItem("mushaf_bookmark");
+      if (!bmText) {
+        alert("Belum ada bookmark yang disimpan.");
+        return;
+      }
+      const bm = JSON.parse(bmText);
+      tampil(bm.halaman);
+      alert(`Membuka Bookmark Tersimpan:\n📖 Surah: ${bm.surah}\n📌 Ayat: ${bm.ayat}\n📄 Halaman: ${bm.halaman}`);
+    };
 
     window.aturModeHafalan = function(mode) {
       modeHafalan = mode;
