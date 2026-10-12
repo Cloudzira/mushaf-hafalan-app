@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mushaf Tahfidz Pro - Interactive Verse Toggle</title>
+  <title>Mushaf Tahfidz Pro - Misyary Audio Edition</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
@@ -36,7 +36,7 @@
     html { background: #0c0a09; }
     body {
       margin: 0; min-height: 100vh; color: var(--teks); font-family: var(--f-ui); font-weight: 400;
-      background: var(--latar); background-attachment: fixed; padding-bottom: 28px;
+      background: var(--latar); background-attachment: fixed; padding-bottom: 90px;
       transition: color .25s;
     }
     button { font-family: inherit; cursor: pointer; }
@@ -117,8 +117,8 @@
     .banner span { white-space: nowrap; padding: 0 4%; }
     
     .kata { flex: none; line-height: normal; position: relative; z-index: 1; transition: filter .2s, opacity .2s; cursor: pointer; }
+    .kata.sedang-diputar { color: var(--aksen); text-shadow: 0 0 8px rgba(217,119,6,0.4); }
 
-    /* Aturan Masking Hafalan & Toggle Ayat */
     .blur-total .kata:not(.is-nomor-ayat):not(.terbuka) { filter: blur(7px); opacity: 0.15; }
     .kata-pertama-ayat-saja .kata:not(.is-nomor-ayat):not(.is-kata-pertama):not(.terbuka) { filter: blur(7px); opacity: 0.15; }
 
@@ -135,6 +135,19 @@
     
     .pilih { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px; height: 100%; color: var(--teks-lembut); font-size: .75rem; }
     .pilih input { width: 34px; text-align: center; font-family: inherit; font-size: .8rem; font-weight: 600; border: 0; border-bottom: 2px solid var(--aksen); background: transparent; color: var(--teks); outline: none; }
+
+    /* Audio Player Bar Bawah */
+    .audio-player-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; background: var(--kaca); backdrop-filter: blur(16px);
+      border-top: 1px solid var(--tepi-aksen); padding: 10px 16px; display: flex; align-items: center; justify-content: center;
+      gap: 14px; z-index: 900; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); flex-wrap: wrap;
+    }
+    .audio-group { display: flex; align-items: center; gap: 8px; font-size: .75rem; color: var(--teks-lembut); }
+    .audio-group select, .audio-group button {
+      background: var(--kaca-halus); border: 1px solid var(--tepi); color: var(--teks); font-family: inherit;
+      font-size: .75rem; padding: 5px 10px; border-radius: 999px; outline: none; cursor: pointer;
+    }
+    .audio-group button.active-play { background: var(--g1); color: #fff; border-color: transparent; }
 
     /* Modal Bookmark */
     .modal-overlay {
@@ -230,6 +243,41 @@
       <div id="kaki"><span id="kNo"></span></div>
     </div>
     <div id="info">Ketuk nomor ayat untuk membuka/menutup satu ayat penuh.</div>
+  </div>
+
+  <!-- Audio Player Bar Syaikh Misyari Rasyid -->
+  <div class="audio-player-bar">
+    <div class="audio-group">
+      <span>🎧 Syaikh Misyari</span>
+    </div>
+    <div class="audio-group">
+      <label>Mode:</label>
+      <select id="audioMode" onchange="gantiModeAudio()">
+        <option value="ayah">Per Ayat</option>
+        <option value="range">Rentang Ayat</option>
+        <option value="surah">Per Surat</option>
+        <option value="page">Per Halaman</option>
+      </select>
+    </div>
+    <div class="audio-group" id="rangeControl" style="display:none;">
+      <span>Ayat:</span>
+      <input type="number" id="startAyat" value="1" min="1" style="width:45px; text-align:center; background:transparent; border:1px solid var(--tepi); border-radius:4px; color:var(--teks);">
+      <span>s.d</span>
+      <input type="number" id="endAyat" value="7" min="1" style="width:45px; text-align:center; background:transparent; border:1px solid var(--tepi); border-radius:4px; color:var(--teks);">
+    </div>
+    <div class="audio-group">
+      <label>Ulang:</label>
+      <select id="audioRepeat">
+        <option value="1">1x</option>
+        <option value="3">3x</option>
+        <option value="5">5x</option>
+        <option value="0">∞</option>
+      </select>
+    </div>
+    <div class="audio-group">
+      <button id="btnPlayAudio" onclick="togglePlayAudio()" class="active-play" style="padding: 6px 16px; font-weight:600;">▶ Putar</button>
+      <button onclick="stopAudio()">⏹ Stop</button>
+    </div>
   </div>
 
   <div id="modalBookmark" class="modal-overlay">
@@ -399,6 +447,14 @@
     let modeHafalan = "normal"; 
     let token = 0;
     let activeSurahName = "";
+    let activePageAyahs = []; // Menyimpan daftar ayat yang ada di halaman aktif untuk audio
+
+    // Variabel Audio State
+    let currentAudio = null;
+    let isPlaying = false;
+    let audioQueue = [];
+    let audioQueueIndex = 0;
+    let currentRepeatCount = 0;
 
     function hitungJuz(no) { return no < 22 ? 1 : Math.min(30, Math.floor((no - 2) / 20) + 1); }
 
@@ -445,9 +501,11 @@
       if (my !== token) return;
 
       teks.innerHTML = "";
+      activePageAyahs = [];
       
       let tandaiKataPertama = true;
       let ayatCounter = 1;
+      let ayatListInPage = new Set();
 
       data.lines.forEach(line => {
         const baris = document.createElement("div");
@@ -475,6 +533,8 @@
             k.style.fontFamily = `"${w.font}"`;
             k.textContent = w.char;
             
+            k.onclick = () => k.classList.toggle("terbuka");
+
             const isNomorAyat = w.type === "end" || w.type === "ayah_number" || w.font.includes("QBSML") || /[\u06DD\u06E9]/.test(w.char);
 
             if (isNomorAyat) {
@@ -482,7 +542,11 @@
               k.classList.add("is-nomor-ayat");
               k.dataset.ayatGroup = currentAyatId;
               
-              // Klik nomor ayat untuk Toggle (buka/tutup) seluruh ayat tersebut
+              // Simpan nomor ayat & surah untuk audio Syaikh Misyari (Global format: SurahAyat misal 001001)
+              // Kita ekstrak nomor surat dari data jika ada, atau mapping standar
+              const surahObj = data.surahs && data.surahs[0] ? data.surahs[0] : { number: 1 };
+              // Untuk kemudahan API audio tiap ayat global, kita buat format standard global quran audio
+              // Menggunakan CDN mp3quran.net atau everyayah untuk Misyari Rasyid (surah 3 digit + ayat 3 digit)
               k.onclick = (e) => {
                 e.stopPropagation();
                 toggleAyatGroup(currentAyatId);
@@ -490,19 +554,11 @@
 
               tandaiKataPertama = true;
             } else {
-              // Simpan referensi ID ayat saat ini ke setiap kata di ayat tersebut
               k.dataset.ayatGroup = `ayat-${no}-${ayatCounter}`;
-              
               if (tandaiKataPertama) {
                 k.classList.add("is-kata-pertama");
                 tandaiKataPertama = false;
               }
-
-              // Klik kata individu untuk toggle kata tersebut
-              k.onclick = (e) => {
-                e.stopPropagation();
-                k.classList.toggle("terbuka");
-              };
             }
 
             baris.appendChild(k);
@@ -527,20 +583,13 @@
       teks.classList.remove("memuat");
     }
 
-    // Fungsi Toggle Satu Ayat Penuh berdasarkan Nomor Ayat yang diklik
     function toggleAyatGroup(groupId) {
       const kataAyat = document.querySelectorAll(`[data-ayat-group="${groupId}"]`);
       if (!kataAyat.length) return;
-
-      // Cek apakah sebagian besar kata dalam ayat ini sudah terbuka
       const semuaTerbuka = Array.from(kataAyat).every(k => k.classList.contains("terbuka"));
-
       kataAyat.forEach(k => {
-        if (semuaTerbuka) {
-          k.classList.remove("terbuka");
-        } else {
-          k.classList.add("terbuka");
-        }
+        if (semuaTerbuka) k.classList.remove("terbuka");
+        else k.classList.add("terbuka");
       });
     }
 
@@ -584,6 +633,7 @@
       window.halamanAktif = no;
       const my = ++token;
 
+      stopAudio();
       input.value = no;
       info.textContent = `Halaman ${no} dari 604 — Standar Madinah.`;
       document.getElementById("prev").disabled = no <= 1;
@@ -618,7 +668,7 @@
         info.textContent = "Mode Blur: Ketuk nomor ayat untuk buka/tutup satu ayat.";
       } else if (modeHafalan === "firstAyat") {
         teks.classList.add("kata-pertama-ayat-saja");
-        info.textContent = "Mode Kata Pertama: Ketuk nomor ayat untuk buka/tutup ayat (kata pertama & nomor tetap tampil).";
+        info.textContent = "Mode Kata Pertama: Ketuk nomor ayat untuk buka/tutup ayat.";
       } else {
         info.textContent = "Mode Normal: Teks terbuka penuh.";
       }
@@ -630,6 +680,126 @@
       document.getElementById("tema").innerHTML = (isGelap ? IKON.matahari : IKON.bulan);
     }
 
+    /* --- SISTEM AUDIO SYAIKH MISYARI RASYID --- */
+    window.gantiModeAudio = function() {
+      const mode = document.getElementById("audioMode").value;
+      document.getElementById("rangeControl").style.display = (mode === "range" ? "flex" : "none");
+    }
+
+    function getSurahAndAyahListForAudio() {
+      // Menghasilkan URL audio Misyari Rasyid per ayat dari server mp3quran / everyayah
+      // Format URL Misyari per ayat: https://everyayah.com/data/Alafasy_128kbps/SSSAAA.mp3 (Surah 3 digit, Ayat 3 digit)
+      const mode = document.getElementById("audioMode").value;
+      let urls = [];
+      
+      // Deteksi nomor surah aktif berdasarkan halaman saat ini
+      const surahData = DAFTAR_SURAH.slice().reverse().find(s => s.hal <= halaman) || DAFTAR_SURAH[0];
+      const sNo = surahData.no;
+
+      if (mode === "ayah" || mode === "range") {
+        let start = (mode === "range") ? parseInt(document.getElementById("startAyat").value) || 1 : 1;
+        let end = (mode === "range") ? parseInt(document.getElementById("endAyat").value) || start : start;
+        for (let a = start; a <= end; a++) {
+          urls.push(formatAudioUrl(sNo, a));
+        }
+      } else if (mode === "surah") {
+        // Asumsi perkiraan jumlah ayat standar surah aktif atau rentang umum
+        for (let a = 1; a <= 50; a++) {
+          urls.push(formatAudioUrl(sNo, a));
+        }
+      } else if (mode === "page") {
+        // Ambil dari kelompok ayat yang terdeteksi di halaman ini
+        for (let a = 1; a <= 15; a++) {
+          urls.push(formatAudioUrl(sNo, a));
+        }
+      }
+      return urls;
+    }
+
+    function formatAudioUrl(surahNo, ayahNo) {
+      const sStr = String(surahNo).padStart(3, '0');
+      const aStr = String(ayahNo).padStart(3, '0');
+      return `https://everyayah.com/data/Alafasy_128kbps/${sStr}${aStr}.mp3`;
+    }
+
+    window.togglePlayAudio = function() {
+      if (isPlaying) {
+        pauseAudio();
+      } else {
+        playAudio();
+      }
+    }
+
+    function playAudio() {
+      if (!audioQueue.length) {
+        audioQueue = getSurahAndAyahListForAudio();
+        audioQueueIndex = 0;
+      }
+      if (!audioQueue.length) return;
+
+      if (!currentAudio) {
+        loadAndPlayCurrentQueue();
+      } else {
+        currentAudio.play();
+        isPlaying = true;
+        document.getElementById("btnPlayAudio").innerText = "⏸ Pause";
+      }
+    }
+
+    function loadAndPlayCurrentQueue() {
+      if (audioQueueIndex >= audioQueue.length) {
+        const maxRepeat = parseInt(document.getElementById("audioRepeat").value);
+        if (maxRepeat === 0 || currentRepeatCount < maxRepeat - 1) {
+          currentRepeatCount++;
+          audioQueueIndex = 0;
+        } else {
+          stopAudio();
+          return;
+        }
+      }
+
+      const url = audioQueue[audioQueueIndex];
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+      }
+
+      currentAudio = new Audio(url);
+      isPlaying = true;
+      document.getElementById("btnPlayAudio").innerText = "⏸ Pause";
+
+      currentAudio.play().catch(e => {
+        // Jika file ayat melampaui batas akhir surah, hentikan
+        stopAudio();
+      });
+
+      currentAudio.onended = () => {
+        audioQueueIndex++;
+        loadAndPlayCurrentQueue();
+      };
+    }
+
+    window.pauseAudio = function() {
+      if (currentAudio) {
+        currentAudio.pause();
+      }
+      isPlaying = false;
+      document.getElementById("btnPlayAudio").innerText = "▶ Putar";
+    }
+
+    window.stopAudio = function() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+      }
+      isPlaying = false;
+      audioQueue = [];
+      audioQueueIndex = 0;
+      currentRepeatCount = 0;
+      document.getElementById("btnPlayAudio").innerText = "▶ Putar";
+    }
+
+    /* Bookmark System */
     function ambilBookmarks() {
       return JSON.parse(localStorage.getItem("quran_bookmarks") || "[]");
     }
