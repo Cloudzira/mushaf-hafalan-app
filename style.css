@@ -1,5 +1,5 @@
 :root {
-  --f-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-ui: "Inter", system-ui, -apple-system, sans-serif;
   --f-arab: "Reem Kufi", "Traditional Arabic", serif;
   --g1: #d97706; 
   --g2: #b45309;
@@ -7,39 +7,39 @@
   --teks: #1c1917; 
   --teks-lembut: #78350f; 
   --redup: rgba(120,53,15,.75);
-  --kaca: rgba(255,255,255,.9); 
-  --kaca-halus: rgba(0,0,0,.04);
-  --tepi: rgba(180,83,9,.18); 
+  --kaca: rgba(255,255,255,.92); 
+  --kaca-halus: rgba(0,0,0,.03);
+  --tepi: rgba(180,83,9,.16); 
   --tepi-aksen: rgba(217,119,6,.35);
-  --garis-baris: rgba(217,119,6,.2);
+  --garis-baris: rgba(217,119,6,.18);
   --latar: linear-gradient(135deg, #fef3c7 0%, #f7f4ea 50%, #fef3c7 100%);
-  --bayang: 0 10px 30px rgba(0,0,0,.08);
+  --bayang: 0 12px 32px rgba(0,0,0,.07);
   --grad-judul: linear-gradient(90deg, #78350f, #b45309, #d97706);
-  --tile-h: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'%3E%3Cpath d='M8 1 13 5 8 9 3 5Z' fill='none' stroke='%23b45309' stroke-opacity='.4' stroke-width='1'/%3E%3C/svg%3E");
-  --tile-v: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16' viewBox='0 0 10 16'%3E%3Cpath d='M1 8 5 3 9 8 5 13Z' fill='none' stroke='%23b45309' stroke-opacity='.4' stroke-width='1'/%3E%3C/svg%3E");
+  --tile-h: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'%3E%3Cpath d='M8 1 13 5 8 9 3 5Z' fill='none' stroke='%23b45309' stroke-opacity='.35' stroke-width='1'/%3E%3C/svg%3E");
+  --tile-v: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16' viewBox='0 0 10 16'%3E%3Cpath d='M1 8 5 3 9 8 5 13Z' fill='none' stroke='%23b45309' stroke-opacity='.35' stroke-width='1'/%3E%3C/svg%3E");
 }
 
 body.gelap {
   --teks: #f5f5f4; 
   --teks-lembut: #fcd34d; 
   --redup: rgba(252,211,77,.75);
-  --kaca: rgba(28,25,23,.9); 
-  --kaca-halus: rgba(255,255,255,.05);
+  --kaca: rgba(28,25,23,.92); 
+  --kaca-halus: rgba(255,255,255,.04);
   --tepi: rgba(252,211,77,.12); 
   --tepi-aksen: rgba(251,191,36,.35);
-  --garis-baris: rgba(251,191,36,.2); 
+  --garis-baris: rgba(251,191,36,.18); 
   --aksen: #fbbf24;
   --latar: linear-gradient(135deg, #1c1917 0%, #0c0a09 50%, #1c1917 100%);
-  --bayang: 0 10px 30px rgba(0,0,0,.45);
+  --bayang: 0 12px 32px rgba(0,0,0,.45);
   --grad-judul: linear-gradient(90deg, #fef3c7, #fcd34d, #fbbf24);
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html { background: #0c0a09; }
+html { background: #0c0a09; scroll-behavior: smooth; }
 body {
   margin: 0; min-height: 100vh; color: var(--teks); font-family: var(--f-ui); font-weight: 400;
-  background: var(--latar); background-attachment: fixed; padding-bottom: 96px;
-  transition: color .25s, background .25s;
+  background: var(--latar); background-attachment: fixed; padding-bottom: 100px;
+  transition: color .2s ease, background .2s ease;
 }
 
 button { font-family: inherit; cursor: pointer; }
@@ -51,11 +51,11 @@ svg.ik { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-wid
 .auth-box {
   font-size: .75rem; font-weight: 500; background: var(--kaca); padding: 5px 14px; border-radius: 999px;
   border: 1px solid var(--tepi); backdrop-filter: blur(12px); display: flex; align-items: center; gap: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  box-shadow: 0 2px 8px rgba(0,0,0,.03);
 }
 .auth-box button {
   background: var(--g1); color: #fff; border: 0; padding: 3px 10px; border-radius: 999px; font-size: .7rem; font-weight: 600;
-  transition: opacity .2s;
+  transition: opacity .15s;
 }
 .auth-box button:hover { opacity: .9; }
 
@@ -65,19 +65,16 @@ svg.ik { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-wid
   background: var(--grad-judul); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 
-/* Toolbar Elegan */
 .toolbar { 
   display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 10px 16px 16px; 
 }
 .icon-btn, .navhal, .pilih-surah {
   height: 38px; display: inline-flex; align-items: center; border-radius: 999px;
   background: var(--kaca); border: 1px solid var(--tepi); backdrop-filter: blur(16px);
-  box-shadow: 0 4px 16px rgba(0,0,0,.04); transition: all .2s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,.03); transition: all .18s ease;
 }
-.icon-btn {
-  width: 38px; justify-content: center; padding: 0; color: var(--teks-lembut);
-}
-.icon-btn.aktif-mode { background: var(--g1); color: #fff; border-color: transparent; box-shadow: 0 4px 12px rgba(217,119,6,.3); }
+.icon-btn { width: 38px; justify-content: center; padding: 0; color: var(--teks-lembut); }
+.icon-btn.aktif-mode { background: var(--g1); color: #fff; border-color: transparent; box-shadow: 0 4px 12px rgba(217,119,6,.25); }
 .icon-btn:hover { border-color: var(--aksen); transform: translateY(-1px); }
 
 .pilih-surah { padding: 0 12px; color: var(--teks-lembut); font-size: .78rem; font-weight: 500; }
@@ -91,7 +88,7 @@ body:not(.gelap) .pilih-surah select option { background: #fef3c7; color: #1c191
   background: var(--kaca); border: 1px solid var(--tepi-aksen); border-radius: 16px;
   backdrop-filter: blur(20px); box-shadow: var(--bayang); user-select: none;
 }
-.frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid rgba(180,83,9,.15); border-radius: 10px; pointer-events: none; }
+.frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid rgba(180,83,9,.12); border-radius: 10px; pointer-events: none; }
 .edge { position: absolute; }
 .e-top    { top: 11px; left: 38px; right: 38px; height: 10px; background: var(--tile-h) repeat-x center; }
 .e-bottom { bottom: 11px; left: 38px; right: 38px; height: 10px; background: var(--tile-h) repeat-x center; }
@@ -106,8 +103,8 @@ body:not(.gelap) .pilih-surah select option { background: #fef3c7; color: #1c191
 #kaki { text-align: center; margin-top: 14px; }
 #kaki span { display: inline-block; min-width: 48px; padding: 3px 14px; border: 1px solid var(--tepi-aksen); border-radius: 999px; background: var(--kaca-halus); font-size: .76rem; font-weight: 600; color: var(--teks-lembut); }
 
-#teks { --fs: 30px; --pitch: 2.2; display: flex; flex-direction: column; justify-content: center; min-height: calc(var(--fs) * var(--pitch) * 15); transition: opacity .15s; }
-#teks.memuat { opacity: .3; }
+#teks { --fs: 30px; --pitch: 2.2; display: flex; flex-direction: column; justify-content: center; min-height: calc(var(--fs) * var(--pitch) * 15); transition: opacity .12s ease; }
+#teks.memuat { opacity: .25; }
 
 .baris {
   display: flex; direction: rtl; align-items: center; justify-content: space-between; gap: .12em;
@@ -123,11 +120,11 @@ body:not(.gelap) .pilih-surah select option { background: #fef3c7; color: #1c191
   position: relative; width: 100%; height: 76%; display: grid; place-items: center; border-radius: 12px;
   font-family: var(--f-arab); font-size: calc(var(--fs) * .8); font-weight: 600; color: #fff;
   background: linear-gradient(90deg, #d97706, #b45309);
-  box-shadow: 0 4px 15px rgba(180,83,9,.25);
+  box-shadow: 0 4px 16px rgba(180,83,9,.2);
 }
 .banner span { white-space: nowrap; padding: 0 4%; }
 
-.kata { flex: none; line-height: normal; position: relative; z-index: 1; transition: filter .2s, opacity .2s; cursor: pointer; }
+.kata { flex: none; line-height: normal; position: relative; z-index: 1; transition: filter .15s ease, opacity .15s ease; cursor: pointer; }
 .blur-total .kata:not(.is-nomor-ayat):not(.terbuka) { filter: blur(7px); opacity: 0.15; }
 .kata-pertama-ayat-saja .kata:not(.is-nomor-ayat):not(.is-kata-pertama):not(.terbuka) { filter: blur(7px); opacity: 0.15; }
 
@@ -136,7 +133,7 @@ body:not(.gelap) .pilih-surah select option { background: #fef3c7; color: #1c191
 .navhal { padding: 3px; gap: 4px; }
 .navhal .bulat {
   width: 32px; height: 32px; border-radius: 50%; border: none; display: grid; place-items: center;
-  background: transparent; color: var(--teks-lembut); cursor: pointer; transition: all .2s;
+  background: transparent; color: var(--teks-lembut); cursor: pointer; transition: all .15s;
 }
 .navhal .bulat:hover { background: var(--kaca-halus); color: var(--aksen); }
 .navhal .bulat:disabled { opacity: .3; cursor: not-allowed; }
@@ -145,21 +142,21 @@ body:not(.gelap) .pilih-surah select option { background: #fef3c7; color: #1c191
 .pilih { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px; height: 100%; color: var(--teks-lembut); font-size: .75rem; }
 .pilih input { width: 36px; text-align: center; font-family: inherit; font-size: .8rem; font-weight: 600; border: 0; border-bottom: 2px solid var(--aksen); background: transparent; color: var(--teks); outline: none; }
 
-/* Audio Player Bar Elegan */
+/* Audio Player Bar Profesional */
 .audio-player-bar {
   position: fixed; bottom: 0; left: 0; right: 0; background: var(--kaca); backdrop-filter: blur(20px);
   border-top: 1px solid var(--tepi-aksen); padding: 10px 20px; display: flex; align-items: center; justify-content: center;
-  gap: 16px; z-index: 900; box-shadow: 0 -6px 24px rgba(0,0,0,0.12); flex-wrap: wrap;
+  gap: 16px; z-index: 900; box-shadow: 0 -6px 24px rgba(0,0,0,0.1); flex-wrap: wrap;
 }
 .audio-group { display: flex; align-items: center; gap: 8px; font-size: .76rem; color: var(--teks-lembut); font-weight: 500; }
 .audio-group select, .audio-group button {
   background: var(--kaca-halus); border: 1px solid var(--tepi); color: var(--teks); font-family: inherit;
-  font-size: .76rem; padding: 6px 12px; border-radius: 999px; outline: none; cursor: pointer; transition: all .2s;
+  font-size: .76rem; padding: 6px 12px; border-radius: 999px; outline: none; cursor: pointer; transition: all .18s;
 }
 .audio-group select:hover, .audio-group button:hover { border-color: var(--aksen); }
-.audio-group button.active-play { background: var(--g1); color: #fff; border-color: transparent; box-shadow: 0 2px 10px rgba(217,119,6,.3); }
+.audio-group button.active-play { background: var(--g1); color: #fff; border-color: transparent; box-shadow: 0 2px 10px rgba(217,119,6,.25); }
 
-/* Modal Popup */
+/* Modal Popup Elegan */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
   display: none; align-items: center; justify-content: center; z-index: 999; padding: 16px;
@@ -181,7 +178,7 @@ body:not(.gelap) .pilih-surah select option { background: #fef3c7; color: #1c191
 .bookmark-item {
   display: flex; justify-content: space-between; align-items: center; padding: 12px 16px;
   background: var(--kaca-halus); border: 1px solid var(--tepi); border-radius: 12px; cursor: pointer;
-  transition: all .2s;
+  transition: all .18s;
 }
 .bookmark-item:hover { background: var(--tepi); transform: translateX(2px); }
 .bookmark-item .info-bm { display: flex; flex-direction: column; gap: 3px; }
