@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mushaf Tahfidz Pro - Interactive Ayat Toggle</title>
+  <title>Mushaf Tahfidz Pro - Interactive Verse Toggle</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
@@ -121,9 +121,6 @@
     /* Aturan Masking Hafalan & Toggle Ayat */
     .blur-total .kata:not(.is-nomor-ayat):not(.terbuka) { filter: blur(7px); opacity: 0.15; }
     .kata-pertama-ayat-saja .kata:not(.is-nomor-ayat):not(.is-kata-pertama):not(.terbuka) { filter: blur(7px); opacity: 0.15; }
-    
-    /* Jika ayat disembunyikan via klik nomor ayat */
-    .kata.ayat-hidden { filter: blur(7px); opacity: 0.15; }
 
     #info { text-align: center; margin: 12px 12px 0; font-size: .75rem; color: var(--redup); }
 
@@ -139,7 +136,7 @@
     .pilih { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px; height: 100%; color: var(--teks-lembut); font-size: .75rem; }
     .pilih input { width: 34px; text-align: center; font-family: inherit; font-size: .8rem; font-weight: 600; border: 0; border-bottom: 2px solid var(--aksen); background: transparent; color: var(--teks); outline: none; }
 
-    /* Modal Popup Bookmark */
+    /* Modal Bookmark */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
       display: none; align-items: center; justify-content: center; z-index: 999; padding: 16px;
@@ -232,10 +229,9 @@
       <div id="teks"></div>
       <div id="kaki"><span id="kNo"></span></div>
     </div>
-    <div id="info">Klik nomor ayat untuk menyembunyikan/memunculkan ayat tersebut.</div>
+    <div id="info">Ketuk nomor ayat untuk membuka/menutup satu ayat penuh.</div>
   </div>
 
-  <!-- Modal Overlay untuk Bookmark -->
   <div id="modalBookmark" class="modal-overlay">
     <div class="modal-box">
       <div class="modal-header">
@@ -451,26 +447,7 @@
       teks.innerHTML = "";
       
       let tandaiKataPertama = true;
-      let currentAyahWords = []; // Menyimpan kata-kata dalam satu ayat untuk fitur toggle nomor ayat
-
-      function flushAyah() {
-        if (currentAyahWords.length > 0) {
-          const ayahGroup = currentAyahWords;
-          const nomorAyatEl = ayahGroup.find(k => k.classList.contains("is-nomor-ayat"));
-          if (nomorAyatEl) {
-            nomorAyatEl.onclick = (e) => {
-              e.stopPropagation();
-              // Toggle sembunyikan/tampilkan kata-kata lain dalam ayat ini
-              ayahGroup.forEach(k => {
-                if (k !== nomorAyatEl) {
-                  k.classList.toggle("ayat-hidden");
-                }
-              });
-            };
-          }
-          currentAyahWords = [];
-        }
-      }
+      let ayatCounter = 1;
 
       data.lines.forEach(line => {
         const baris = document.createElement("div");
@@ -478,7 +455,6 @@
         const header = line.words.find(w => w.type === "surah_header");
         
         if (header) {
-          flushAyah();
           baris.classList.add("header");
           const b = document.createElement("div");
           b.className = "banner";
@@ -499,25 +475,34 @@
             k.style.fontFamily = `"${w.font}"`;
             k.textContent = w.char;
             
-            // Default klik kata biasa untuk mengintip jika buram
-            k.onclick = (e) => {
-              e.stopPropagation();
-              k.classList.toggle("terbuka");
-            };
-
             const isNomorAyat = w.type === "end" || w.type === "ayah_number" || w.font.includes("QBSML") || /[\u06DD\u06E9]/.test(w.char);
 
             if (isNomorAyat) {
+              const currentAyatId = `ayat-${no}-${ayatCounter++}`;
               k.classList.add("is-nomor-ayat");
-              currentAyahWords.push(k);
-              flushAyah(); // Ayat selesai pada nomor ayat ini
+              k.dataset.ayatGroup = currentAyatId;
+              
+              // Klik nomor ayat untuk Toggle (buka/tutup) seluruh ayat tersebut
+              k.onclick = (e) => {
+                e.stopPropagation();
+                toggleAyatGroup(currentAyatId);
+              };
+
               tandaiKataPertama = true;
             } else {
+              // Simpan referensi ID ayat saat ini ke setiap kata di ayat tersebut
+              k.dataset.ayatGroup = `ayat-${no}-${ayatCounter}`;
+              
               if (tandaiKataPertama) {
                 k.classList.add("is-kata-pertama");
                 tandaiKataPertama = false;
               }
-              currentAyahWords.push(k);
+
+              // Klik kata individu untuk toggle kata tersebut
+              k.onclick = (e) => {
+                e.stopPropagation();
+                k.classList.toggle("terbuka");
+              };
             }
 
             baris.appendChild(k);
@@ -525,7 +510,6 @@
         }
         teks.appendChild(baris);
       });
-      flushAyah();
 
       const namaSurah = (data.surahs && data.surahs.length) ? data.surahs.map(s => s.name).join(" · ") : "";
       activeSurahName = namaSurah;
@@ -541,6 +525,23 @@
       atur();
       terapkanModeHafalanUI();
       teks.classList.remove("memuat");
+    }
+
+    // Fungsi Toggle Satu Ayat Penuh berdasarkan Nomor Ayat yang diklik
+    function toggleAyatGroup(groupId) {
+      const kataAyat = document.querySelectorAll(`[data-ayat-group="${groupId}"]`);
+      if (!kataAyat.length) return;
+
+      // Cek apakah sebagian besar kata dalam ayat ini sudah terbuka
+      const semuaTerbuka = Array.from(kataAyat).every(k => k.classList.contains("terbuka"));
+
+      kataAyat.forEach(k => {
+        if (semuaTerbuka) {
+          k.classList.remove("terbuka");
+        } else {
+          k.classList.add("terbuka");
+        }
+      });
     }
 
     function lebarAlami(baris, fs) {
@@ -606,9 +607,6 @@
       document.querySelectorAll("#teks .kata.terbuka").forEach(k => {
         k.classList.remove("terbuka");
       });
-      document.querySelectorAll("#teks .kata.ayat-hidden").forEach(k => {
-        k.classList.remove("ayat-hidden");
-      });
 
       terapkanModeHafalanUI();
     }
@@ -617,10 +615,10 @@
       teks.classList.remove("blur-total", "kata-pertama-ayat-saja");
       if (modeHafalan === "blur") {
         teks.classList.add("blur-total");
-        info.textContent = "Mode Blur: Semua ayat buram kecuali nomor ayat. Klik nomor ayat untuk sembunyikan/tampilkan ayat.";
+        info.textContent = "Mode Blur: Ketuk nomor ayat untuk buka/tutup satu ayat.";
       } else if (modeHafalan === "firstAyat") {
         teks.classList.add("kata-pertama-ayat-saja");
-        info.textContent = "Mode Kata Pertama: Hanya nomor ayat dan kata pertama tiap ayat yang terbuka.";
+        info.textContent = "Mode Kata Pertama: Ketuk nomor ayat untuk buka/tutup ayat (kata pertama & nomor tetap tampil).";
       } else {
         info.textContent = "Mode Normal: Teks terbuka penuh.";
       }
