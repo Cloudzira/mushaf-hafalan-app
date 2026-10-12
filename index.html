@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mushaf Tahfidz Pro - Kata Pertama Ayat & Nomor Terbuka</title>
+  <title>Mushaf Tahfidz Pro - Kata Pertama Ayat & Nomor Selalu Terbuka</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
@@ -116,7 +116,7 @@
     .blur-total .kata.terbuka { filter: none; opacity: 1; }
     
     .kata-pertama-ayat-saja .kata { filter: blur(7px); opacity: 0.1; }
-    /* Kata pertama setelah nomor ayat dan nomor ayat itu sendiri selalu terbuka */
+    /* Nomor ayat dan kata pertama tiap ayat selalu terbuka jernih */
     .kata-pertama-ayat-saja .kata.terbuka-selalu { filter: none; opacity: 1; }
 
     #info { text-align: center; margin: 14px 12px 0; font-size: .78rem; color: var(--redup); }
@@ -178,7 +178,7 @@
       <div id="teks"></div>
       <div id="kaki"><span id="kNo"></span></div>
     </div>
-    <div id="info">Nomor ayat & kata pertama setiap ayat selalu terbuka.</div>
+    <div id="info">Nomor ayat & kata pertama tiap ayat selalu terbuka.</div>
   </div>
 
   <!-- Firebase SDK -->
@@ -405,12 +405,12 @@
             k.textContent = w.char;
             k.onclick = () => k.classList.toggle("terbuka");
 
-            // Deteksi apakah ini nomor ayat (font QCF4 ayah number atau karakter khusus nomor) atau kata pertama ayat baru
+            // Deteksi nomor ayat (simbol/font nomor ayat QCF4)
             const isAyahNumber = w.type === "ayah_number" || w.font.includes("QBSML") || /[\u06DD\u06E9]/.test(w.char);
 
             if (isAyahNumber) {
-              k.classList.add("terbuka-selalu"); // Nomor ayat SELALU terbuka
-              bukaKataBerikutnya = true;         // Kata setelah nomor ayat ini akan ditandai sebagai kata pertama ayat baru
+              k.classList.add("terbuka-selalu"); // Nomor ayat mutlak SELALU terbuka
+              bukaKataBerikutnya = true;         // Menandai bahwa kata berikutnya adalah kata pertama ayat baru
             } else if (bukaKataBerikutnya) {
               k.classList.add("terbuka-selalu"); // Kata pertama setiap ayat SELALU terbuka
               bukaKataBerikutnya = false;
@@ -529,7 +529,7 @@
 
     document.getElementById("tema").onclick = () => {
       tema = tema === "dark" ? "light" : "dark";
-      localStorage.setItem("quran_tema", tema);
+      localStorage.getItem("quran_tema", tema);
       terapkanTema();
     };
 
