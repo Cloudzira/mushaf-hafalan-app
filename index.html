@@ -1,717 +1,314 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mushaf Tahfidz Pro - Professional Edition</title>
+  <title>Mushaf Tahfidz Pro</title>
+  <meta name="description" content="Mushaf Madinah 604 halaman untuk menghafal Al-Qur'an: mode tutup ayat, audio per ayat dengan pengulangan, penanda, dan pelacak hafalan.">
+  <meta name="theme-color" content="#0c0a09">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header class="auth-banner">
-    <div class="judul" style="padding:0; text-align:left;">
-      <span class="arab" style="font-size: 1.15rem;">المصحف الشريف</span>
+  <!-- Sprite ikon -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></symbol>
+    <symbol id="i-type" viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4L12 14l-3-3"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6.5C9.3 13.7 12 13 12 13"/></symbol>
+    <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.8-3.4L23 10M1 14l4.7 4.4A9 9 0 0 0 20.5 15"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  </svg>
+
+  <a class="skip" href="#teks">Lewati ke teks mushaf</a>
+
+  <!-- Bilah atas -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="arab">المصحف الشريف</span>
+      <small>Mushaf Tahfidz Pro</small>
     </div>
     <div class="auth-box">
+      <svg class="ik" aria-hidden="true"><use href="#i-user"/></svg>
       <span id="userStatus">Tamu</span>
-      <button id="authBtn" onclick="toggleAuth()">Masuk</button>
+      <button id="authBtn" type="button">Masuk</button>
     </div>
   </header>
 
-  <nav class="toolbar">
-    <button id="btnNormal" class="icon-btn aktif-mode" onclick="aturModeHafalan('normal')" title="Mode Normal">
-      <svg class="ik" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15C4 3.12 5.12 2 6.5 2Z"/></svg>
-    </button>
-    <button id="btnBlur" class="icon-btn" onclick="aturModeHafalan('blur')" title="Mode Blur">
-      <svg class="ik" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-    </button>
-    <button id="btnFirstAyat" class="icon-btn" onclick="aturModeHafalan('firstAyat')" title="Kata Pertama">
-      <svg class="ik" viewBox="0 0 24 24"><path d="m15 5 4 4"/><path d="M13 7 8.7 11.3a1 1 0 0 0-.3.7V15h3a1 1 0 0 0 .7-.3L17 11"/><path d="m2 22 20-20"/></svg>
-    </button>
-    
-    <button id="btnBookmark" class="icon-btn" onclick="bukaBookmarkModal()" title="Daftar Simpanan">
-      <svg class="ik" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
-    </button>
-
-    <button id="btnSaveCurrent" class="icon-btn" onclick="simpanHalamanIni()" title="Simpan Halaman">
-      <svg class="ik" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-    </button>
-
-    <button id="tema" class="icon-btn" aria-label="Ganti tema" title="Ganti Tema"></button>
-
-    <div class="pilih-surah">
-      <select id="pilihSurah">
-        <option value="" disabled selected>Pilih Surat</option>
-      </select>
+  <!-- Toolbar -->
+  <nav class="toolbar" aria-label="Kontrol mushaf">
+    <div class="seg" id="modeGroup" role="radiogroup" aria-label="Mode hafalan">
+      <button type="button" role="radio" data-mode="normal" aria-checked="true" title="Mode Normal (1)">
+        <svg class="ik" aria-hidden="true"><use href="#i-book"/></svg><span>Normal</span>
+      </button>
+      <button type="button" role="radio" data-mode="blur" aria-checked="false" title="Tutup semua kata (2)">
+        <svg class="ik" aria-hidden="true"><use href="#i-eye-off"/></svg><span>Tutup</span>
+      </button>
+      <button type="button" role="radio" data-mode="first" aria-checked="false" title="Hanya kata pertama tiap ayat (3)">
+        <svg class="ik" aria-hidden="true"><use href="#i-type"/></svg><span>Kata awal</span>
+      </button>
     </div>
 
-    <div class="navhal" role="group">
-      <button id="next" class="bulat" aria-label="Berikutnya" title="Halaman Berikutnya"><svg class="ik" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button id="btnNavOpen" class="chip" type="button" title="Navigasi surat, juz, dan ayat (/)">
+      <svg class="ik" aria-hidden="true"><use href="#i-compass"/></svg>
+      <span id="navLabel">Pilih surat</span>
+    </button>
+
+    <div class="navhal" role="group" aria-label="Pindah halaman">
+      <button id="next" class="bulat" type="button" aria-label="Halaman berikutnya" title="Halaman berikutnya (←)"><svg class="ik" aria-hidden="true"><use href="#i-left"/></svg></button>
       <label class="pilih" for="halaman">
         <span>Hal.</span>
-        <input type="number" id="halaman" min="1" max="604" value="1">
+        <input type="number" id="halaman" min="1" max="604" value="1" inputmode="numeric" aria-label="Nomor halaman">
+        <span class="dari">/ 604</span>
       </label>
-      <button id="prev" class="bulat" aria-label="Sebelumnya" title="Halaman Sebelumnya"><svg class="ik" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      <button id="prev" class="bulat" type="button" aria-label="Halaman sebelumnya" title="Halaman sebelumnya (→)"><svg class="ik" aria-hidden="true"><use href="#i-right"/></svg></button>
+    </div>
+
+    <div class="aksi">
+      <button id="btnBookmark" class="icon-btn" type="button" aria-pressed="false" title="Simpan penanda halaman (B)"><svg class="ik" aria-hidden="true"><use href="#i-bookmark"/></svg><span class="sr">Penanda</span></button>
+      <button id="btnBookmarks" class="icon-btn" type="button" title="Daftar penanda"><svg class="ik" aria-hidden="true"><use href="#i-list"/></svg><span class="sr">Daftar penanda</span></button>
+      <button id="btnMemo" class="icon-btn" type="button" aria-pressed="false" title="Tandai halaman ini sudah hafal (M)"><svg class="ik" aria-hidden="true"><use href="#i-check"/></svg><span class="sr">Tandai hafal</span></button>
+      <button id="btnProgress" class="icon-btn" type="button" title="Progres hafalan"><svg class="ik" aria-hidden="true"><use href="#i-chart"/></svg><span class="sr">Progres hafalan</span></button>
+      <button id="btnTheme" class="icon-btn" type="button" title="Ganti tema"><svg class="ik" aria-hidden="true"><use id="themeIcon" href="#i-moon"/></svg><span class="sr">Ganti tema</span></button>
+      <button id="btnSettings" class="icon-btn" type="button" title="Pengaturan"><svg class="ik" aria-hidden="true"><use href="#i-sliders"/></svg><span class="sr">Pengaturan</span></button>
     </div>
   </nav>
 
+  <!-- Halaman mushaf -->
   <main id="wrap">
-    <section class="frame" id="frame">
+    <section class="frame" id="frame" aria-label="Halaman mushaf">
       <div class="edge e-top"></div><div class="edge e-bottom"></div>
       <div class="edge e-left"></div><div class="edge e-right"></div>
-      <svg class="corner c1" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 28 Q2 2 28 2"/><path d="M2 2 H12 M2 2 V12"/><circle cx="9" cy="9" r="2.6" fill="currentColor" stroke="none"/></svg>
-      <svg class="corner c2" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 28 Q2 2 28 2"/><path d="M2 2 H12 M2 2 V12"/><circle cx="9" cy="9" r="2.6" fill="currentColor" stroke="none"/></svg>
-      <svg class="corner c3" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 28 Q2 2 28 2"/><path d="M2 2 H12 M2 2 V12"/><circle cx="9" cy="9" r="2.6" fill="currentColor" stroke="none"/></svg>
-      <svg class="corner c4" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 28 Q2 2 28 2"/><path d="M2 2 H12 M2 2 V12"/><circle cx="9" cy="9" r="2.6" fill="currentColor" stroke="none"/></svg>
+      <svg class="corner c1" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 28 Q2 2 28 2"/><path d="M2 2 H12 M2 2 V12"/><circle cx="9" cy="9" r="2.6" fill="currentColor" stroke="none"/></svg>
+      <svg class="corner c2" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 28 Q2 2 28 2"/><path d="M2 2 H12 M2 2 V12"/><circle cx="9" cy="9" r="2.6" fill="currentColor" stroke="none"/></svg>
+      <svg class="corner c3" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 28 Q2 2 28 2"/><path d="M2 2 H12 M2 2 V12"/><circle cx="9" cy="9" r="2.6" fill="currentColor" stroke="none"/></svg>
+      <svg class="corner c4" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 28 Q2 2 28 2"/><path d="M2 2 H12 M2 2 V12"/><circle cx="9" cy="9" r="2.6" fill="currentColor" stroke="none"/></svg>
 
       <div id="kepala"><span id="kSurah"></span><span id="kJuz"></span></div>
-      <div id="teks"></div>
+      <div id="teks" lang="ar" dir="rtl"></div>
       <div id="kaki"><span id="kNo"></span></div>
     </section>
-    <div id="info">Ketuk nomor ayat untuk membuka/menutup atau memutar audio ayat tersebut.</div>
+    <p id="info" aria-live="polite"></p>
   </main>
 
-  <!-- Audio Player Bar -->
-  <footer class="audio-player-bar">
-    <div class="audio-group">
-      <span>🎧 Syaikh Misyari</span>
+  <!-- Kartu ayat terpilih -->
+  <aside id="ayatSheet" class="ayat-sheet" hidden aria-label="Ayat terpilih">
+    <div class="as-head">
+      <strong id="asKey">QS</strong>
+      <button id="asClose" class="icon-btn kecil" type="button" aria-label="Tutup"><svg class="ik" aria-hidden="true"><use href="#i-x"/></svg></button>
     </div>
-    <div class="audio-group">
-      <label>Mode:</label>
-      <select id="audioMode" onchange="gantiModeAudio()">
-        <option value="page">Per Halaman</option>
-        <option value="ayah">Per Ayat Terpilih</option>
-        <option value="range">Rentang Ayat</option>
-        <option value="surah">Per Surat</option>
-      </select>
+    <p id="asText" class="as-text"></p>
+    <div class="as-act">
+      <button id="asPlay" type="button"><svg class="ik f" aria-hidden="true"><use href="#i-play"/></svg>Putar ayat</button>
+      <button id="asDrill" type="button" title="Putar ayat, beri jeda sepanjang ayat agar Anda melantunkannya, ulang 5x"><svg class="ik" aria-hidden="true"><use href="#i-target"/></svg>Latih hafalan</button>
+      <button id="asFrom" type="button"><svg class="ik" aria-hidden="true"><use href="#i-next"/></svg>Lanjut sampai akhir surat</button>
     </div>
-    <div class="audio-group" id="rangeControl" style="display:none;">
-      <span>Ayat:</span>
-      <input type="number" id="startAyat" value="1" min="1" style="width:45px; text-align:center; background:transparent; border:1px solid var(--tepi); border-radius:4px; color:var(--teks);">
-      <span>s.d</span>
-      <input type="number" id="endAyat" value="7" min="1" style="width:45px; text-align:center; background:transparent; border:1px solid var(--tepi); border-radius:4px; color:var(--teks);">
+  </aside>
+
+  <!-- Pemutar audio -->
+  <footer class="player" id="player" aria-label="Pemutar audio">
+    <div class="pl-progress" aria-hidden="true"><i id="plBar"></i></div>
+    <div class="pl-main">
+      <div class="pl-ctrl">
+        <button id="plPrev" class="icon-btn" type="button" aria-label="Ayat sebelumnya"><svg class="ik" aria-hidden="true"><use href="#i-prev"/></svg></button>
+        <button id="plPlay" class="icon-btn utama" type="button" aria-label="Putar"><svg class="ik f" aria-hidden="true"><use id="plPlayIcon" href="#i-play"/></svg></button>
+        <button id="plNext" class="icon-btn" type="button" aria-label="Ayat berikutnya"><svg class="ik" aria-hidden="true"><use href="#i-next"/></svg></button>
+        <button id="plStop" class="icon-btn" type="button" aria-label="Berhenti"><svg class="ik f" aria-hidden="true"><use href="#i-stop"/></svg></button>
+      </div>
+      <div class="pl-status" aria-live="polite">
+        <strong id="plTitle">Murattal</strong>
+        <small id="plSub">Siap diputar</small>
+      </div>
+      <button id="plMore" class="icon-btn" type="button" aria-expanded="false" aria-controls="plPanel" aria-label="Opsi audio"><svg class="ik" aria-hidden="true"><use href="#i-up"/></svg></button>
     </div>
-    <div class="audio-group">
-      <label>Ulang:</label>
-      <select id="audioRepeat">
-        <option value="1">1x</option>
-        <option value="3">3x</option>
-        <option value="5">5x</option>
-        <option value="0">∞</option>
-      </select>
-    </div>
-    <div class="audio-group">
-      <button id="btnPlayAudio" onclick="togglePlayAudio()" class="active-play" style="padding: 6px 16px; font-weight:600;">▶ Putar</button>
-      <button onclick="stopAudio()">⏹ Stop</button>
+    <div class="pl-panel" id="plPanel" hidden>
+      <label>Qari
+        <select id="selQari"></select>
+      </label>
+      <label>Cakupan putar
+        <select id="selMode">
+          <option value="page">Seluruh halaman ini</option>
+          <option value="ayah">Ayat terpilih</option>
+          <option value="range">Rentang ayat</option>
+          <option value="surah">Dari ayat terpilih sampai akhir surat</option>
+        </select>
+      </label>
+      <div class="rentang" id="rngWrap" hidden>
+        <label>Surat <select id="rngSurah"></select></label>
+        <label>Dari ayat <input type="number" id="rngFrom" min="1" value="1" inputmode="numeric"></label>
+        <label>Sampai <input type="number" id="rngTo" min="1" value="1" inputmode="numeric"></label>
+      </div>
+      <label>Ulang tiap ayat
+        <select id="selRepAyat">
+          <option value="1">1×</option><option value="2">2×</option><option value="3">3×</option>
+          <option value="5">5×</option><option value="7">7×</option><option value="10">10×</option><option value="0">Tanpa batas</option>
+        </select>
+      </label>
+      <label>Ulang seluruh rentang
+        <select id="selRepRange">
+          <option value="1">1×</option><option value="2">2×</option><option value="3">3×</option>
+          <option value="5">5×</option><option value="10">10×</option><option value="0">Tanpa batas</option>
+        </select>
+      </label>
+      <label>Kecepatan
+        <select id="selSpeed">
+          <option value="0.6">0,6×</option><option value="0.75">0,75×</option><option value="0.9">0,9×</option>
+          <option value="1">1× (normal)</option><option value="1.1">1,1×</option><option value="1.25">1,25×</option><option value="1.5">1,5×</option>
+        </select>
+      </label>
+      <label>Jeda antar ayat
+        <select id="selGap">
+          <option value="0">Tanpa jeda</option><option value="1">1 detik</option><option value="2">2 detik</option>
+          <option value="3">3 detik</option><option value="-1">Sepanjang ayat (giliran Anda)</option>
+        </select>
+      </label>
     </div>
   </footer>
 
-  <div id="modalBookmark" class="modal-overlay">
+  <!-- Dialog: Navigasi -->
+  <dialog id="dlgNav" class="modal" aria-labelledby="navTitle">
     <div class="modal-box">
-      <div class="modal-header">
-        <span>📌 Daftar Ayat Tersimpan</span>
-        <button onclick="tutupBookmarkModal()">&times;</button>
+      <header class="modal-head">
+        <h2 id="navTitle">Navigasi</h2>
+        <button class="icon-btn kecil" type="button" data-close aria-label="Tutup"><svg class="ik" aria-hidden="true"><use href="#i-x"/></svg></button>
+      </header>
+      <div class="tabs" role="tablist" aria-label="Jenis navigasi">
+        <button type="button" role="tab" id="tabSurat" aria-selected="true" aria-controls="panSurat">Surat</button>
+        <button type="button" role="tab" id="tabJuz" aria-selected="false" aria-controls="panJuz" tabindex="-1">Juz</button>
+        <button type="button" role="tab" id="tabAyat" aria-selected="false" aria-controls="panAyat" tabindex="-1">Ayat</button>
       </div>
       <div class="modal-body">
-        <ul id="bookmarkList" class="bookmark-list"></ul>
+        <div id="panSurat" role="tabpanel" aria-labelledby="tabSurat">
+          <label class="search"><svg class="ik" aria-hidden="true"><use href="#i-search"/></svg>
+            <input id="navSearch" type="search" placeholder="Cari surat, atau ketik 2:255" autocomplete="off" aria-label="Cari surat atau ayat">
+          </label>
+          <ul id="listSurat" class="list"></ul>
+        </div>
+        <div id="panJuz" role="tabpanel" aria-labelledby="tabJuz" hidden>
+          <div id="gridJuz" class="grid-juz"></div>
+        </div>
+        <div id="panAyat" role="tabpanel" aria-labelledby="tabAyat" hidden>
+          <div class="form-ayat">
+            <label>Surat <select id="ayatSurah"></select></label>
+            <label>Ayat <input id="ayatNo" type="number" min="1" value="1" inputmode="numeric"></label>
+            <button id="ayatGo" type="button" class="btn-utama">Buka ayat</button>
+          </div>
+          <p class="catatan">Halaman ayat dicari lewat Quran.com API. Jika sedang luring, aplikasi membuka awal surat.</p>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCDU5f4iBXSwlKYYJUO6bb72r1VBVLAg3I",
-      authDomain: "mushafpro-e80e1.firebaseapp.com",
-      projectId: "mushafpro-e80e1",
-      storageBucket: "mushafpro-e80e1.firebasestorage.app",
-      messagingSenderId: "416657395563",
-      appId: "1:416657395563:web:842ee40f5e180c22bb862e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
-
-    let currentUser = null;
-
-    onAuthStateChanged(auth, async (user) => {
-      currentUser = user;
-      const userStatus = document.getElementById('userStatus');
-      const authBtn = document.getElementById('authBtn');
-
-      if (user) {
-        userStatus.innerText = user.displayName.split(' ')[0];
-        authBtn.innerText = "Keluar";
-        await loadUserPage(user.uid);
-      } else {
-        userStatus.innerText = "Tamu";
-        authBtn.innerText = "Masuk";
-      }
-    });
-
-    window.toggleAuth = async function() {
-      if (currentUser) {
-        await signOut(auth);
-      } else {
-        try { await signInWithPopup(auth, provider); } catch (e) { console.error("Login gagal", e); }
-      }
-    }
-
-    window.savePageToCloud = async function(pageNo) {
-      if (!currentUser) return;
-      try {
-        const ref = doc(db, "progres_hafalan", currentUser.uid);
-        await setDoc(ref, { halaman_terakhir: pageNo, updated_at: new Date().toISOString() }, { merge: true });
-      } catch(e) {}
-    }
-
-    async function loadUserPage(uid) {
-      try {
-        const ref = doc(db, "progres_hafalan", uid);
-        const snap = await getDoc(ref);
-        if (snap.exists() && snap.data().halaman_terakhir) {
-          const hal = snap.data().halaman_terakhir;
-          if (hal !== window.halamanAktif) { window.tampilHalaman(hal); }
-        }
-      } catch(e) {}
-    }
-  </script>
-
-  <!-- Logika Aplikasi Utama -->
-  <script>
-    const DAFTAR_SURAH = [
-      { no: 1, nama: "Al-Fatihah", hal: 1 }, { no: 2, nama: "Al-Baqarah", hal: 2 },
-      { no: 3, nama: "Ali 'Imran", hal: 50 }, { no: 4, nama: "An-Nisa'", hal: 77 },
-      { no: 5, nama: "Al-Ma'idah", hal: 106 }, { no: 6, nama: "Al-An'am", hal: 128 },
-      { no: 7, nama: "Al-A'raf", hal: 151 }, { no: 8, nama: "Al-Anfal", hal: 177 },
-      { no: 9, nama: "At-Taubah", hal: 187 }, { no: 10, nama: "Yunus", hal: 208 },
-      { no: 11, nama: "Hud", hal: 221 }, { no: 12, nama: "Yusuf", hal: 235 },
-      { no: 13, nama: "Ar-Ra'd", hal: 249 }, { no: 14, nama: "Ibrahim", hal: 255 },
-      { no: 15, nama: "Al-Hijr", hal: 262 }, { no: 16, nama: "An-Nahl", hal: 267 },
-      { no: 17, nama: "Al-Isra'", hal: 282 }, { no: 18, nama: "Al-Kahf", hal: 293 },
-      { no: 19, nama: "Maryam", hal: 305 }, { no: 20, nama: "Ta-Ha", hal: 312 },
-      { no: 21, nama: "Al-Anbiya'", hal: 322 }, { no: 22, nama: "Al-Hajj", hal: 332 },
-      { no: 23, nama: "Al-Mu'minun", hal: 342 }, { no: 24, nama: "An-Nur", hal: 350 },
-      { no: 25, nama: "Al-Furqan", hal: 359 }, { no: 26, nama: "Asy-Syu'ara'", hal: 367 },
-      { no: 27, nama: "An-Naml", hal: 377 }, { no: 28, nama: "Al-Qasas", hal: 385 },
-      { no: 29, nama: "Al-Ankabut", hal: 396 }, { no: 30, nama: "Ar-Rum", hal: 404 },
-      { no: 31, nama: "Luqman", hal: 411 }, { no: 32, nama: "As-Sajdah", hal: 415 },
-      { no: 33, nama: "Al-Ahzab", hal: 418 }, { no: 34, nama: "Saba'", hal: 428 },
-      { no: 35, nama: "Fatir", hal: 434 }, { no: 36, nama: "Ya-Sin", hal: 440 },
-      { no: 37, nama: "Ash-Shaffat", hal: 446 }, { no: 38, nama: "Sad", hal: 453 },
-      { no: 39, nama: "Az-Zumar", hal: 458 }, { no: 40, nama: "Ghafir", hal: 467 },
-      { no: 41, nama: "Fussilat", hal: 477 }, { no: 42, nama: "Asy-Syura", hal: 483 },
-      { no: 43, nama: "Az-Zukhruf", hal: 489 }, { no: 44, nama: "Ad-Dukhan", hal: 496 },
-      { no: 45, nama: "Al-Jatsiyah", hal: 499 }, { no: 46, nama: "Al-Ahqaf", hal: 502 },
-      { no: 47, nama: "Muhammad", hal: 507 }, { no: 48, nama: "Al-Fath", hal: 511 },
-      { no: 49, nama: "Al-Hujurat", hal: 515 }, { no: 50, nama: "Qaf", hal: 518 },
-      { no: 51, nama: "Adz-Dzariyat", hal: 520 }, { no: 52, nama: "At-Tur", hal: 523 },
-      { no: 53, nama: "An-Najm", hal: 526 }, { no: 54, nama: "Al-Qamar", hal: 528 },
-      { no: 55, nama: "Ar-Rahman", hal: 531 }, { no: 56, nama: "Al-Waqi'ah", hal: 534 },
-      { no: 57, nama: "Al-Hadid", hal: 537 }, { no: 58, nama: "Al-Mujadilah", hal: 542 },
-      { no: 59, nama: "Al-Hasyr", hal: 545 }, { no: 60, nama: "Al-Mumtahanah", hal: 549 },
-      { no: 61, nama: "Ash-Shaff", hal: 551 }, { no: 62, nama: "Al-Jumu'ah", hal: 553 },
-      { no: 63, nama: "Al-Munafiqun", hal: 554 }, { no: 64, nama: "At-Taghabun", hal: 556 },
-      { no: 65, nama: "At-Talaq", hal: 558 }, { no: 66, nama: "At-Tahrim", hal: 560 },
-      { no: 67, nama: "Al-Mulk", hal: 562 }, { no: 68, nama: "Al-Qalam", hal: 564 },
-      { no: 69, nama: "Al-Haqqah", hal: 566 }, { no: 70, nama: "Al-Ma'arij", hal: 568 },
-      { no: 71, nama: "Nuh", hal: 570 }, { no: 72, nama: "Al-Jinn", hal: 572 },
-      { no: 73, nama: "Al-Muzzammil", hal: 574 }, { no: 74, nama: "Al-Muddatstsir", hal: 575 },
-      { no: 75, nama: "Al-Qiyamah", hal: 577 }, { no: 76, nama: "Al-Insan", hal: 578 },
-      { no: 77, nama: "Al-Mursalat", hal: 580 }, { no: 78, nama: "An-Naba'", hal: 582 },
-      { no: 79, nama: "An-Nazi'at", hal: 583 }, { no: 80, nama: "'Abasa", hal: 585 },
-      { no: 81, nama: "At-Takwir", hal: 586 }, { no: 82, nama: "Al-Infitar", hal: 587 },
-      { no: 83, nama: "Al-Muthaffifin", hal: 587 }, { no: 84, nama: "Al-Insiqaq", hal: 589 },
-      { no: 85, nama: "Al-Buruj", hal: 590 }, { no: 86, nama: "At-Tariq", hal: 591 },
-      { no: 87, nama: "Al-A'la", hal: 591 }, { no: 88, nama: "Al-Ghasyiyah", hal: 592 },
-      { no: 89, nama: "Al-Fajr", hal: 593 }, { no: 90, nama: "Al-Balad", hal: 594 },
-      { no: 91, nama: "Asy-Syams", hal: 595 }, { no: 92, nama: "Al-Lail", hal: 595 },
-      { no: 93, nama: "Ad-Duha", hal: 596 }, { no: 94, nama: "Asy-Syarh", hal: 596 },
-      { no: 95, nama: "At-Tin", hal: 597 }, { no: 96, nama: "Al-'Alaq", hal: 597 },
-      { no: 97, nama: "Al-Qadr", hal: 598 }, { no: 98, nama: "Al-Bayyinah", hal: 598 },
-      { no: 99, nama: "Az-Zalzalah", hal: 599 }, { no: 100, nama: "Al-'Adiyat", hal: 599 },
-      { no: 101, nama: "Al-Qari'ah", hal: 600 }, { no: 102, nama: "At-Takatsur", hal: 600 },
-      { no: 103, nama: "Al-'Asr", hal: 601 }, { no: 104, nama: "Al-Humazah", hal: 601 },
-      { no: 105, nama: "Al-Fiil", hal: 601 }, { no: 106, nama: "Quraisy", hal: 602 },
-      { no: 107, nama: "Al-Ma'un", hal: 602 }, { no: 108, nama: "Al-Kautsar", hal: 602 },
-      { no: 109, nama: "Al-Kafirun", hal: 603 }, { no: 110, nama: "An-Nasr", hal: 603 },
-      { no: 111, nama: "Al-Lahab", hal: 603 }, { no: 112, nama: "Al-Ikhlas", hal: 604 },
-      { no: 113, nama: "Al-Falaq", hal: 604 }, { no: 114, nama: "An-Nas", hal: 604 }
-    ];
-
-    const selectSurah = document.getElementById("pilihSurah");
-    DAFTAR_SURAH.forEach(s => {
-      const opt = document.createElement("option");
-      opt.value = s.hal;
-      opt.textContent = `${s.no}. ${s.nama}`;
-      selectSurah.appendChild(opt);
-    });
-
-    const JSON_URL = "https://raw.githubusercontent.com/MohamadHajjRabee/quran-qcf4/main/pages/";
-    const FONT_URL = "https://cdn.jsdelivr.net/gh/MohamadHajjRabee/quran-qcf4@main/fonts-woff2/";
-
-    const JARAK_KATA_EM = 0.12;  
-    const MIN_JARAK_BARIS = 2.0; 
-
-    const IKON = {
-      bulan: '<svg class="ik" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
-      matahari: '<svg class="ik" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
-    };
-
-    const teks = document.getElementById("teks");
-    const input = document.getElementById("halaman");
-    const info = document.getElementById("info");
-
-    let halaman = Number(localStorage.getItem("quran_halaman")) || 1;
-    window.halamanAktif = halaman;
-    let tema = localStorage.getItem("quran_tema") === "light" ? "light" : "dark";  
-    let modeHafalan = "normal"; 
-    let token = 0;
-    let activeSurahName = "";
-    
-    let pageAyahAudioList = [];
-    let selectedAyahAudioUrl = null;
-
-    let currentAudio = null;
-    let isPlaying = false;
-    let audioQueue = [];
-    let audioQueueIndex = 0;
-    let currentRepeatCount = 0;
-
-    function hitungJuz(no) { return no < 22 ? 1 : Math.min(30, Math.floor((no - 2) / 20) + 1); }
-
-    function judulSurah(teksJudul) {
-      const kata = (teksJudul || "").trim().split(/\s+/);
-      const polos = k => k.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g, "");
-      const i = kata.findIndex(k => polos(k) === "بسم");
-      return (i > 0 ? kata.slice(0, i) : kata).join(" ");
-    }
-
-    const dataCache = {};
-    const fontCache = {};
-
-    function ambilData(no) {
-      if (!dataCache[no]) {
-        const nama = String(no).padStart(3, "0");
-        dataCache[no] = fetch(JSON_URL + nama + ".json").then(r => {
-          if (!r.ok) throw new Error("Gagal ambil json");
-          return r.json();
-        });
-      }
-      return dataCache[no];
-    }
-
-    function muatFont(nama) {
-      if (!fontCache[nama]) {
-        const file = nama === "QCF4_QBSML" ? "QCF4_QBSML.woff2" : nama + "_W.woff2";
-        const f = new FontFace(nama, `url(${FONT_URL}${file})`);
-        fontCache[nama] = f.load().then(ff => { document.fonts.add(ff); return ff; });
-      }
-      return fontCache[nama];
-    }
-
-    function fontHalaman(data) {
-      const s = new Set();
-      data.lines.forEach(l => l.words.forEach(w => { if (w.type !== "surah_header") s.add(w.font); }));
-      return [...s];
-    }
-
-    function getSurahAndAyahFromPageData(data, halamanNo) {
-      const currentSurahObj = DAFTAR_SURAH.slice().reverse().find(s => s.hal <= halamanNo) || DAFTAR_SURAH[0];
-      let sNo = currentSurahObj.no;
-      let list = [];
-      let ayahCount = 1;
-
-      data.lines.forEach(line => {
-        const header = line.words.find(w => w.type === "surah_header");
-        if (header) {
-          const foundS = DAFTAR_SURAH.find(s => header.text.includes(s.nama.replace(/[^a-zA-Z]/g, "")));
-          if (foundS) sNo = foundS.no;
-          ayahCount = 1;
-        }
-        line.words.forEach(w => {
-          const isNomorAyat = w.type === "end" || w.type === "ayah_number" || w.font.includes("QBSML") || /[\u06DD\u06E9]/.test(w.char);
-          if (isNomorAyat) {
-            list.push({
-              surah: sNo,
-              ayah: ayahCount,
-              url: `https://everyayah.com/data/Alafasy_128kbps/${String(sNo).padStart(3, '0')}${String(ayahCount).padStart(3, '0')}.mp3`
-            });
-            ayahCount++;
-          }
-        });
-      });
-      return list;
-    }
-
-    async function renderTeks(no, my) {
-      teks.classList.add("memuat");
-      const data = await ambilData(no);
-      await Promise.all(fontHalaman(data).map(muatFont));
-      if (my !== token) return;
-
-      teks.innerHTML = "";
-      pageAyahAudioList = getSurahAndAyahFromPageData(data, no);
-      
-      let tandaiKataPertama = true;
-      let ayatCounter = 1;
-
-      data.lines.forEach(line => {
-        const baris = document.createElement("div");
-        baris.className = "baris";
-        const header = line.words.find(w => w.type === "surah_header");
-        
-        if (header) {
-          baris.classList.add("header");
-          const b = document.createElement("div");
-          b.className = "banner";
-          const t = document.createElement("span");
-          t.textContent = judulSurah(header.text);
-          b.appendChild(t);
-          baris.appendChild(b);
-          tandaiKataPertama = true;
-        } else {
-          const isBasmalahLine = line.words.some(w => w.text && (w.text.includes("بِسْمِ") || w.text.includes("بسم") || w.font === "QCF4_QBSML"));
-          if (isBasmalahLine) baris.classList.add("basmalah");
-
-          line.words.forEach(w => {
-            const k = document.createElement("span");
-            k.className = "kata";
-            k.style.fontFamily = `"${w.font}"`;
-            k.textContent = w.char;
-            
-            k.onclick = () => k.classList.toggle("terbuka");
-
-            const isNomorAyat = w.type === "end" || w.type === "ayah_number" || w.font.includes("QBSML") || /[\u06DD\u06E9]/.test(w.char);
-
-            if (isNomorAyat) {
-              const currentAyatId = `ayat-${no}-${ayatCounter++}`;
-              k.classList.add("is-nomor-ayat");
-              k.dataset.ayatGroup = currentAyatId;
-              
-              const audioInfo = pageAyahAudioList[ayatCounter - 2] || pageAyahAudioList[0];
-              
-              k.onclick = (e) => {
-                e.stopPropagation();
-                toggleAyatGroup(currentAyatId);
-                if (audioInfo) playSpecificAyat(audioInfo.url);
-              };
-
-              tandaiKataPertama = true;
-            } else {
-              k.dataset.ayatGroup = `ayat-${no}-${ayatCounter}`;
-              if (tandaiKataPertama) {
-                k.classList.add("is-kata-pertama");
-                tandaiKataPertama = false;
-              }
-            }
-            baris.appendChild(k);
-          });
-        }
-        teks.appendChild(baris);
-      });
-
-      const namaSurah = (data.surahs && data.surahs.length) ? data.surahs.map(s => s.name).join(" · ") : "";
-      activeSurahName = namaSurah;
-      document.getElementById("kSurah").textContent = namaSurah;
-      document.getElementById("kJuz").textContent = "Juz " + hitungJuz(no);
-      document.getElementById("kNo").textContent = no;
-
-      if (data.surahs && data.surahs.length) {
-        const surahAktif = DAFTAR_SURAH.slice().reverse().find(s => s.hal <= no);
-        if (surahAktif) selectSurah.value = surahAktif.hal;
-      }
-
-      atur();
-      terapkanModeHafalanUI();
-      teks.classList.remove("memuat");
-    }
-
-    function toggleAyatGroup(groupId) {
-      const kataAyat = document.querySelectorAll(`[data-ayat-group="${groupId}"]`);
-      if (!kataAyat.length) return;
-      const semuaTerbuka = Array.from(kataAyat).every(k => k.classList.contains("terbuka"));
-      kataAyat.forEach(k => {
-        if (semuaTerbuka) k.classList.remove("terbuka");
-        else k.classList.add("terbuka");
-      });
-    }
-
-    function lebarAlami(baris, fs) {
-      let total = 0;
-      baris.querySelectorAll(".kata").forEach(k => { total += k.getBoundingClientRect().width; });
-      return total + Math.max(0, baris.children.length - 1) * JARAK_KATA_EM * fs;
-    }
-
-    function atur() {
-      const lebar = teks.clientWidth;
-      if (!lebar) return;
-      const semua = [...teks.querySelectorAll(".baris")];
-      const isi = semua.filter(b => !b.classList.contains("header"));
-      const target = lebar;
-      semua.forEach(b => { b.style.width = target + "px"; });
-      if (!isi.length) return;
-
-      teks.style.setProperty("--fs", "100px");
-      const alami = isi.map(b => lebarAlami(b, 100));
-      const maks = Math.max(...alami);
-      if (!maks) return;
-      let fs = (100 * target / maks) * 0.995;
-      teks.style.setProperty("--fs", fs + "px");
-
-      for (let i = 0; i < 20; i++) {
-        const meluber = isi.some(b => lebarAlami(b, fs) > target - 0.5);
-        if (!meluber) break;
-        fs *= 0.985;
-        teks.style.setProperty("--fs", fs + "px");
-      }
-
-      let hMaks = 0;
-      isi.forEach(b => b.querySelectorAll(".kata").forEach(k => { hMaks = Math.max(hMaks, k.getBoundingClientRect().height); }));
-      teks.style.setProperty("--pitch", Math.max(MIN_JARAK_BARIS, (hMaks / fs) * 1.1).toFixed(3));
-    }
-
-    function tampil(no) {
-      if (!(no >= 1 && no <= 604)) { input.value = halaman; return; }
-      halaman = no;
-      window.halamanAktif = no;
-      const my = ++token;
-
-      stopAudio();
-      input.value = no;
-      info.textContent = `Halaman ${no} dari 604 — Standar Madinah.`;
-      document.getElementById("prev").disabled = no <= 1;
-      document.getElementById("next").disabled = no >= 604;
-      localStorage.setItem("quran_halaman", no);
-      
-      if (typeof window.savePageToCloud === 'function') window.savePageToCloud(no);
-      renderTeks(no, my);
-    }
-    window.tampilHalaman = tampil;
-
-    window.aturModeHafalan = function(mode) {
-      modeHafalan = mode;
-      document.getElementById("btnNormal").classList.toggle("aktif-mode", mode === "normal");
-      document.getElementById("btnBlur").classList.toggle("aktif-mode", mode === "blur");
-      document.getElementById("btnFirstAyat").classList.toggle("aktif-mode", mode === "firstAyat");
-      document.querySelectorAll("#teks .kata.terbuka").forEach(k => k.classList.remove("terbuka"));
-      terapkanModeHafalanUI();
-    }
-
-    function terapkanModeHafalanUI() {
-      teks.classList.remove("blur-total", "kata-pertama-ayat-saja");
-      if (modeHafalan === "blur") {
-        teks.classList.add("blur-total");
-        info.textContent = "Mode Blur: Ketuk nomor ayat untuk buka/tutup atau putar ayat.";
-      } else if (modeHafalan === "firstAyat") {
-        teks.classList.add("kata-pertama-ayat-saja");
-        info.textContent = "Mode Kata Pertama: Ketuk nomor ayat untuk buka/tutup atau putar ayat.";
-      } else {
-        info.textContent = "Mode Normal: Teks terbuka penuh.";
-      }
-    }
-
-    function terapkanTema() {
-      const isGelap = tema === "dark";
-      document.body.classList.toggle("gelap", isGelap);
-      document.getElementById("tema").innerHTML = (isGelap ? IKON.matahari : IKON.bulan);
-    }
-
-    window.gantiModeAudio = function() {
-      const mode = document.getElementById("audioMode").value;
-      document.getElementById("rangeControl").style.display = (mode === "range" ? "flex" : "none");
-    }
-
-    function getAudioQueueByMode() {
-      const mode = document.getElementById("audioMode").value;
-      let urls = [];
-      if (mode === "page") {
-        urls = pageAyahAudioList.map(item => item.url);
-      } else if (mode === "ayah") {
-        if (selectedAyahAudioUrl) urls = [selectedAyahAudioUrl];
-        else if (pageAyahAudioList.length) urls = [pageAyahAudioList[0].url];
-      } else if (mode === "range") {
-        let start = parseInt(document.getElementById("startAyat").value) || 1;
-        let end = parseInt(document.getElementById("endAyat").value) || start;
-        const currentSurahObj = DAFTAR_SURAH.slice().reverse().find(s => s.hal <= halaman) || DAFTAR_SURAH[0];
-        let sNo = currentSurahObj.no;
-        for (let a = start; a <= end; a++) {
-          urls.push(`https://everyayah.com/data/Alafasy_128kbps/${String(sNo).padStart(3, '0')}${String(a).padStart(3, '0')}.mp3`);
-        }
-      } else if (mode === "surah") {
-        const currentSurahObj = DAFTAR_SURAH.slice().reverse().find(s => s.hal <= halaman) || DAFTAR_SURAH[0];
-        let sNo = currentSurahObj.no;
-        for (let a = 1; a <= 60; a++) {
-          urls.push(`https://everyayah.com/data/Alafasy_128kbps/${String(sNo).padStart(3, '0')}${String(a).padStart(3, '0')}.mp3`);
-        }
-      }
-      return urls;
-    }
-
-    function playSpecificAyat(url) {
-      stopAudio();
-      selectedAyahAudioUrl = url;
-      audioQueue = [url];
-      audioQueueIndex = 0;
-      currentRepeatCount = 0;
-      loadAndPlayCurrentQueue();
-    }
-
-    window.togglePlayAudio = function() {
-      if (isPlaying) pauseAudio();
-      else playAudio();
-    }
-
-    function playAudio() {
-      if (!audioQueue.length) {
-        audioQueue = getAudioQueueByMode();
-        audioQueueIndex = 0;
-      }
-      if (!audioQueue.length) return;
-
-      if (!currentAudio) {
-        loadAndPlayCurrentQueue();
-      } else {
-        currentAudio.play();
-        isPlaying = true;
-        document.getElementById("btnPlayAudio").innerText = "⏸ Pause";
-      }
-    }
-
-    function loadAndPlayCurrentQueue() {
-      if (audioQueueIndex >= audioQueue.length) {
-        const maxRepeat = parseInt(document.getElementById("audioRepeat").value);
-        if (maxRepeat === 0 || currentRepeatCount < maxRepeat - 1) {
-          currentRepeatCount++;
-          audioQueueIndex = 0;
-        } else {
-          stopAudio();
-          return;
-        }
-      }
-
-      const url = audioQueue[audioQueueIndex];
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio = null;
-      }
-
-      currentAudio = new Audio(url);
-      isPlaying = true;
-      document.getElementById("btnPlayAudio").innerText = "⏸ Pause";
-
-      currentAudio.play().catch(e => stopAudio());
-      currentAudio.onended = () => {
-        audioQueueIndex++;
-        loadAndPlayCurrentQueue();
-      };
-    }
-
-    window.pauseAudio = function() {
-      if (currentAudio) currentAudio.pause();
-      isPlaying = false;
-      document.getElementById("btnPlayAudio").innerText = "▶ Putar";
-    }
-
-    window.stopAudio = function() {
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio = null;
-      }
-      isPlaying = false;
-      audioQueue = [];
-      audioQueueIndex = 0;
-      currentRepeatCount = 0;
-      document.getElementById("btnPlayAudio").innerText = "▶ Putar";
-    }
-
-    function ambilBookmarks() {
-      return JSON.parse(localStorage.getItem("quran_bookmarks") || "[]");
-    }
-
-    window.simpanHalamanIni = function() {
-      const list = ambilBookmarks();
-      const item = {
-        halaman: halaman,
-        surah: activeSurahName || "Surat",
-        waktu: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
-      };
-      if (!list.some(b => b.halaman === item.halaman)) {
-        list.push(item);
-        localStorage.setItem("quran_bookmarks", JSON.stringify(list));
-        alert(`Halaman ${halaman} (${activeSurahName}) berhasil disimpan!`);
-      } else {
-        alert(`Halaman ${halaman} sudah ada di daftar simpanan.`);
-      }
-    }
-
-    window.bukaBookmarkModal = function() {
-      const modal = document.getElementById("modalBookmark");
-      const container = document.getElementById("bookmarkList");
-      const list = ambilBookmarks();
-      container.innerHTML = "";
-      if (list.length === 0) {
-        container.innerHTML = `<li class="empty-bm">Belum ada ayat atau surat yang disimpan.</li>`;
-      } else {
-        list.forEach((bm, index) => {
-          const li = document.createElement("li");
-          li.className = "bookmark-item";
-          li.innerHTML = `
-            <div class="info-bm" onclick="lompatKeBookmark(${bm.halaman})">
-              <span class="title-bm">${bm.surah}</span>
-              <span class="sub-bm">Halaman ${bm.halaman} • ${bm.waktu}</span>
-            </div>
-            <button class="btn-hapus" onclick="hapusBookmark(${index}, event)">&times;</button>
-          `;
-          container.appendChild(li);
-        });
-      }
-      modal.classList.add("aktif");
-    }
-
-    window.tutupBookmarkModal = function() {
-      document.getElementById("modalBookmark").classList.remove("aktif");
-    }
-
-    window.lompatKeBookmark = function(hal) {
-      tampil(hal);
-      tutupBookmarkModal();
-    }
-
-    window.hapusBookmark = function(index, e) {
-      e.stopPropagation();
-      const list = ambilBookmarks();
-      list.splice(index, 1);
-      localStorage.setItem("quran_bookmarks", JSON.stringify(list));
-      bukaBookmarkModal();
-    }
-
-    document.getElementById("next").onclick = () => tampil(halaman + 1);
-    document.getElementById("prev").onclick = () => tampil(halaman - 1);
-    input.addEventListener("change", () => tampil(parseInt(input.value)));
-    
-    selectSurah.addEventListener("change", () => {
-      const halTujuan = parseInt(selectSurah.value);
-      if (halTujuan) tampil(halTujuan);
-    });
-
-    document.getElementById("tema").onclick = () => {
-      tema = tema === "dark" ? "light" : "dark";
-      localStorage.setItem("quran_tema", tema);
-      terapkanTema();
-    };
-
-    terapkanTema();
-    tampil(halaman);
-  </script>
+  </dialog>
+
+  <!-- Dialog: Penanda -->
+  <dialog id="dlgBm" class="modal" aria-labelledby="bmTitle">
+    <div class="modal-box">
+      <header class="modal-head">
+        <h2 id="bmTitle">Penanda halaman</h2>
+        <button class="icon-btn kecil" type="button" data-close aria-label="Tutup"><svg class="ik" aria-hidden="true"><use href="#i-x"/></svg></button>
+      </header>
+      <div class="modal-body">
+        <ul id="bmList" class="list"></ul>
+      </div>
+      <footer class="modal-foot"><button id="bmAdd" type="button" class="btn-utama">Simpan halaman ini</button></footer>
+    </div>
+  </dialog>
+
+  <!-- Dialog: Progres -->
+  <dialog id="dlgPrg" class="modal" aria-labelledby="prgTitle">
+    <div class="modal-box">
+      <header class="modal-head">
+        <h2 id="prgTitle">Progres hafalan</h2>
+        <button class="icon-btn kecil" type="button" data-close aria-label="Tutup"><svg class="ik" aria-hidden="true"><use href="#i-x"/></svg></button>
+      </header>
+      <div class="modal-body">
+        <div class="prg-total">
+          <div class="prg-angka"><strong id="prgPct">0%</strong><span id="prgText">0 / 604 halaman</span></div>
+          <div class="bar"><i id="prgBar"></i></div>
+        </div>
+        <h3 class="sub">Per juz <small>(ketuk untuk membuka)</small></h3>
+        <ul id="prgJuz" class="list juz-list"></ul>
+      </div>
+      <footer class="modal-foot"><button id="prgMark" type="button" class="btn-utama">Tandai halaman ini hafal</button></footer>
+    </div>
+  </dialog>
+
+  <!-- Dialog: Pengaturan -->
+  <dialog id="dlgSet" class="modal" aria-labelledby="setTitle">
+    <div class="modal-box">
+      <header class="modal-head">
+        <h2 id="setTitle">Pengaturan</h2>
+        <button class="icon-btn kecil" type="button" data-close aria-label="Tutup"><svg class="ik" aria-hidden="true"><use href="#i-x"/></svg></button>
+      </header>
+      <div class="modal-body set-body">
+        <fieldset class="grp">
+          <legend>Tema</legend>
+          <div class="radio-row">
+            <label><input type="radio" name="theme" value="auto"><span>Otomatis</span></label>
+            <label><input type="radio" name="theme" value="light"><span>Terang</span></label>
+            <label><input type="radio" name="theme" value="dark"><span>Gelap</span></label>
+            <label><input type="radio" name="theme" value="sepia"><span>Sepia</span></label>
+          </div>
+        </fieldset>
+        <div class="grp">
+          <label class="row" for="setWidth"><span>Lebar halaman</span><output id="setWidthVal">700 px</output></label>
+          <input id="setWidth" type="range" min="480" max="960" step="20" value="700">
+        </div>
+        <div class="grp">
+          <label class="check"><input id="setReveal" type="checkbox"><span>Buka ayat otomatis saat audio memutarnya <small>(pada mode Tutup / Kata awal)</small></span></label>
+          <label class="check"><input id="setTrans" type="checkbox"><span>Tampilkan terjemahan Indonesia saat ayat dipilih</span></label>
+          <label class="check"><input id="setWake" type="checkbox"><span>Jaga layar tetap menyala</span></label>
+        </div>
+        <div class="grp">
+          <h3 class="sub">Data</h3>
+          <div class="btn-row">
+            <button id="btnExport" type="button" class="btn"><svg class="ik" aria-hidden="true"><use href="#i-download"/></svg>Ekspor cadangan</button>
+            <button id="btnImport" type="button" class="btn"><svg class="ik" aria-hidden="true"><use href="#i-upload"/></svg>Impor cadangan</button>
+            <button id="btnReset" type="button" class="btn bahaya"><svg class="ik" aria-hidden="true"><use href="#i-trash"/></svg>Hapus data lokal</button>
+          </div>
+          <input id="fileImport" type="file" accept="application/json,.json" hidden>
+          <p class="catatan">Masuk dengan Google untuk menyinkronkan progres, penanda, dan pengaturan antar perangkat.</p>
+        </div>
+        <div class="grp sumber">
+          <h3 class="sub">Sumber data</h3>
+          <p class="catatan">Teks &amp; font: mushaf Madinah (QCF v4) · Peta ayat, halaman &amp; terjemahan Indonesia (Kemenag): Quran.com API · Audio: EveryAyah.com. Semua sumber gratis.</p>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="toasts" role="status" aria-live="polite"></div>
+
+  <script src="app.js" defer></script>
 </body>
 </html>
