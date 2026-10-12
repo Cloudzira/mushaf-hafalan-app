@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mushaf Hafalan Pro - Tikrar & Focus Mode</title>
-    <!-- Tailwind CSS untuk Desain Modern yang Cantik & Responsif -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        mushafBg: '#FBF9F1', // Warna kertas sepian/krem ramah mata
+                        mushafBg: '#FBF9F1',
                         mushafCard: '#F4EFEA',
                     }
                 }
@@ -21,10 +21,18 @@
 </head>
 <body class="bg-mushafBg text-gray-800 font-sans min-h-screen flex flex-col">
 
-    <!-- Header / Navbar -->
+    <!-- Header / Navbar & Status Login -->
     <header class="bg-amber-800 text-white shadow-md p-4 flex justify-between items-center">
-        <h1 class="text-lg font-bold tracking-wide">📖 Mushaf Tahfidz Pro</h1>
-        <div class="text-sm bg-amber-900 px-3 py-1 rounded-full">Surah Al-Fatihah (Juz 1)</div>
+        <div>
+            <h1 class="text-lg font-bold tracking-wide">📖 Mushaf Tahfidz Pro</h1>
+            <span class="text-xs text-amber-200" id="userStatus">Belum Masuk</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <div class="text-xs bg-amber-900 px-3 py-1 rounded-full hidden md:block">Surah Al-Fatihah (Juz 1)</div>
+            <button id="authBtn" onclick="toggleAuth()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-3 py-1.5 rounded-lg transition">
+                Masuk (Google)
+            </button>
+        </div>
     </header>
 
     <!-- Konten Utama Mushaf -->
@@ -46,28 +54,26 @@
         <div id="mushafSheet" class="bg-white p-6 rounded-2xl shadow-md border border-amber-100 flex flex-col gap-6">
             
             <!-- Ayat 1 -->
-            <div class="p-4 rounded-xl border border-gray-100 hover:bg-amber-50/50 transition flex flex-col gap-3">
+            <div class="p-4 rounded-xl border border-gray-100 hover:bg-amber-50/50 transition flex flex-col gap-3" data-ayah="1">
                 <div class="flex justify-between items-center text-xs text-gray-400 font-semibold">
                     <span>Ayat 1</span>
                     <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Tikrar: <span class="count">0</span>x</span>
                 </div>
-                <!-- Teks Arab -->
                 <p class="ayah-text text-2xl md:text-3xl text-right font-serif leading-loose text-gray-900 select-none transition-all duration-300">
                     بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
                 </p>
-                <!-- Tombol Tikrar & Audio per Ayat -->
                 <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
                     <button onclick="playAudio('001001')" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
                         🔊 Dengar Audio
                     </button>
-                    <button onclick="tambahTikrar(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
+                    <button onclick="tambahTikrar('1', this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
                         + Hitung Tikrar (Ulang)
                     </button>
                 </div>
             </div>
 
             <!-- Ayat 2 -->
-            <div class="p-4 rounded-xl border border-gray-100 hover:bg-amber-50/50 transition flex flex-col gap-3">
+            <div class="p-4 rounded-xl border border-gray-100 hover:bg-amber-50/50 transition flex flex-col gap-3" data-ayah="2">
                 <div class="flex justify-between items-center text-xs text-gray-400 font-semibold">
                     <span>Ayat 2</span>
                     <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Tikrar: <span class="count">0</span>x</span>
@@ -79,14 +85,14 @@
                     <button onclick="playAudio('001002')" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
                         🔊 Dengar Audio
                     </button>
-                    <button onclick="tambahTikrar(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
+                    <button onclick="tambahTikrar('2', this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
                         + Hitung Tikrar (Ulang)
                     </button>
                 </div>
             </div>
 
             <!-- Ayat 3 -->
-            <div class="p-4 rounded-xl border border-gray-100 hover:bg-amber-50/50 transition flex flex-col gap-3">
+            <div class="p-4 rounded-xl border border-gray-100 hover:bg-amber-50/50 transition flex flex-col gap-3" data-ayah="3">
                 <div class="flex justify-between items-center text-xs text-gray-400 font-semibold">
                     <span>Ayat 3</span>
                     <span class="tikrar-badge bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Tikrar: <span class="count">0</span>x</span>
@@ -98,7 +104,7 @@
                     <button onclick="playAudio('001003')" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
                         🔊 Dengar Audio
                     </button>
-                    <button onclick="tambahTikrar(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
+                    <button onclick="tambahTikrar('3', this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
                         + Hitung Tikrar (Ulang)
                     </button>
                 </div>
@@ -109,12 +115,111 @@
 
     <!-- Footer -->
     <footer class="text-center py-4 text-xs text-gray-500">
-        Mushaf Tahfidz Digital • 100% Free & Open Source
+        Mushaf Tahfidz Digital • Powered by Firebase & Vercel
     </footer>
 
-    <!-- JavaScript Interaktif -->
+    <!-- Firebase SDK (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ⚠️ GANTI DENGAN KUNCI FIREBASE ANDA SENDIRI
+        const firebaseConfig = {
+             apiKey: "AIzaSyCDU5f4iBXSwlKYYJUO6bb72r1VBVLAg3I",
+              authDomain: "mushafpro-e80e1.firebaseapp.com",
+              projectId: "mushafpro-e80e1",
+              storageBucket: "mushafpro-e80e1.firebasestorage.app",
+              messagingSenderId: "416657395563",
+              appId: "1:416657395563:web:842ee40f5e180c22bb862e"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        let currentUser = null;
+
+        // Pantau Status Login Pengguna
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            const userStatus = document.getElementById('userStatus');
+            const authBtn = document.getElementById('authBtn');
+
+            if (user) {
+                userStatus.innerText = `Halo, ${user.displayName}`;
+                authBtn.innerText = "Keluar";
+                authBtn.className = "bg-rose-700 hover:bg-rose-800 text-white text-xs px-3 py-1.5 rounded-lg transition";
+                
+                // Ambil data progres hafalan pengguna dari Firestore
+                await loadUserProgress(user.uid);
+            } else {
+                userStatus.innerText = "Belum Masuk";
+                authBtn.innerText = "Masuk (Google)";
+                authBtn.className = "bg-amber-600 hover:bg-amber-700 text-white text-xs px-3 py-1.5 rounded-lg transition";
+            }
+        });
+
+        // Tombol Login / Logout
+        window.toggleAuth = async function() {
+            if (currentUser) {
+                await signOut(auth);
+            } else {
+                try {
+                    await signInWithPopup(auth, provider);
+                } catch (error) {
+                    console.error("Gagal login:", error);
+                    alert("Login gagal: " + error.message);
+                }
+            }
+        }
+
+        // Simpan Progres Tikrar ke Firebase Firestore
+        window.saveProgressToCloud = async function(ayahNum, count) {
+            if (!currentUser) return; // Kalau belum login, simpan lokal saja
+            try {
+                const userDocRef = doc(db, "progres_hafalan", currentUser.uid);
+                await setDoc(userDocRef, {
+                    [`ayah_${ayahNum}`]: count,
+                    updated_at: new Date().toISOString()
+                }, { merge: true });
+            } catch (e) {
+                console.error("Gagal menyimpan ke cloud:", e);
+            }
+        }
+
+        // Muat Progres dari Firebase Firestore
+        async function loadUserProgress(uid) {
+            try {
+                const userDocRef = doc(db, "progres_hafalan", uid);
+                const docSnap = await getDoc(userDocRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    // Terapkan data ke tampilan web
+                    document.querySelectorAll('[data-ayah]').forEach(el => {
+                        const ayahNum = el.getAttribute('data-ayah');
+                        const savedCount = data[`ayah_${ayahNum}`];
+                        if (savedCount !== undefined) {
+                            const countSpan = el.querySelector('.count');
+                            countSpan.innerText = savedCount;
+                            if (savedCount >= 20) {
+                                const badge = el.querySelector('.tikrar-badge');
+                                badge.className = "tikrar-badge bg-amber-500 text-white px-2 py-0.5 rounded font-bold";
+                                badge.innerText = `Tikrar Selesai (${savedCount}x) ✨`;
+                            }
+                        }
+                    });
+                }
+            } catch (e) {
+                console.error("Gagal memuat progres:", e);
+            }
+        }
+    </script>
+
+    <!-- JavaScript Interaktif Antarmuka -->
     <script>
-        // 1. Fungsi Fitur Masking (Sembunyikan/Blur Teks untuk Uji Hafalan)
+        // 1. Fitur Masking (Blur)
         let isBlurred = false;
         function toggleMasking() {
             isBlurred = !isBlurred;
@@ -135,7 +240,6 @@
             statusMode.className = isBlurred ? "font-bold text-amber-600" : "font-bold text-green-700";
         }
 
-        // Interaksi klik untuk intip ayat saat mode blur aktif
         document.querySelectorAll('.ayah-text').forEach(el => {
             el.addEventListener('click', function() {
                 if (isBlurred) {
@@ -144,8 +248,8 @@
             });
         });
 
-        // 2. Fungsi Hitung Tikrar (Repetisi)
-        function tambahTikrar(btn) {
+        // 2. Fungsi Hitung Tikrar & Sinkronisasi Cloud
+        window.tambahTikrar = function(ayahNum, btn) {
             const container = btn.closest('div').parentElement;
             const countSpan = container.querySelector('.count');
             let currentCount = parseInt(countSpan.innerText);
@@ -157,17 +261,20 @@
                 badge.className = "tikrar-badge bg-amber-500 text-white px-2 py-0.5 rounded font-bold";
                 badge.innerText = `Tikrar Selesai (${currentCount}x) ✨`;
             }
+
+            // Simpan otomatis ke Firebase jika fungsi cloud aktif
+            if (typeof window.saveProgressToCloud === 'function') {
+                window.saveProgressToCloud(ayahNum, currentCount);
+            }
         }
 
-        // 3. Fungsi Audio Menggunakan CDN EveryAyah (Syeikh Al-Hudhaify / Al-Husary Standar Stabil)
-        function playAudio(filename) {
-            // Menggunakan server EveryAyah dengan format 6 digit (contoh: 001001.mp3)
+        // 3. Audio Player
+        window.playAudio = function(filename) {
             let audioUrl = `https://everyayah.com/data/Husary_64kbps/${filename}.mp3`;
-            
             let audio = new Audio(audioUrl);
             audio.play().catch(error => {
                 console.error("Gagal memutar audio:", error);
-                alert("Gagal memutar audio. Pastikan perangkat terhubung ke internet.");
+                alert("Gagal memutar audio. Pastikan terhubung ke internet.");
             });
         }
     </script>
