@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mushaf Hafalan Pro - Tikrar & AI Voice Setoran</title>
+    <title>Mushaf Hafalan Pro - Advanced AI Tashih</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -64,9 +64,14 @@
                     بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
                 </p>
 
-                <!-- Box Hasil Setoran AI -->
-                <div id="aiResult-1" class="hidden text-xs p-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-900">
-                    <span class="font-bold">Hasil Suara Anda:</span> <span class="user-speech italic"></span>
+                <!-- Box Laporan Detail Koreksi AI -->
+                <div id="aiResult-1" class="hidden text-xs p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 flex flex-col gap-2">
+                    <div class="flex justify-between font-bold border-b border-amber-200 pb-1">
+                        <span>📊 Laporan Tashih AI:</span>
+                        <span id="score-1" class="text-emerald-700">Akurasi: 0%</span>
+                    </div>
+                    <div><span class="font-semibold">Suara Anda:</span> <span class="user-speech italic"></span></div>
+                    <div id="detail-feedback-1" class="font-semibold text-rose-700"></div>
                 </div>
 
                 <div class="flex flex-wrap justify-between items-center mt-2 pt-2 border-t border-gray-100 gap-2">
@@ -75,7 +80,7 @@
                             🔊 Audio
                         </button>
                         <button onclick="startAiRecord('1', 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1">
-                            🎙️ Setoran AI
+                            🎙️ Setoran AI (Detail)
                         </button>
                     </div>
                     <button onclick="tambahTikrar('1', this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
@@ -95,8 +100,13 @@
                     الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
                 </p>
 
-                <div id="aiResult-2" class="hidden text-xs p-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-900">
-                    <span class="font-bold">Hasil Suara Anda:</span> <span class="user-speech italic"></span>
+                <div id="aiResult-2" class="hidden text-xs p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 flex flex-col gap-2">
+                    <div class="flex justify-between font-bold border-b border-amber-200 pb-1">
+                        <span>📊 Laporan Tashih AI:</span>
+                        <span id="score-2" class="text-emerald-700">Akurasi: 0%</span>
+                    </div>
+                    <div><span class="font-semibold">Suara Anda:</span> <span class="user-speech italic"></span></div>
+                    <div id="detail-feedback-2" class="font-semibold text-rose-700"></div>
                 </div>
 
                 <div class="flex flex-wrap justify-between items-center mt-2 pt-2 border-t border-gray-100 gap-2">
@@ -105,7 +115,7 @@
                             🔊 Audio
                         </button>
                         <button onclick="startAiRecord('2', 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1">
-                            🎙️ Setoran AI
+                            🎙️ Setoran AI (Detail)
                         </button>
                     </div>
                     <button onclick="tambahTikrar('2', this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
@@ -125,8 +135,13 @@
                     الرَّحْمَٰنِ الرَّحِيمِ
                 </p>
 
-                <div id="aiResult-3" class="hidden text-xs p-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-900">
-                    <span class="font-bold">Hasil Suara Anda:</span> <span class="user-speech italic"></span>
+                <div id="aiResult-3" class="hidden text-xs p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 flex flex-col gap-2">
+                    <div class="flex justify-between font-bold border-b border-amber-200 pb-1">
+                        <span>📊 Laporan Tashih AI:</span>
+                        <span id="score-3" class="text-emerald-700">Akurasi: 0%</span>
+                    </div>
+                    <div><span class="font-semibold">Suara Anda:</span> <span class="user-speech italic"></span></div>
+                    <div id="detail-feedback-3" class="font-semibold text-rose-700"></div>
                 </div>
 
                 <div class="flex flex-wrap justify-between items-center mt-2 pt-2 border-t border-gray-100 gap-2">
@@ -135,7 +150,7 @@
                             🔊 Audio
                         </button>
                         <button onclick="startAiRecord('3', 'الرَّحْمَٰنِ الرَّحِيمِ')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1">
-                            🎙️ Setoran AI
+                            🎙️ Setoran AI (Detail)
                         </button>
                     </div>
                     <button onclick="tambahTikrar('3', this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
@@ -149,23 +164,23 @@
 
     <!-- Footer -->
     <footer class="text-center py-4 text-xs text-gray-500">
-        Mushaf Tahfidz Digital • Powered by AI Web Speech Engine
+        Mushaf Tahfidz Digital • Advanced AI Token Matcher
     </footer>
 
-    <!-- Firebase SDK (Modular) -->
+    <!-- Firebase SDK & Konfigurasi -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ⚠️ GANTI DENGAN KUNCI FIREBASE ANDA
-       const firebaseConfig = {
-          apiKey: "AIzaSyCDU5f4iBXSwlKYYJUO6bb72r1VBVLAg3I",
-          authDomain: "mushafpro-e80e1.firebaseapp.com",
-          projectId: "mushafpro-e80e1",
-          storageBucket: "mushafpro-e80e1.firebasestorage.app",
-          messagingSenderId: "416657395563",
-          appId: "1:416657395563:web:842ee40f5e180c22bb862e"
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyCDU5f4iBXSwlKYYJUO6bb72r1VBVLAg3I",
+            authDomain: "mushafpro-e80e1.firebaseapp.com",
+            projectId: "mushafpro-e80e1",
+            storageBucket: "mushafpro-e80e1.firebasestorage.app",
+            messagingSenderId: "416657395563",
+            appId: "1:416657395563:web:842ee40f5e180c22bb862e"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -200,6 +215,7 @@
                     await signInWithPopup(auth, provider);
                 } catch (error) {
                     console.error("Gagal login:", error);
+                    alert("Gagal login: " + error.message);
                 }
             }
         }
@@ -243,9 +259,8 @@
         }
     </script>
 
-    <!-- JavaScript Interaktif & AI Speech Recognition -->
+    <!-- JavaScript Interaktif & Advanced AI Token Matcher -->
     <script>
-        // 1. Fitur Masking (Blur)
         let isBlurred = false;
         function toggleMasking() {
             isBlurred = !isBlurred;
@@ -261,7 +276,6 @@
                     el.title = "";
                 }
             });
-
             statusMode.innerText = isBlurred ? "Mode Sembunyi (Blur Aktif)" : "Tampil Normal";
             statusMode.className = isBlurred ? "font-bold text-amber-600" : "font-bold text-green-700";
         }
@@ -274,7 +288,6 @@
             });
         });
 
-        // 2. Fungsi Hitung Tikrar
         window.tambahTikrar = function(ayahNum, btn) {
             const container = btn.closest('div').parentElement;
             const countSpan = container.querySelector('.count');
@@ -293,36 +306,37 @@
             }
         }
 
-        // 3. Audio Player
         window.playAudio = function(filename) {
             let audioUrl = `https://everyayah.com/data/Husary_64kbps/${filename}.mp3`;
             let audio = new Audio(audioUrl);
             audio.play().catch(error => {
-                console.error("Gagal memutar audio:", error);
                 alert("Gagal memutar audio. Pastikan terhubung ke internet.");
             });
         }
 
-        // 4. Fitur Koreksi Setoran AI (Web Speech Recognition Engine)
+        // --- ALGORITMA AI ANALISIS DETAIL KATA (TOKEN MATCHER) ---
         window.startAiRecord = function(ayahNum, originalText) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
             if (!SpeechRecognition) {
-                alert("Browser Anda belum mendukung fitur AI Speech Recognition. Gunakan Chrome atau Edge versi terbaru.");
+                alert("Browser Anda belum mendukung fitur AI Speech Recognition. Gunakan Google Chrome.");
                 return;
             }
 
             const recognition = new SpeechRecognition();
-            recognition.lang = 'ar-SA'; // Bahasa Arab Standard / Qur'ani
+            recognition.lang = 'ar-SA';
             recognition.interimResults = false;
 
             const resultBox = document.getElementById(`aiResult-${ayahNum}`);
             const speechSpan = resultBox.querySelector('.user-speech');
+            const scoreSpan = document.getElementById(`score-${ayahNum}`);
+            const detailBox = document.getElementById(`detail-feedback-${ayahNum}`);
             const textElement = document.getElementById(`text-${ayahNum}`);
 
             resultBox.classList.remove('hidden');
-            speechSpan.innerText = "🎙️ Mendengarkan... Silakan melafalkan ayat sekarang!";
-            speechSpan.className = "user-speech font-bold text-indigo-600 animate-pulse";
+            speechSpan.innerText = "🎙️ Mendengarkan bacaan Anda...";
+            scoreSpan.innerText = "Menganalisis...";
+            detailBox.innerText = "";
 
             recognition.start();
 
@@ -330,28 +344,52 @@
                 const spokenText = event.results[0][0].transcript;
                 speechSpan.innerText = spokenText;
 
-                // Pembersihan tanda baca sederhana untuk pencocokan kata
+                // 1. Bersihkan teks dari harakat untuk pencocokan token murni
                 const cleanOriginal = originalText.replace(/[\u064B-\u0652]/g, "").trim();
                 const cleanSpoken = spokenText.replace(/[\u064B-\u0652]/g, "").trim();
 
-                // Evaluasi AI
-                if (cleanSpoken.length > 0) {
-                    textElement.classList.remove('bg-green-100', 'bg-rose-100');
-                    if (cleanOriginal.includes(cleanSpoken) || cleanSpoken.includes(cleanOriginal)) {
-                        textElement.classList.add('bg-green-100', 'p-2', 'rounded-lg');
-                        speechSpan.className = "user-speech font-bold text-emerald-700";
-                        speechSpan.innerText = `${spokenText} (✅ Hafalan Tepat & Lancar!)`;
+                const originalWords = cleanOriginal.split(/\s+/);
+                const spokenWords = cleanSpoken.split(/\s+/);
+
+                // 2. Bandingkan kata per kata (Token Level Comparison)
+                let matchedCount = 0;
+                let missingWords = [];
+
+                originalWords.forEach((oWord, index) => {
+                    if (spokenWords.includes(oWord)) {
+                        matchedCount++;
                     } else {
-                        textElement.classList.add('bg-rose-100', 'p-2', 'rounded-lg');
-                        speechSpan.className = "user-speech font-bold text-rose-700";
-                        speechSpan.innerText = `${spokenText} (🔴 Ada kata yang kurang tepat, coba ulangi!)`;
+                        missingWords.push(`"${oWord}" (Kata ke-${index + 1})`);
                     }
+                });
+
+                // Hitung akurasi persentase
+                const accuracy = Math.round((matchedCount / originalWords.length) * 100);
+                scoreSpan.innerText = `Akurasi: ${accuracy}%`;
+
+                // 3. Berikan feedback detail
+                textElement.classList.remove('bg-green-100', 'bg-yellow-100', 'bg-rose-100');
+                
+                if (accuracy === 100) {
+                    textElement.classList.add('bg-green-100', 'p-2', 'rounded-lg');
+                    scoreSpan.className = "text-emerald-700 font-bold";
+                    detailBox.className = "font-semibold text-emerald-700";
+                    detailBox.innerHTML = "✅ Masya Allah! Hafalan sempurna dan sangat akurat.";
+                } else if (accuracy >= 60) {
+                    textElement.classList.add('bg-yellow-100', 'p-2', 'rounded-lg');
+                    scoreSpan.className = "text-amber-700 font-bold";
+                    detailBox.className = "font-semibold text-amber-800";
+                    detailBox.innerHTML = `⚠️ Hampir lancar, tapi ada bagian yang terlewat:<br>• Kurang tepat/terlewat: ${missingWords.join(', ')}`;
+                } else {
+                    textElement.classList.add('bg-rose-100', 'p-2', 'rounded-lg');
+                    scoreSpan.className = "text-rose-700 font-bold";
+                    detailBox.className = "font-semibold text-rose-700";
+                    detailBox.innerHTML = `❌ Hafalan belum sesuai teks asli.<br>• Kata yang tidak terdeteksi: ${missingWords.join(', ')}`;
                 }
             };
 
             recognition.onerror = function(event) {
-                speechSpan.innerText = "Gagal mendeteksi suara. Pastikan mikrofon diizinkan.";
-                speechSpan.className = "user-speech text-rose-600";
+                speechSpan.innerText = "Gagal mendeteksi suara. Pastikan mikrofon aktif.";
             };
         }
     </script>
