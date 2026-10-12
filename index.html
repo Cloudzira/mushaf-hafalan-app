@@ -79,7 +79,7 @@
       background: var(--kaca); border: 1px solid var(--tepi-aksen); border-radius: 14px;
       backdrop-filter: blur(16px); box-shadow: var(--bayang); user-select: none;
     }
-    .frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid rgba(180,83,9,.2); border-radius: 9px; pointer-events: none; }
+    .frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid rgba(180,83,9,.2); border-radius: 99px; pointer-events: none; }
     .edge { position: absolute; }
     .e-top    { top: 11px; left: 34px; right: 34px; height: 10px; background: var(--tile-h) repeat-x center; }
     .e-bottom { bottom: 11px; left: 34px; right: 34px; height: 10px; background: var(--tile-h) repeat-x center; }
@@ -111,13 +111,19 @@
     .banner span { white-space: nowrap; padding: 0 4%; }
     .kata { flex: none; line-height: normal; position: relative; z-index: 1; transition: filter .2s, opacity .2s; }
 
-    /* Aturan Masking Hafalan */
+    /* Control Masking Hafalan */
     .blur-total .kata { filter: blur(7px); opacity: 0.15; cursor: pointer; }
     .blur-total .kata.terbuka { filter: none; opacity: 1; }
     
-    .kata-pertama-ayat-saja .kata { filter: blur(7px); opacity: 0.1; }
-    /* Nomor ayat dan kata pertama tiap ayat selalu terbuka jernih */
-    .kata-pertama-ayat-saja .kata.terbuka-selalu { filter: none; opacity: 1; }
+    .kata-pertama-ayat-saja .kata { filter: blur(7px); opacity: 0.15; cursor: pointer; }
+    .kata-pertama-ayat-saja .kata.terbuka { filter: none; opacity: 1; }
+    
+    /* Nomor ayat dan kata pertama ayat SELALU TERBUKA */
+    .kata-pertama-ayat-saja .kata.is-nomor-ayat,
+    .kata-pertama-ayat-saja .kata.is-kata-pertama { 
+      filter: none !important; 
+      opacity: 1 !important; 
+    }
 
     #info { text-align: center; margin: 14px 12px 0; font-size: .78rem; color: var(--redup); }
 
@@ -382,7 +388,7 @@
 
       teks.innerHTML = "";
       
-      let bukaKataBerikutnya = true; // Kata pertama di awal halaman selalu terbuka
+      let tandaiKataPertama = true; // Kata pertama di awal halaman selalu terbuka
 
       data.lines.forEach(line => {
         const baris = document.createElement("div");
@@ -397,6 +403,7 @@
           t.textContent = judulSurah(header.text);
           b.appendChild(t);
           baris.appendChild(b);
+          tandaiKataPertama = true;
         } else {
           line.words.forEach(w => {
             const k = document.createElement("span");
@@ -405,15 +412,15 @@
             k.textContent = w.char;
             k.onclick = () => k.classList.toggle("terbuka");
 
-            // Deteksi nomor ayat (simbol/font nomor ayat QCF4)
-            const isAyahNumber = w.type === "ayah_number" || w.font.includes("QBSML") || /[\u06DD\u06E9]/.test(w.char);
+            // Semak jika elemen ini adalah NOMBOR AYAT
+            const isNomorAyat = w.type === "end" || w.type === "ayah_number" || w.font.includes("QBSML") || /[\u06DD\u06E9]/.test(w.char);
 
-            if (isAyahNumber) {
-              k.classList.add("terbuka-selalu"); // Nomor ayat mutlak SELALU terbuka
-              bukaKataBerikutnya = true;         // Menandai bahwa kata berikutnya adalah kata pertama ayat baru
-            } else if (bukaKataBerikutnya) {
-              k.classList.add("terbuka-selalu"); // Kata pertama setiap ayat SELALU terbuka
-              bukaKataBerikutnya = false;
+            if (isNomorAyat) {
+              k.classList.add("is-nomor-ayat"); // Diberi kelas nombor ayat (Pasti Terbuka)
+              tandaiKataPertama = true;           // Mengarahkan kata berikut sebagai KATA PERTAMA ayat baharu
+            } else if (tandaiKataPertama) {
+              k.classList.add("is-kata-pertama"); // Diberi kelas kata pertama ayat (Pasti Terbuka)
+              tandaiKataPertama = false;
             }
 
             baris.appendChild(k);
@@ -529,7 +536,7 @@
 
     document.getElementById("tema").onclick = () => {
       tema = tema === "dark" ? "light" : "dark";
-      localStorage.getItem("quran_tema", tema);
+      localStorage.setItem("quran_tema", tema);
       terapkanTema();
     };
 
