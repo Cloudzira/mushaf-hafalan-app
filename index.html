@@ -57,7 +57,7 @@
                 </p>
                 <!-- Tombol Tikrar & Audio per Ayat -->
                 <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
-                    <button onclick="playAudio('1')" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
+                    <button onclick="playAudio('001001')" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
                         🔊 Dengar Audio
                     </button>
                     <button onclick="tambahTikrar(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
@@ -76,7 +76,7 @@
                     الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
                 </p>
                 <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
-                    <button onclick="playAudio('2')" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
+                    <button onclick="playAudio('001002')" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
                         🔊 Dengar Audio
                     </button>
                     <button onclick="tambahTikrar(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
@@ -95,7 +95,7 @@
                     الرَّحْمَٰنِ الرَّحِيمِ
                 </p>
                 <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
-                    <button onclick="playAudio('3')" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
+                    <button onclick="playAudio('001003')" class="text-xs text-amber-700 hover:underline flex items-center gap-1 font-semibold">
                         🔊 Dengar Audio
                     </button>
                     <button onclick="tambahTikrar(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg shadow-sm">
@@ -159,10 +159,10 @@
             }
         }
 
-        // 3. Fungsi Audio Menggunakan CDN Resmi Islamic Network / Al-Afasy
-        function playAudio(ayahNumber) {
-            // Surah 1 (Al-Fatihah), ayat sesuai parameter (1, 2, atau 3)
-            let audioUrl = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/1.${ayahNumber}.mp3`;
+        // 3. Fungsi Audio Menggunakan CDN EveryAyah (Syeikh Al-Hudhaify / Al-Husary Standar Stabil)
+        function playAudio(filename) {
+            // Menggunakan server EveryAyah dengan format 6 digit (contoh: 001001.mp3)
+            let audioUrl = `https://everyayah.com/data/Husary_64kbps/${filename}.mp3`;
             
             let audio = new Audio(audioUrl);
             audio.play().catch(error => {
