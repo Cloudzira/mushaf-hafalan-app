@@ -242,7 +242,7 @@
       <div id="teks"></div>
       <div id="kaki"><span id="kNo"></span></div>
     </div>
-    <div id="info">Ketuk nomor ayat untuk membuka/menutup satu ayat penuh.</div>
+    <div id="info">Ketuk nomor ayat untuk membuka/menutup atau memutar audio ayat tersebut.</div>
   </div>
 
   <!-- Audio Player Bar Syaikh Misyari Rasyid -->
@@ -253,10 +253,10 @@
     <div class="audio-group">
       <label>Mode:</label>
       <select id="audioMode" onchange="gantiModeAudio()">
-        <option value="ayah">Per Ayat</option>
+        <option value="page">Per Halaman</option>
+        <option value="ayah">Per Ayat Terpilih</option>
         <option value="range">Rentang Ayat</option>
         <option value="surah">Per Surat</option>
-        <option value="page">Per Halaman</option>
       </select>
     </div>
     <div class="audio-group" id="rangeControl" style="display:none;">
@@ -447,7 +447,10 @@
     let modeHafalan = "normal"; 
     let token = 0;
     let activeSurahName = "";
-    let activePageAyahs = []; // Menyimpan daftar ayat yang ada di halaman aktif untuk audio
+    
+    // Menyimpan daftar URL audio & nomor ayat yang sedang tampil di halaman ini
+    let pageAyahAudioList = [];
+    let selectedAyahAudioUrl = null;
 
     // Variabel Audio State
     let currentAudio = null;
@@ -494,6 +497,38 @@
       return [...s];
     }
 
+    // Mapping perkiraan nomor surah & ayat berdasarkan data QCF Halaman
+    function getSurahAndAyahFromPageData(data, halamanNo) {
+      // Menentukan nomor surah dasar halaman
+      const currentSurahObj = DAFTAR_SURAH.slice().reverse().find(s => s.hal <= halamanNo) || DAFTAR_SURAH[0];
+      let sNo = currentSurahObj.no;
+      
+      let list = [];
+      let ayahCount = 1;
+
+      data.lines.forEach(line => {
+        const header = line.words.find(w => w.type === "surah_header");
+        if (header) {
+          // Cari nomor surah baru jika ada header surah di tengah halaman
+          const foundS = DAFTAR_SURAH.find(s => header.text.includes(s.nama.replace(/[^a-zA-Z]/g, "")));
+          if (foundS) sNo = foundS.no;
+          ayahCount = 1;
+        }
+        line.words.forEach(w => {
+          const isNomorAyat = w.type === "end" || w.type === "ayah_number" || w.font.includes("QBSML") || /[\u06DD\u06E9]/.test(w.char);
+          if (isNomorAyat) {
+            list.push({
+              surah: sNo,
+              ayah: ayahCount,
+              url: `https://everyayah.com/data/Alafasy_128kbps/${String(sNo).padStart(3, '0')}${String(ayahCount).padStart(3, '0')}.mp3`
+            });
+            ayahCount++;
+          }
+        });
+      });
+      return list;
+    }
+
     async function renderTeks(no, my) {
       teks.classList.add("memuat");
       const data = await ambilData(no);
@@ -501,11 +536,10 @@
       if (my !== token) return;
 
       teks.innerHTML = "";
-      activePageAyahs = [];
+      pageAyahAudioList = getSurahAndAyahFromPageData(data, no);
       
       let tandaiKataPertama = true;
       let ayatCounter = 1;
-      let ayatListInPage = new Set();
 
       data.lines.forEach(line => {
         const baris = document.createElement("div");
@@ -542,14 +576,15 @@
               k.classList.add("is-nomor-ayat");
               k.dataset.ayatGroup = currentAyatId;
               
-              // Simpan nomor ayat & surah untuk audio Syaikh Misyari (Global format: SurahAyat misal 001001)
-              // Kita ekstrak nomor surat dari data jika ada, atau mapping standar
-              const surahObj = data.surahs && data.surahs[0] ? data.surahs[0] : { number: 1 };
-              // Untuk kemudahan API audio tiap ayat global, kita buat format standard global quran audio
-              // Menggunakan CDN mp3quran.net atau everyayah untuk Misyari Rasyid (surah 3 digit + ayat 3 digit)
+              const audioInfo = pageAyahAudioList[ayatCounter - 2] || pageAyahAudioList[0];
+              
+              // Klik nomor ayat: Toggle teks ayat SEKALIGUS memutar audio ayat itu saja
               k.onclick = (e) => {
                 e.stopPropagation();
                 toggleAyatGroup(currentAyatId);
+                if (audioInfo) {
+                  playSpecificAyat(audioInfo.url);
+                }
               };
 
               tandaiKataPertama = true;
@@ -665,10 +700,10 @@
       teks.classList.remove("blur-total", "kata-pertama-ayat-saja");
       if (modeHafalan === "blur") {
         teks.classList.add("blur-total");
-        info.textContent = "Mode Blur: Ketuk nomor ayat untuk buka/tutup satu ayat.";
+        info.textContent = "Mode Blur: Ketuk nomor ayat untuk buka/tutup atau putar ayat.";
       } else if (modeHafalan === "firstAyat") {
         teks.classList.add("kata-pertama-ayat-saja");
-        info.textContent = "Mode Kata Pertama: Ketuk nomor ayat untuk buka/tutup ayat.";
+        info.textContent = "Mode Kata Pertama: Ketuk nomor ayat untuk buka/tutup atau putar ayat.";
       } else {
         info.textContent = "Mode Normal: Teks terbuka penuh.";
       }
@@ -686,40 +721,41 @@
       document.getElementById("rangeControl").style.display = (mode === "range" ? "flex" : "none");
     }
 
-    function getSurahAndAyahListForAudio() {
-      // Menghasilkan URL audio Misyari Rasyid per ayat dari server mp3quran / everyayah
-      // Format URL Misyari per ayat: https://everyayah.com/data/Alafasy_128kbps/SSSAAA.mp3 (Surah 3 digit, Ayat 3 digit)
+    function getAudioQueueByMode() {
       const mode = document.getElementById("audioMode").value;
       let urls = [];
       
-      // Deteksi nomor surah aktif berdasarkan halaman saat ini
-      const surahData = DAFTAR_SURAH.slice().reverse().find(s => s.hal <= halaman) || DAFTAR_SURAH[0];
-      const sNo = surahData.no;
-
-      if (mode === "ayah" || mode === "range") {
-        let start = (mode === "range") ? parseInt(document.getElementById("startAyat").value) || 1 : 1;
-        let end = (mode === "range") ? parseInt(document.getElementById("endAyat").value) || start : start;
+      if (mode === "page") {
+        // Putar hanya ayat-ayat yang ada di halaman aktif saat ini
+        urls = pageAyahAudioList.map(item => item.url);
+      } else if (mode === "ayah") {
+        if (selectedAyahAudioUrl) urls = [selectedAyahAudioUrl];
+        else if (pageAyahAudioList.length) urls = [pageAyahAudioList[0].url];
+      } else if (mode === "range") {
+        let start = parseInt(document.getElementById("startAyat").value) || 1;
+        let end = parseInt(document.getElementById("endAyat").value) || start;
+        const currentSurahObj = DAFTAR_SURAH.slice().reverse().find(s => s.hal <= halaman) || DAFTAR_SURAH[0];
+        let sNo = currentSurahObj.no;
         for (let a = start; a <= end; a++) {
-          urls.push(formatAudioUrl(sNo, a));
+          urls.push(`https://everyayah.com/data/Alafasy_128kbps/${String(sNo).padStart(3, '0')}${String(a).padStart(3, '0')}.mp3`);
         }
       } else if (mode === "surah") {
-        // Asumsi perkiraan jumlah ayat standar surah aktif atau rentang umum
-        for (let a = 1; a <= 50; a++) {
-          urls.push(formatAudioUrl(sNo, a));
-        }
-      } else if (mode === "page") {
-        // Ambil dari kelompok ayat yang terdeteksi di halaman ini
-        for (let a = 1; a <= 15; a++) {
-          urls.push(formatAudioUrl(sNo, a));
+        const currentSurahObj = DAFTAR_SURAH.slice().reverse().find(s => s.hal <= halaman) || DAFTAR_SURAH[0];
+        let sNo = currentSurahObj.no;
+        for (let a = 1; a <= 60; a++) {
+          urls.push(`https://everyayah.com/data/Alafasy_128kbps/${String(sNo).padStart(3, '0')}${String(a).padStart(3, '0')}.mp3`);
         }
       }
       return urls;
     }
 
-    function formatAudioUrl(surahNo, ayahNo) {
-      const sStr = String(surahNo).padStart(3, '0');
-      const aStr = String(ayahNo).padStart(3, '0');
-      return `https://everyayah.com/data/Alafasy_128kbps/${sStr}${aStr}.mp3`;
+    function playSpecificAyat(url) {
+      stopAudio();
+      selectedAyahAudioUrl = url;
+      audioQueue = [url];
+      audioQueueIndex = 0;
+      currentRepeatCount = 0;
+      loadAndPlayCurrentQueue();
     }
 
     window.togglePlayAudio = function() {
@@ -732,7 +768,7 @@
 
     function playAudio() {
       if (!audioQueue.length) {
-        audioQueue = getSurahAndAyahListForAudio();
+        audioQueue = getAudioQueueByMode();
         audioQueueIndex = 0;
       }
       if (!audioQueue.length) return;
@@ -769,7 +805,6 @@
       document.getElementById("btnPlayAudio").innerText = "⏸ Pause";
 
       currentAudio.play().catch(e => {
-        // Jika file ayat melampaui batas akhir surah, hentikan
         stopAudio();
       });
 
