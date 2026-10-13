@@ -450,7 +450,9 @@ html[data-theme="dark"] .toast button { color: #b45309; }
 
 /* ------------------------------------------------------------ responsif */
 @media (max-width: 640px) {
-  :root { --pad-x: 24px; }
+  :root { --pad-x: 12px; }
+  #wrap { padding: 0; }
+  .topbar { width: min(var(--w), 100%); }
   .frame { padding: 30px var(--pad-x) 26px; }
   .e-top, .e-bottom { left: 24px; right: 24px; }
   .e-left, .e-right { top: 24px; bottom: 24px; }
@@ -463,6 +465,7 @@ html[data-theme="dark"] .toast button { color: #b45309; }
   .rentang label:first-child { grid-column: 1 / -1; }
 }
 @media (max-width: 380px) {
+  :root { --pad-x: 8px; }
   .aksi .icon-btn { width: 30px; height: 30px; }
   .grid-juz { grid-template-columns: repeat(4, 1fr); }
 }
