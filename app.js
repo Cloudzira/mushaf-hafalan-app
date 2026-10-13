@@ -132,6 +132,16 @@ async function fetchJson(url, tries = 2) {
   throw err;
 }
 
+/* Catatan galat ringkas, dipakai oleh "Salin info diagnostik" di Pengaturan. */
+const LOGBUF = [];
+function logDiag(kind, msg) {
+  LOGBUF.push(new Date().toISOString().slice(11, 19) + " " + kind + ": " + String(msg).slice(0, 220));
+  if (LOGBUF.length > 25) LOGBUF.shift();
+}
+window.addEventListener("error", e => logDiag("error", `${e.message} @${String(e.filename || "").split("/").pop()}:${e.lineno}`));
+window.addEventListener("unhandledrejection", e => logDiag("promise", e.reason && (e.reason.message || e.reason)));
+{ const w0 = console.warn; console.warn = (...a) => { logDiag("warn", a.map(String).join(" ")); w0.apply(console, a); }; }
+
 const LS = {
   get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* penyimpanan penuh / diblokir */ } },
@@ -240,7 +250,7 @@ const els = {};
  "selQari","selMode","rngWrap","rngSurah","rngFrom","rngTo","selRepAyat","selRepRange","selSpeed","selGap",
  "dlgNav","tabSurat","tabJuz","tabAyat","panSurat","panJuz","panAyat","navSearch","listSurat","gridJuz","ayatSurah","ayatNo","ayatGo",
  "dlgBm","bmList","bmAdd","dlgPrg","prgText","prgBar","prgPct","prgJuz","prgMark",
- "dlgSet","setWidth","setWidthVal","setReveal","setTrans","setWake","btnExport","btnImport","btnReset","fileImport","toasts","frame"
+ "dlgSet","setWidth","setWidthVal","setReveal","setTrans","setWake","btnExport","btnImport","btnReset","btnDiag","fileImport","toasts","frame"
 ].forEach(id => { els[id] = $(id); });
 
 const cur = { page: 0, verses: [], verseSet: new Set(), words: new Map(), surahs: [], sel: null };
@@ -275,10 +285,7 @@ function loadPage(no) {
 function loadFont(nama) {
   if (!fontCache.has(nama)) {
     const file = nama === "QCF4_QBSML" ? "QCF4_QBSML.woff2" : nama + "_W.woff2";
-    const p = new FontFace(nama, `url(${FONT_URL}${file})`, { display: "block" }).load()
-      .then(ff => { document.fonts.add(ff); return ff; })
-      // pastikan font benar-benar aktif sebelum teks dibuat dan diukur
-      .then(ff => document.fonts.load(`100px "${nama}"`).then(() => ff, () => ff));
+    const p = new FontFace(nama, `url(${FONT_URL}${file})`).load().then(ff => { document.fonts.add(ff); return ff; });
     p.catch(() => fontCache.delete(nama));
     fontCache.set(nama, p);
   }
@@ -299,7 +306,7 @@ async function render(no, tk) {
   let data;
   try {
     data = await loadPage(no);
-    await Promise.all(fontsOf(data).map(loadFont));
+    await Promise.all([metricsReady, ...fontsOf(data).map(loadFont)]);
   } catch (err) {
     console.warn("Gagal memuat halaman", no, err);
     if (tk === token) showError(no);
@@ -361,13 +368,12 @@ async function render(no, tk) {
     cur.surahs = [{ id: s, from: 1, to: SURAH[s - 1][2] }];
   }
 
-  fitLog.length = 0;
-  fit(true);
+  lastW = els.teks.clientWidth;
+  fit();
   applyHideMode();
   reapplyMarks();
   updateChrome();
   fillRangeControls();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (tk === token) fitSoon(); });
   return true;
 }
 
@@ -383,7 +389,21 @@ function showError(no) {
   els.teks.replaceChildren(box);
 }
 
-/* ---- Pas halaman: ukuran font dihitung agar baris terpanjang tepat selebar kolom ---- */
+/* ---- Pas halaman ----
+   Tata letak dihitung, BUKAN diukur dari DOM. Tiap kata QCF4 adalah satu glyph tanpa kerning,
+   jadi lebar baris = jumlah lebar glyph (em) + jarak antar kata. metrics.json menyimpan, untuk
+   tiap halaman, lebar baris terpanjang (em) dan daftar baris pendek, dihitung dari 47 font
+   asli dan dicocokkan dengan Chromium untuk 604 halaman (selisih maks 0,008%).
+   Karena tidak ada pengukuran, hasilnya tidak bergantung pada kapan font aktif, dan tidak ada
+   umpan balik layout → tidak ada kedipan. Bila metrics.json gagal dimuat, dipakai cadangan:
+   ukur DOM satu kali per render / perubahan lebar (tanpa timer, tanpa pengamat tambahan). */
+let METRICS = null;
+const metricsReady = fetchJson("metrics.json", 1)
+  .then(m => { if (m && m.p && m.pitch) METRICS = m; })
+  .catch(err => { console.warn("metrics.json tidak tersedia, memakai pengukuran DOM", err); });
+
+const FIT_SLACK = 0.985;                    // sisakan 1,5% (baris tetap rata kiri-kanan lewat space-between)
+
 function lebarAlami(baris, fs) {
   let total = 0;
   const kids = baris.querySelectorAll(".kata");
@@ -391,57 +411,59 @@ function lebarAlami(baris, fs) {
   return total + Math.max(0, kids.length - 1) * GAP_EM * fs;
 }
 
-/* fit() bersifat IDEMPOTEN: dipanggil berkali-kali pun tidak menulis apa-apa ke halaman
-   selama ukuran font sudah pas. Tidak ada reset ke ukuran lain di tengah jalan, sehingga
-   tidak bisa memicu putaran umpan balik (kedipan). */
-const FILL_MIN = 0.965, FILL_MAX = 1;      // baris terpanjang harus mengisi 96,5%–100% lebar kolom
-let lastFs = 0;
-const fitLog = [];
-function fit(force) {
-  const now = performance.now();
-  while (fitLog.length && now - fitLog[0] > 1000) fitLog.shift();
-  if (fitLog.length >= 15) return;          // pemutus: terlalu sering dalam 1 detik → abaikan
-  fitLog.push(now);
+function setVar(name, val) {
+  if (els.teks.style.getPropertyValue(name) !== val) els.teks.style.setProperty(name, val);
+}
 
+function fit() {
   const W = els.teks.clientWidth;
-  if (!W) return;
+  if (!W || !cur.page) return;
   const semua = $$(".baris", els.teks);
-  const isi = semua.filter(b => !b.classList.contains("header"));
-  if (!isi.length) return;
+  if (!semua.length) return;
   const wpx = W + "px";
   semua.forEach(b => { if (b.style.width !== wpx) b.style.width = wpx; });
 
-  let fs = parseFloat(els.teks.style.getPropertyValue("--fs")) || lastFs || 30;
-  const awal = fs;
-  for (let i = 0; i < 8; i++) {
+  const m = METRICS && METRICS.p[String(cur.page)];
+  if (m) {
+    const fs = clamp(W / m[0] * FIT_SLACK, 4, 200);
+    setVar("--fs", fs.toFixed(3) + "px");
+    setVar("--pitch", String(METRICS.pitch));
+    const pendek = new Set(m[1]);
+    semua.forEach((b, i) => {
+      const p = pendek.has(i) && !b.classList.contains("basmalah");
+      if (b.classList.contains("pendek") !== p) b.classList.toggle("pendek", p);
+    });
+    return;
+  }
+
+  // ---- cadangan: ukur DOM ----
+  const isi = semua.filter(b => !b.classList.contains("header"));
+  if (!isi.length) return;
+  let fs = 100;
+  els.teks.style.setProperty("--fs", fs + "px");
+  for (let i = 0; i < 4; i++) {
     const maks = Math.max(...isi.map(b => lebarAlami(b, fs)));
     if (!maks) return;
-    const isi2 = maks / W;                                  // 1 = tepat penuh
-    if (isi2 >= FILL_MIN && isi2 <= FILL_MAX) break;        // sudah pas
-    fs = clamp(fs * (W / maks) * 0.99, 4, 200);
-    els.teks.style.setProperty("--fs", fs.toFixed(3) + "px");
+    fs = clamp(fs * (W / maks) * FIT_SLACK, 4, 200);
+    els.teks.style.setProperty("--fs", fs + "px");
+    if (i >= 1) break;                      // lebar linear terhadap ukuran: 2 putaran cukup
   }
-  lastFs = fs;
-  const berubah = Math.abs(fs - awal) > 0.001;
-
-  if (berubah || force) {
-    let hMaks = 0;
-    isi.forEach(b => b.querySelectorAll(".kata").forEach(k => { hMaks = Math.max(hMaks, k.getBoundingClientRect().height); }));
-    els.teks.style.setProperty("--pitch", Math.max(MIN_PITCH, (hMaks / fs) * 1.1).toFixed(3));
-  }
+  let hMaks = 0;
+  isi.forEach(b => b.querySelectorAll(".kata").forEach(k => { hMaks = Math.max(hMaks, k.getBoundingClientRect().height); }));
+  setVar("--pitch", Math.max(MIN_PITCH, (hMaks / fs) * 1.1).toFixed(3));
   isi.forEach(b => {
-    const pendek = !b.classList.contains("basmalah") && lebarAlami(b, fs) < W * SHORT_LINE;
-    if (b.classList.contains("pendek") !== pendek) b.classList.toggle("pendek", pendek);
+    const p = !b.classList.contains("basmalah") && lebarAlami(b, fs) < W * SHORT_LINE;
+    if (b.classList.contains("pendek") !== p) b.classList.toggle("pendek", p);
   });
 }
-const fitSoon = (() => { let raf = 0; return () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => fit()); }; })();
+const fitSoon = (() => { let raf = 0; return () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(fit); }; })();
 
-// Jaring pengaman untuk font yang baru aktif / berganti setelah render: cek ringan tiap detik
-// (hanya MEMBACA; menulis hanya bila ukuran memang di luar toleransi) + saat font selesai dimuat.
-if (document.fonts) document.fonts.addEventListener("loadingdone", () => { if (cur.page) fitSoon(); });
-setInterval(() => { if (cur.page && !document.hidden) fitSoon(); }, 1000);
-
-new ResizeObserver(() => { if (cur.page) fitSoon(); }).observe(els.teks);
+// Hanya satu pemicu: lebar kolom berubah (jendela diubah / lebar halaman di Pengaturan).
+let lastW = 0;
+new ResizeObserver(() => {
+  const w = els.teks.clientWidth;
+  if (cur.page && w && w !== lastW) { lastW = w; fitSoon(); }
+}).observe(els.teks);
 
 /* ============================================================
    Navigasi halaman
@@ -1092,6 +1114,26 @@ function syncControls() {
   ui();
 }
 
+async function copyDiag() {
+  const rows = $$(".baris", els.teks);
+  const k = els.teks.querySelector(".kata");
+  let brave = false;
+  try { brave = !!(navigator.brave && await navigator.brave.isBrave()); } catch { /* abaikan */ }
+  const info = {
+    app: "Mushaf Tahfidz Pro v5",
+    ua: navigator.userAgent, brave, dpr: window.devicePixelRatio, viewport: `${innerWidth}x${innerHeight}`,
+    page: cur.page, kolomW: els.teks.clientWidth, fs: els.teks.style.getPropertyValue("--fs"), pitch: els.teks.style.getPropertyValue("--pitch"),
+    metrikDimuat: !!METRICS, barisMeluber: rows.filter(r => r.scrollWidth > r.clientWidth + 1).length,
+    fontKata: k ? getComputedStyle(k).fontFamily : null, lebarKataPertama: k ? Math.round(k.getBoundingClientRect().width * 100) / 100 : null,
+    font: [...document.fonts].map(f => `${f.family}:${f.status}`),
+    serviceWorker: !!(navigator.serviceWorker && navigator.serviceWorker.controller),
+    catatan: LOGBUF
+  };
+  const text = JSON.stringify(info, null, 2);
+  try { await navigator.clipboard.writeText(text); toast("Info diagnostik disalin. Tempel ke pesan Anda."); }
+  catch { window.prompt("Salin teks diagnostik ini:", text); }
+}
+
 function exportData() {
   const blob = new Blob([JSON.stringify({ app: "mushaf-tahfidz-pro", version: 2, exportedAt: new Date().toISOString(), ...S }, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
@@ -1285,6 +1327,7 @@ function bindUI() {
   els.btnExport.addEventListener("click", exportData);
   els.btnImport.addEventListener("click", () => els.fileImport.click());
   els.fileImport.addEventListener("change", () => { if (els.fileImport.files[0]) importData(els.fileImport.files[0]); els.fileImport.value = ""; });
+  els.btnDiag.addEventListener("click", copyDiag);
   els.btnReset.addEventListener("click", () => {
     if (!confirm("Hapus semua penanda, progres hafalan, dan pengaturan di perangkat ini? Data di akun awan (jika ada) tidak ikut terhapus.")) return;
     hardStop(true);

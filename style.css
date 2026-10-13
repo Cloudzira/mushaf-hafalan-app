@@ -88,7 +88,7 @@ html[data-theme="sepia"] {
 /* ------------------------------------------------------------ dasar */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 [hidden] { display: none !important; }
-html { background: var(--latar-solid); scroll-behavior: smooth; }
+html { background: var(--latar-solid); scroll-behavior: smooth; scrollbar-gutter: stable; }
 body {
   margin: 0;
   min-height: 100vh;
@@ -205,7 +205,7 @@ svg.ik.f { fill: currentColor; }
   position: relative; max-width: var(--w); margin: 0 auto;
   padding: 34px var(--pad-x) 30px;
   background: var(--kaca); border: 1px solid var(--tepi-aksen); border-radius: 16px;
-  backdrop-filter: blur(20px); box-shadow: var(--bayang);
+  box-shadow: var(--bayang);   /* tanpa backdrop-filter: permukaan teks besar, hindari glitch komposit GPU */
   user-select: none; -webkit-user-select: none; touch-action: pan-y;
   overflow: clip;   /* jaring pengaman: teks tidak pernah meluber keluar bingkai */
 }

@@ -1,11 +1,12 @@
 /* Mushaf Tahfidz Pro — service worker
-   • Cangkang aplikasi: stale-while-revalidate (cepat, tetap segar)
+   • Cangkang aplikasi (HTML/CSS/JS/metrics): JARINGAN DULU, cache hanya sebagai cadangan luring.
+     Dengan begitu pembaruan kode selalu langsung terpakai (tidak ada versi lama yang "menempel").
    • Data halaman, font, terjemahan: cache-first (tidak berubah) → bisa dibaca luring setelah dibuka sekali
    • Audio (everyayah.com) & Firebase: tidak disentuh */
-const VERSION = "v4";
+const VERSION = "v5";
 const SHELL_CACHE = "mushaf-shell-" + VERSION;
 const DATA_CACHE = "mushaf-data-" + VERSION;
-const SHELL = ["./", "index.html", "style.css", "app.js", "manifest.webmanifest", "icon.svg"];
+const SHELL = ["./", "index.html", "style.css", "app.js", "metrics.json", "manifest.webmanifest", "icon.svg"];
 
 const DATA_HOSTS = [
   "raw.githubusercontent.com",
@@ -16,7 +17,12 @@ const DATA_HOSTS = [
 ];
 
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(SHELL_CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  // cache: "reload" → ambil dari jaringan, bukan dari cache HTTP browser
+  e.waitUntil(
+    caches.open(SHELL_CACHE)
+      .then(c => Promise.all(SHELL.map(u => fetch(new Request(u, { cache: "reload" })).then(r => { if (r.ok) return c.put(u, r); }).catch(() => {}))))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener("activate", e => {
@@ -48,13 +54,19 @@ self.addEventListener("fetch", e => {
     return;
   }
 
-  // cangkang aplikasi: stale-while-revalidate
+  // cangkang aplikasi: jaringan dulu (selalu revalidasi), cache sebagai cadangan luring
   if (url.origin === self.location.origin) {
     e.respondWith(
       caches.open(SHELL_CACHE).then(async cache => {
-        const hit = await cache.match(req, { ignoreSearch: true });
-        const net = fetch(req).then(res => { if (res && res.ok) cache.put(req, res.clone()); return res; }).catch(() => hit);
-        return hit || net;
+        try {
+          const res = await fetch(req, { cache: "no-cache" });
+          if (res && res.ok) cache.put(req, res.clone());
+          return res;
+        } catch (err) {
+          const hit = await cache.match(req, { ignoreSearch: true });
+          if (hit) return hit;
+          throw err;
+        }
       })
     );
   }
