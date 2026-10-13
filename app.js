@@ -301,6 +301,7 @@ async function installApp() {
 const cur = { page: 0, verses: [], verseSet: new Set(), words: new Map(), surahs: [], sel: null };
 let token = 0;
 let playingKey = null;
+let highlightKey = null;
 
 const dataCache = new Map();   // halaman → Promise<json>
 const fontCache = new Map();   // nama font → Promise<FontFace>
@@ -569,19 +570,25 @@ function selectVerse(key, opts = {}) {
   clearSel();
   cur.sel = key;
   (cur.words.get(key) || []).forEach(w => w.classList.add("sel"));
+  setHighlight(key);
   if (opts.sheet !== false) showSheet(key);
 }
-function markPlaying(key) {
-  if (playingKey) (cur.words.get(playingKey) || []).forEach(w => w.classList.remove("putar"));
-  playingKey = key;
+function setHighlight(key) {
+  if (highlightKey && highlightKey !== key) (cur.words.get(highlightKey) || []).forEach(w => w.classList.remove("putar"));
+  highlightKey = key;
   if (key) (cur.words.get(key) || []).forEach(w => w.classList.add("putar"));
+}
+function markPlaying(key) {
+  const changed = key !== playingKey;
+  playingKey = key;
+  if (key && changed) setHighlight(key);
 }
 function reapplyMarks() {
   if (cur.sel) {
     if (cur.words.has(cur.sel)) (cur.words.get(cur.sel)).forEach(w => w.classList.add("sel"));
     else { cur.sel = null; els.ayatSheet.hidden = true; }
   }
-  if (playingKey && cur.words.has(playingKey)) (cur.words.get(playingKey)).forEach(w => w.classList.add("putar"));
+  if (highlightKey && cur.words.has(highlightKey)) (cur.words.get(highlightKey)).forEach(w => w.classList.add("putar"));
 }
 
 els.teks.addEventListener("click", e => {
