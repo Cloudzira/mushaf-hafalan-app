@@ -14,6 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -52,9 +53,20 @@
     <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
     <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.8-3.4L23 10M1 14l4.7 4.4A9 9 0 0 0 20.5 15"/></symbol>
     <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 11v5M12 8h.01"/></symbol>
   </svg>
 
   <a class="skip" href="#teks">Lewati ke teks mushaf</a>
+
+  <div id="splash" class="splash" role="status" aria-live="polite">
+    <div class="splash-content">
+      <img src="icon.svg" alt="" width="64" height="64">
+      <span class="splash-arab" lang="ar" dir="rtl">مصحف للحفظ</span>
+      <strong>Mushaf Tahfidz Pro</strong>
+      <span class="splash-status">Menyiapkan mushaf</span>
+      <span class="splash-line" aria-hidden="true"><i></i></span>
+    </div>
+  </div>
 
   <!-- Bilah atas -->
   <header class="topbar">
@@ -62,10 +74,15 @@
       <span class="arab">مصحف للحفظ</span>
       <small>Mushaf Tahfidz Pro</small>
     </div>
-    <div class="auth-box">
-      <svg class="ik" aria-hidden="true"><use href="#i-user"/></svg>
-      <span id="userStatus">Tamu</span>
-      <button id="authBtn" type="button">Masuk</button>
+    <div class="header-actions">
+      <button id="btnAbout" class="about-btn" type="button" aria-label="Tentang aplikasi" title="Tentang aplikasi">
+        <svg class="ik" aria-hidden="true"><use href="#i-info"/></svg>
+      </button>
+      <div class="auth-box">
+        <svg class="ik" aria-hidden="true"><use href="#i-user"/></svg>
+        <span id="userStatus">Tamu</span>
+        <button id="authBtn" type="button">Masuk</button>
+      </div>
     </div>
   </header>
 
@@ -118,8 +135,50 @@
       <div id="teks" lang="ar" dir="rtl"></div>
       <div id="kaki"><span id="kNo"></span></div>
     </section>
-    <p id="info" aria-live="polite"></p>
   </main>
+
+  <footer class="site-footer">
+    <p>Crafted with <span class="heart">♥</span> by <span class="creator">Kurniapedia</span> 2026</p>
+  </footer>
+
+  <dialog id="dlgAbout" class="modal" aria-labelledby="aboutTitle">
+    <div class="modal-box">
+      <header class="modal-head">
+        <h2 id="aboutTitle">Tentang Mushaf Tahfidz Pro</h2>
+        <button class="icon-btn kecil" type="button" data-close aria-label="Tutup"><svg class="ik" aria-hidden="true"><use href="#i-x"/></svg></button>
+      </header>
+      <div class="modal-body about-body">
+        <p class="about-intro">Mushaf Madinah 604 halaman untuk membaca, menjaga, dan menguatkan hafalan Al-Qur'an.</p>
+        <section class="about-section">
+          <h3 class="sub">Panduan penggunaan</h3>
+          <ul class="about-list">
+            <li>Geser ke kiri atau kanan pada halaman untuk berpindah halaman.</li>
+            <li>Pilih surat, juz, atau ayat melalui tombol navigasi.</li>
+            <li>Gunakan mode Tutup atau Kata awal untuk latihan hafalan; ketuk ayat untuk membuka dan melihat terjemahan.</li>
+            <li>Ketuk tanda akhir ayat untuk memutar, mengulang, atau melatih lantunan.</li>
+            <li>Simpan penanda dan progres hafalan dari menu Aksi halaman.</li>
+          </ul>
+        </section>
+        <section class="about-section">
+          <h3 class="sub">Referensi</h3>
+          <ul class="about-list sumber-list">
+            <li>Teks dan font mushaf: QCF v4, Mushaf Madinah.</li>
+            <li>Peta halaman dan terjemahan Indonesia Kemenag: Quran.com API.</li>
+            <li>Audio murattal: EveryAyah.com.</li>
+          </ul>
+        </section>
+        <section class="about-section">
+          <h3 class="sub">Kurniapedia</h3>
+          <div class="about-social" aria-label="Media sosial Kurniapedia">
+            <a href="https://instagram.com/kurniapedia" target="_blank" rel="noopener noreferrer" aria-label="Instagram Kurniapedia" title="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+            <a href="https://tiktok.com/@kurniapedia" target="_blank" rel="noopener noreferrer" aria-label="TikTok Kurniapedia" title="TikTok"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
+            <a href="https://www.youtube.com/@kurniapedia" target="_blank" rel="noopener noreferrer" aria-label="YouTube Kurniapedia" title="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+            <a href="https://wa.me/+6285870906050" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Kurniapedia" title="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </dialog>
 
   <!-- Kartu ayat terpilih -->
   <aside id="ayatSheet" class="ayat-sheet" hidden aria-label="Ayat terpilih">

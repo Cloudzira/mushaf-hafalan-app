@@ -245,8 +245,8 @@ function persist() {
    Elemen & model halaman
    ============================================================ */
 const els = {};
-["teks","kSurah","kJuz","kNo","kaki","info","navLabel","userStatus","authBtn","themeIcon",
- "btnBookmark","btnBookmarks","btnMemo","btnProgress","btnTheme","btnSettings","btnNavOpen","btnMoreActions","actionItems","btnInstall","modeGroup",
+["teks","kSurah","kJuz","kNo","kaki","navLabel","userStatus","authBtn","themeIcon",
+ "btnAbout","dlgAbout","splash","btnBookmark","btnBookmarks","btnMemo","btnProgress","btnTheme","btnSettings","btnNavOpen","btnMoreActions","actionItems","btnInstall","modeGroup",
  "ayatSheet","asKey","asText","asPlay","asDrill","asFrom","asClose",
  "player","plBar","plPrev","plPlay","plPlayIcon","plNext","plStop","plTitle","plSub","plMore","plPanel",
  "selQari","selMode","rngWrap","rngSurah","rngFrom","rngTo","selRepAyat","selRepRange","selSpeed","selGap",
@@ -526,14 +526,7 @@ function updateChrome() {
   els.btnMemo.setAttribute("aria-pressed", String(!!S.memorized[p]));
   els.btnMemo.title = S.memorized[p] ? "Batalkan tanda hafal (M)" : "Tandai halaman ini sudah hafal (M)";
   document.title = `Hal. ${p} · ${names[0] || "Mushaf"} — Mushaf Tahfidz Pro`;
-  els.info.textContent = INFO[S.settings.hideMode];
 }
-
-const INFO = {
-  normal: "Ketuk kata atau nomor ayat untuk memilih ayat · geser kanan/kiri untuk pindah halaman.",
-  blur: "Mode Tutup: ketuk satu kata untuk membukanya, atau nomor ayat untuk membuka seluruh ayat.",
-  first: "Mode Kata Awal: hanya kata pertama tiap ayat yang tampak. Lanjutkan hafalan, lalu ketuk nomor ayat untuk memeriksa."
-};
 
 /* ============================================================
    Mode hafalan, pemilihan & penandaan ayat
@@ -544,7 +537,6 @@ function applyHideMode() {
   els.teks.classList.toggle("m-first", m === "first");
   $$(".kata.terbuka", els.teks).forEach(k => k.classList.remove("terbuka"));
   $$("#modeGroup button").forEach(b => b.setAttribute("aria-checked", String(b.dataset.mode === m)));
-  els.info.textContent = INFO[m];
 }
 
 function setHideMode(m) {
@@ -1309,6 +1301,7 @@ function bindUI() {
   els.btnProgress.addEventListener("click", () => { renderProgress(); els.dlgPrg.showModal(); });
   els.prgMark.addEventListener("click", toggleMemo);
   els.btnSettings.addEventListener("click", () => els.dlgSet.showModal());
+  els.btnAbout.addEventListener("click", () => els.dlgAbout.showModal());
   els.btnNavOpen.addEventListener("click", () => openNav("surat"));
   els.btnInstall.addEventListener("click", installApp);
   els.authBtn.addEventListener("click", toggleAuth);
@@ -1404,7 +1397,7 @@ function bindUI() {
 /* ============================================================
    Mulai
    ============================================================ */
-function init() {
+async function init() {
   syncInstallButton();
   const standaloneQuery = window.matchMedia("(display-mode: standalone)");
   standaloneQuery.addEventListener && standaloneQuery.addEventListener("change", syncInstallButton);
@@ -1414,11 +1407,15 @@ function init() {
   syncControls();
   applyHideMode();
   renderBookmarks();
-  goto(S.page, { auto: true });
   syncWake();
   cloudInit();
   if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
     window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  }
+  try { await goto(S.page, { auto: true }); }
+  finally {
+    els.splash.classList.add("splash-hilang");
+    setTimeout(() => { els.splash.hidden = true; }, 400);
   }
 }
 init();

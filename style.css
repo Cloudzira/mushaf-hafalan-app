@@ -128,7 +128,7 @@ svg.ik.f { fill: currentColor; }
   font-family: var(--f-arab); font-weight: 600; font-size: 1.3rem;
   background: var(--grad-judul); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.brand small { font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--redup); font-weight: 600; }
+.brand small { padding-right: 6px; font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--redup); font-weight: 600; }
 
 .auth-box {
   display: flex; align-items: center; gap: 8px; padding: 4px 6px 4px 12px;
@@ -138,11 +138,18 @@ svg.ik.f { fill: currentColor; }
 }
 .auth-box .ik { width: 14px; height: 14px; }
 .auth-box button {
-  background: var(--g1); color: #fff; border: 0; padding: 5px 12px; border-radius: 999px;
+  background: var(--g1); color: #fff; border: 0; padding: 5px 12px 5px 16px; border-radius: 999px;
   font-size: .72rem; font-weight: 600; transition: opacity .15s;
 }
 .auth-box button:hover { opacity: .9; }
 .auth-box button:disabled { opacity: .45; }
+.header-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+.about-btn {
+  width: 34px; height: 34px; flex: none; display: grid; place-items: center; padding: 0;
+  color: var(--teks-lembut); background: var(--kaca); border: 1px solid var(--tepi);
+  border-radius: 50%; box-shadow: 0 2px 8px rgba(0, 0, 0, .08); transition: color .15s, border-color .15s, background .15s;
+}
+.about-btn:hover { color: var(--aksen); border-color: var(--tepi-aksen); background: var(--kaca-halus); }
 
 /* ------------------------------------------------------------ toolbar */
 .toolbar {
@@ -275,7 +282,45 @@ svg.ik.f { fill: currentColor; }
   padding: 9px 18px; border-radius: 999px; font-size: .8rem; font-weight: 600;
 }
 
-#info { text-align: center; margin: 14px 16px 0; font-size: .76rem; color: var(--redup); font-weight: 500; }
+.site-footer { padding: 8px 12px 16px; text-align: center; font: 11px sans-serif; color: #64748b; }
+.site-footer p { margin: 0; }
+.site-footer .heart { color: #ff007f; }
+.site-footer .creator { color: #00f2fe; font-weight: 600; text-shadow: 0 0 10px rgba(0, 242, 254, .4); }
+
+.about-intro { margin: 0 0 16px; font-size: .86rem; line-height: 1.6; color: var(--teks); }
+.about-section { padding: 0 0 14px; }
+.about-section:last-child { padding-bottom: 0; }
+.about-section .sub { margin-top: 0; }
+.about-list { margin: 0; padding-left: 18px; color: var(--redup); font-size: .78rem; line-height: 1.6; }
+.about-list li + li { margin-top: 4px; }
+.about-social { display: flex; align-items: center; gap: 10px; }
+.about-social a {
+  width: 36px; height: 36px; display: grid; place-items: center; color: var(--teks-lembut);
+  background: rgba(15, 23, 42, .35); border: 1px solid var(--tepi); border-radius: 50%;
+  text-decoration: none; transition: color .2s, border-color .2s, transform .2s;
+}
+.about-social a:hover { transform: translateY(-2px); }
+.about-social .fa-instagram:hover { color: #00f2fe; }
+.about-social .fa-tiktok:hover { color: #bd00ff; }
+.about-social .fa-youtube:hover { color: #ff007f; }
+.about-social .fa-whatsapp:hover { color: #00c777; }
+
+.splash {
+  position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; overflow: hidden;
+  color: #f5f5f4; background-color: #0c0a09;
+  background-image: linear-gradient(rgba(251, 191, 36, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(251, 191, 36, .035) 1px, transparent 1px);
+  background-size: 44px 44px; opacity: 1; visibility: visible;
+  transition: opacity .35s ease, visibility .35s ease;
+}
+.splash.splash-hilang { opacity: 0; visibility: hidden; pointer-events: none; }
+.splash-content { width: min(320px, calc(100% - 40px)); display: grid; justify-items: center; gap: 12px; text-align: center; }
+.splash-content img { width: 68px; height: 68px; border-radius: 16px; box-shadow: 0 0 28px rgba(217, 119, 6, .2); }
+.splash-arab { color: #fbbf24; font-family: var(--f-arab); font-size: 1.3rem; }
+.splash-content strong { font-size: 1.05rem; font-weight: 600; }
+.splash-status { color: #a8a29e; font-size: .76rem; }
+.splash-line { width: 156px; height: 2px; overflow: hidden; background: rgba(251, 191, 36, .15); }
+.splash-line i { display: block; width: 42%; height: 100%; background: #fbbf24; animation: splash-load 1.15s ease-in-out infinite alternate; }
+@keyframes splash-load { from { transform: translateX(0); } to { transform: translateX(138%); } }
 
 /* ------------------------------------------------------------ kartu ayat */
 .ayat-sheet {
@@ -459,7 +504,7 @@ html[data-theme="dark"] .toast button { color: #b45309; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 @media print {
-  .topbar, .toolbar, .player, .ayat-sheet, #info, #toasts { display: none !important; }
+  .topbar, .toolbar, .player, .ayat-sheet, .site-footer, #toasts { display: none !important; }
   body { background: #fff; padding: 0; }
   .frame { box-shadow: none; backdrop-filter: none; }
 }
