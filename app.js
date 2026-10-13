@@ -403,6 +403,7 @@ async function render(no, tk) {
   els.teks.replaceChildren(frag);
   els.teks.classList.remove("memuat");
   els.teks.classList.toggle("rata-tengah", no <= 2);
+  document.documentElement.style.setProperty("--verse-space", "0px");
 
   cur.page = no;
   cur.verses = verses;
@@ -573,8 +574,32 @@ function selectVerse(key, opts = {}) {
 }
 function markPlaying(key) {
   if (playingKey) (cur.words.get(playingKey) || []).forEach(w => w.classList.remove("putar"));
+  $$(".baris.ayat-audio", els.teks).forEach(b => b.classList.remove("ayat-audio"));
   playingKey = key;
-  if (key) (cur.words.get(key) || []).forEach(w => w.classList.add("putar"));
+  document.documentElement.style.setProperty("--verse-space", "0px");
+  if (!key) return;
+  const activeRows = new Set();
+  (cur.words.get(key) || []).forEach(w => {
+    w.classList.add("putar");
+    const row = w.closest(".baris");
+    if (row && !row.classList.contains("header")) activeRows.add(row);
+  });
+  activeRows.forEach(row => row.classList.add("ayat-audio"));
+  requestAnimationFrame(() => {
+    if (playingKey !== key) return;
+    const words = cur.words.get(key) || [];
+    if (!words.length) return;
+    const top = Math.min(...words.map(w => w.getBoundingClientRect().top));
+    const bottom = Math.max(...words.map(w => w.getBoundingClientRect().bottom));
+    const safeTop = document.querySelector(".toolbar").getBoundingClientRect().bottom;
+    const safeBottom = els.player.getBoundingClientRect().top;
+    const targetCenter = safeTop + Math.max(0, safeBottom - safeTop) / 2;
+    const delta = (top + bottom) / 2 - targetCenter;
+    if (delta < -2 && window.scrollY <= 1) {
+      const currentSpace = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--verse-space")) || 0;
+      document.documentElement.style.setProperty("--verse-space", `${currentSpace - delta}px`);
+    } else if (Math.abs(delta) > 2) window.scrollBy({ top: delta, behavior: "smooth" });
+  });
 }
 function reapplyMarks() {
   if (cur.sel) {

@@ -29,6 +29,8 @@
   --bayang: 0 10px 28px rgba(35, 32, 26, .08);
   --grad-judul: linear-gradient(90deg, #61523f, #887452, #a58c6b);
   --sorot-putar: rgba(138, 115, 85, .2);
+  --putar-teks: #55432c;
+  --putar-garis: #c9ad7e;
   --sorot-pilih: rgba(138, 115, 85, .11);
   --ok: #47745a;
   --bahaya: #b45f5c;
@@ -65,6 +67,8 @@ html[data-theme="dark"] {
   --bayang: 0 12px 32px rgba(0, 0, 0, .3);
   --grad-judul: linear-gradient(90deg, #ded1b3, #c6ad7e, #a88e65);
   --sorot-putar: rgba(196, 170, 126, .22);
+  --putar-teks: #f0d9aa;
+  --putar-garis: #aa9062;
   --sorot-pilih: rgba(196, 170, 126, .12);
   --ok: #83ae8d;
   --bahaya: #d18b87;
@@ -98,6 +102,8 @@ html[data-theme="sepia"] {
   --bayang: 0 10px 28px rgba(73, 61, 39, .1);
   --grad-judul: linear-gradient(90deg, #64563f, #887450, #a08b68);
   --sorot-putar: rgba(139, 118, 84, .2);
+  --putar-teks: #55472f;
+  --putar-garis: #c6b187;
   --sorot-pilih: rgba(139, 118, 84, .11);
   --opt-bg: #f5f1e7;
   --opt-fg: #3b382f;
@@ -228,7 +234,7 @@ svg.ik.f { fill: currentColor; }
 .icon-btn:disabled { opacity: .35; }
 
 /* ------------------------------------------------------------ bingkai mushaf */
-#wrap { padding: 0 12px; }
+#wrap { padding: var(--verse-space, 0px) 12px 0; }
 .frame {
   position: relative; max-width: var(--w); margin: 0 auto;
   padding: 34px var(--pad-x) 30px;
@@ -282,6 +288,7 @@ svg.ik.f { fill: currentColor; }
 .baris.basmalah { justify-content: center; gap: .3em; }
 .baris.pendek { justify-content: flex-start; }
 #teks.rata-tengah .baris:not(.header) { justify-content: center; }
+#teks .baris.ayat-audio { justify-content: center; }
 
 .banner {
   position: relative; width: 100%; height: 76%; display: grid; place-items: center; border-radius: 12px;
@@ -296,7 +303,10 @@ svg.ik.f { fill: currentColor; }
   transition: filter .15s ease, opacity .15s ease, background-color .2s ease;
 }
 .kata.sel { color: var(--aksen); }
-.kata.putar { color: var(--aksen); text-shadow: 0 0 10px var(--sorot-putar); }
+.kata.putar {
+  color: var(--putar-teks); text-shadow: 0 0 8px var(--sorot-putar);
+  box-shadow: inset 0 -0.12em 0 var(--putar-garis); border-radius: 2px;
+}
 .kata.is-end:focus-visible { outline-offset: 0; }
 
 .m-blur .kata:not(.is-end):not(.terbuka),
@@ -510,7 +520,7 @@ html[data-theme="dark"] .toast button { color: #b45309; }
 /* ------------------------------------------------------------ responsif */
 @media (max-width: 640px) {
   :root { --pad-x: 12px; }
-  #wrap { padding: 0; }
+  #wrap { padding: var(--verse-space, 0px) 0 0; }
   .topbar { width: min(var(--w), 100%); }
   .frame { padding: 30px var(--pad-x) 26px; }
   .e-top, .e-bottom { left: 24px; right: 24px; }
