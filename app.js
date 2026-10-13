@@ -72,7 +72,7 @@ const API       = "https://api.quran.com/api/v4";
 const TRANSLATION_ID = 33; // Terjemahan Indonesia — Kementerian Agama RI
 const GAP_EM = 0.12;       // jarak antar kata (em), harus sama dengan CSS .baris
 const MIN_PITCH = 2.0;
-const SHORT_LINE = 0.72;   // baris yang lebih pendek dari 72% lebar dipusatkan (akhir surat)
+const SHORT_LINE = 0.72;
 const KEY = "mushaf_v2";
 
 const FIREBASE_CONFIG = {
@@ -394,12 +394,17 @@ function showError(no) {
   visual glyph, jadi pitch baris memakai nilai desain yang stabil. */
 
 const FIT_SLACK = 0.985;                    // sisakan 1,5% (baris tetap rata kiri-kanan lewat space-between)
+const measureCtx = document.createElement("canvas").getContext("2d");
 
 function lebarAlami(baris, fs) {
   let total = 0;
   const kids = baris.querySelectorAll(".kata");
-  kids.forEach(k => { total += k.getBoundingClientRect().width; });
-  return total + Math.max(0, kids.length - 1) * GAP_EM * fs;
+  kids.forEach(k => {
+    measureCtx.font = `${fs}px ${k.style.fontFamily || getComputedStyle(k).fontFamily}`;
+    total += measureCtx.measureText(k.textContent).width;
+  });
+  const gap = baris.classList.contains("basmalah") ? 0.3 : GAP_EM;
+  return total + Math.max(0, kids.length - 1) * gap * fs;
 }
 
 function setVar(name, val) {
@@ -417,20 +422,16 @@ function fit() {
   // ---- cadangan: ukur DOM ----
   const isi = semua.filter(b => !b.classList.contains("header"));
   if (!isi.length) return;
-  const maxFs = Math.max(24, Math.min(96, window.innerHeight * 0.78 / (isi.length * MIN_PITCH)));
-  let fs = 100;
+  const maxFs = Math.min(96, window.innerHeight * 0.78 / (isi.length * MIN_PITCH));
+  const baseFs = 100;
+  const maks = Math.max(...isi.map(b => lebarAlami(b, baseFs)));
+  if (!maks) return;
+  const fs = clamp(baseFs * (W / maks) * FIT_SLACK, 4, maxFs);
   els.teks.style.setProperty("--fs", fs + "px");
-  for (let i = 0; i < 4; i++) {
-    const maks = Math.max(...isi.map(b => lebarAlami(b, fs)));
-    if (!maks) return;
-    fs = clamp(fs * (W / maks) * FIT_SLACK, 4, maxFs);
-    els.teks.style.setProperty("--fs", fs + "px");
-    if (i >= 1) break;                      // lebar linear terhadap ukuran: 2 putaran cukup
-  }
   setVar("--pitch", String(MIN_PITCH));
   isi.forEach(b => {
-    const p = !b.classList.contains("basmalah") && lebarAlami(b, fs) < W * SHORT_LINE;
-    if (b.classList.contains("pendek") !== p) b.classList.toggle("pendek", p);
+    const pendek = !b.classList.contains("basmalah") && lebarAlami(b, fs) < W * SHORT_LINE;
+    b.classList.toggle("pendek", pendek);
   });
 }
 const fitSoon = (() => { let raf = 0; return () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(fit); }; })();

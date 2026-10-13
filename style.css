@@ -254,7 +254,8 @@ svg.ik.f { fill: currentColor; }
 }
 .baris:last-child { background: none; }
 .baris.header { background: none; justify-content: center; }
-.baris.basmalah, .baris.pendek { justify-content: center; gap: .3em; }
+.baris.basmalah { justify-content: center; gap: .3em; }
+.baris.pendek { justify-content: flex-start; }
 
 .banner {
   position: relative; width: 100%; height: 76%; display: grid; place-items: center; border-radius: 12px;
