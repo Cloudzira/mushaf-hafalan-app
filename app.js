@@ -306,7 +306,7 @@ async function render(no, tk) {
   let data;
   try {
     data = await loadPage(no);
-    await Promise.all([metricsReady, ...fontsOf(data).map(loadFont)]);
+    await Promise.all(fontsOf(data).map(loadFont));
   } catch (err) {
     console.warn("Gagal memuat halaman", no, err);
     if (tk === token) showError(no);
@@ -390,17 +390,8 @@ function showError(no) {
 }
 
 /* ---- Pas halaman ----
-   Tata letak dihitung, BUKAN diukur dari DOM. Tiap kata QCF4 adalah satu glyph tanpa kerning,
-   jadi lebar baris = jumlah lebar glyph (em) + jarak antar kata. metrics.json menyimpan, untuk
-   tiap halaman, lebar baris terpanjang (em) dan daftar baris pendek, dihitung dari 47 font
-   asli dan dicocokkan dengan Chromium untuk 604 halaman (selisih maks 0,008%).
-   Karena tidak ada pengukuran, hasilnya tidak bergantung pada kapan font aktif, dan tidak ada
-   umpan balik layout → tidak ada kedipan. Bila metrics.json gagal dimuat, dipakai cadangan:
-   ukur DOM satu kali per render / perubahan lebar (tanpa timer, tanpa pengamat tambahan). */
-let METRICS = null;
-const metricsReady = fetchJson("metrics.json", 1)
-  .then(m => { if (m && m.p && m.pitch) METRICS = m; })
-  .catch(err => { console.warn("metrics.json tidak tersedia, memakai pengukuran DOM", err); });
+  Ukur lebar glyph setelah font QCF siap. Tinggi kotak font QCF tidak mewakili tinggi
+  visual glyph, jadi pitch baris memakai nilai desain yang stabil. */
 
 const FIT_SLACK = 0.985;                    // sisakan 1,5% (baris tetap rata kiri-kanan lewat space-between)
 
@@ -423,34 +414,20 @@ function fit() {
   const wpx = W + "px";
   semua.forEach(b => { if (b.style.width !== wpx) b.style.width = wpx; });
 
-  const m = METRICS && METRICS.p[String(cur.page)];
-  if (m) {
-    const fs = clamp(W / m[0] * FIT_SLACK, 4, 200);
-    setVar("--fs", fs.toFixed(3) + "px");
-    setVar("--pitch", String(METRICS.pitch));
-    const pendek = new Set(m[1]);
-    semua.forEach((b, i) => {
-      const p = pendek.has(i) && !b.classList.contains("basmalah");
-      if (b.classList.contains("pendek") !== p) b.classList.toggle("pendek", p);
-    });
-    return;
-  }
-
   // ---- cadangan: ukur DOM ----
   const isi = semua.filter(b => !b.classList.contains("header"));
   if (!isi.length) return;
+  const maxFs = Math.max(24, Math.min(96, window.innerHeight * 0.78 / (isi.length * MIN_PITCH)));
   let fs = 100;
   els.teks.style.setProperty("--fs", fs + "px");
   for (let i = 0; i < 4; i++) {
     const maks = Math.max(...isi.map(b => lebarAlami(b, fs)));
     if (!maks) return;
-    fs = clamp(fs * (W / maks) * FIT_SLACK, 4, 200);
+    fs = clamp(fs * (W / maks) * FIT_SLACK, 4, maxFs);
     els.teks.style.setProperty("--fs", fs + "px");
     if (i >= 1) break;                      // lebar linear terhadap ukuran: 2 putaran cukup
   }
-  let hMaks = 0;
-  isi.forEach(b => b.querySelectorAll(".kata").forEach(k => { hMaks = Math.max(hMaks, k.getBoundingClientRect().height); }));
-  setVar("--pitch", Math.max(MIN_PITCH, (hMaks / fs) * 1.1).toFixed(3));
+  setVar("--pitch", String(MIN_PITCH));
   isi.forEach(b => {
     const p = !b.classList.contains("basmalah") && lebarAlami(b, fs) < W * SHORT_LINE;
     if (b.classList.contains("pendek") !== p) b.classList.toggle("pendek", p);
@@ -1123,7 +1100,7 @@ async function copyDiag() {
     app: "Mushaf Tahfidz Pro v5",
     ua: navigator.userAgent, brave, dpr: window.devicePixelRatio, viewport: `${innerWidth}x${innerHeight}`,
     page: cur.page, kolomW: els.teks.clientWidth, fs: els.teks.style.getPropertyValue("--fs"), pitch: els.teks.style.getPropertyValue("--pitch"),
-    metrikDimuat: !!METRICS, barisMeluber: rows.filter(r => r.scrollWidth > r.clientWidth + 1).length,
+    barisMeluber: rows.filter(r => r.scrollWidth > r.clientWidth + 1).length,
     fontKata: k ? getComputedStyle(k).fontFamily : null, lebarKataPertama: k ? Math.round(k.getBoundingClientRect().width * 100) / 100 : null,
     font: [...document.fonts].map(f => `${f.family}:${f.status}`),
     serviceWorker: !!(navigator.serviceWorker && navigator.serviceWorker.controller),

@@ -236,7 +236,6 @@ svg.ik.f { fill: currentColor; }
   --fs: 30px; --pitch: 2.2;
   position: relative;
   display: flex; flex-direction: column; justify-content: center;
-  min-height: calc(var(--fs) * var(--pitch) * 15);
   transition: opacity .15s ease;
 }
 #teks.memuat { opacity: .3; }
