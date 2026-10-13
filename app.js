@@ -422,11 +422,10 @@ function fit() {
   // ---- cadangan: ukur DOM ----
   const isi = semua.filter(b => !b.classList.contains("header"));
   if (!isi.length) return;
-  const maxFs = Math.min(96, window.innerHeight * 0.78 / (isi.length * MIN_PITCH));
   const baseFs = 100;
   const maks = Math.max(...isi.map(b => lebarAlami(b, baseFs)));
   if (!maks) return;
-  const fs = clamp(baseFs * (W / maks) * FIT_SLACK, 4, maxFs);
+  const fs = clamp(baseFs * (W / maks) * FIT_SLACK, 4, 96);
   els.teks.style.setProperty("--fs", fs + "px");
   setVar("--pitch", String(MIN_PITCH));
   isi.forEach(b => {
