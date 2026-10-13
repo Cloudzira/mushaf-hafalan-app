@@ -119,7 +119,7 @@ svg.ik.f { fill: currentColor; }
 .topbar {
   position: sticky; top: 0; z-index: 800;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  max-width: 980px; margin: 0 auto; padding: 8px 16px;
+  width: min(var(--w), calc(100% - 24px)); margin: 0 auto; padding: 8px 0;
   padding-top: max(8px, env(safe-area-inset-top));
 }
 .brand { display: flex; flex-direction: column; line-height: 1.15; }
@@ -145,6 +145,7 @@ svg.ik.f { fill: currentColor; }
 
 /* ------------------------------------------------------------ toolbar */
 .toolbar {
+  position: relative; z-index: 820;
   display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;
   max-width: 980px; margin: 4px auto 14px; padding: 0 16px;
 }
@@ -156,9 +157,9 @@ svg.ik.f { fill: currentColor; }
 }
 .seg { padding: 3px; gap: 2px; }
 .seg button {
-  display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px;
+  width: 34px; height: 32px; padding: 0; display: inline-grid; place-items: center;
   border: 0; background: transparent; border-radius: 999px;
-  font-size: .76rem; font-weight: 600; color: var(--teks-lembut); transition: all .15s;
+  color: var(--teks-lembut); transition: all .15s;
 }
 .seg button .ik { width: 15px; height: 15px; }
 .seg button:hover { background: var(--kaca-halus); }
@@ -187,7 +188,14 @@ svg.ik.f { fill: currentColor; }
 .pilih input::-webkit-outer-spin-button, .pilih input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .pilih .dari { opacity: .7; }
 
-.aksi { padding: 3px; gap: 2px; }
+.aksi { position: relative; padding: 3px; gap: 2px; }
+.aksi-items {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 850;
+  display: flex; align-items: center; gap: 2px; padding: 4px;
+  background: var(--kaca); border: 1px solid var(--tepi-aksen); border-radius: 999px;
+  box-shadow: var(--bayang); backdrop-filter: blur(16px);
+  animation: muncul .14s ease;
+}
 .icon-btn {
   width: 34px; height: 34px; display: inline-grid; place-items: center; padding: 0;
   border: 1px solid transparent; border-radius: 50%; background: transparent; color: var(--teks-lembut);
@@ -204,18 +212,15 @@ svg.ik.f { fill: currentColor; }
 .frame {
   position: relative; max-width: var(--w); margin: 0 auto;
   padding: 34px var(--pad-x) 30px;
-  background: var(--kaca); border: 1px solid var(--tepi-aksen); border-radius: 16px;
-  box-shadow: var(--bayang);   /* tanpa backdrop-filter: permukaan teks besar, hindari glitch komposit GPU */
+  background: var(--kaca); border: 1px solid var(--tepi-aksen); border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .18);
   user-select: none; -webkit-user-select: none; touch-action: pan-y;
   overflow: clip;   /* jaring pengaman: teks tidak pernah meluber keluar bingkai */
 }
-.frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--tepi); border-radius: 10px; pointer-events: none; }
+.frame::before { content: ""; position: absolute; inset: 8px; border: 1px solid var(--tepi); border-radius: 6px; pointer-events: none; }
 .edge { position: absolute; pointer-events: none; }
-.e-top    { top: 11px; left: var(--pad-x); right: var(--pad-x); height: 10px; background: var(--tile-h) repeat-x center; }
-.e-bottom { bottom: 11px; left: var(--pad-x); right: var(--pad-x); height: 10px; background: var(--tile-h) repeat-x center; }
-.e-left   { left: 11px; top: var(--pad-x); bottom: var(--pad-x); width: 10px; background: var(--tile-v) repeat-y center; }
-.e-right  { right: 11px; top: var(--pad-x); bottom: var(--pad-x); width: 10px; background: var(--tile-v) repeat-y center; }
-.corner { position: absolute; width: 28px; height: 28px; color: var(--aksen); pointer-events: none; }
+.edge { display: none; }
+.corner { position: absolute; width: 22px; height: 22px; color: var(--aksen); opacity: .58; pointer-events: none; }
 .c1 { top: 4px; left: 4px; } .c2 { top: 4px; right: 4px; transform: scaleX(-1); }
 .c3 { bottom: 4px; left: 4px; transform: scaleY(-1); } .c4 { bottom: 4px; right: 4px; transform: scale(-1, -1); }
 
@@ -451,9 +456,6 @@ html[data-theme="dark"] .toast button { color: #b45309; }
   .e-left, .e-right { top: 24px; bottom: 24px; }
   .e-left { left: 7px; } .e-right { right: 7px; }
   .toolbar { gap: 6px; }
-  .seg button span { display: none; }
-  .seg button { padding: 0 11px; }
-  .seg button[aria-checked="true"] span { display: inline; }
   .chip { max-width: 150px; }
   .brand small { display: none; }
   .modal { width: calc(100% - 16px); }

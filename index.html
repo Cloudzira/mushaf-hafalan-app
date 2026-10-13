@@ -24,6 +24,7 @@
     <symbol id="i-type" viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></symbol>
     <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
     <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4L12 14l-3-3"/></symbol>
     <symbol id="i-chart" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></symbol>
     <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
@@ -56,7 +57,7 @@
   <!-- Bilah atas -->
   <header class="topbar">
     <div class="brand">
-      <span class="arab">المصحف الشريف</span>
+      <span class="arab">مصحف للحفظ</span>
       <small>Mushaf Tahfidz Pro</small>
     </div>
     <div class="auth-box">
@@ -69,14 +70,14 @@
   <!-- Toolbar -->
   <nav class="toolbar" aria-label="Kontrol mushaf">
     <div class="seg" id="modeGroup" role="radiogroup" aria-label="Mode hafalan">
-      <button type="button" role="radio" data-mode="normal" aria-checked="true" title="Mode Normal (1)">
-        <svg class="ik" aria-hidden="true"><use href="#i-book"/></svg><span>Normal</span>
+        <button type="button" role="radio" data-mode="normal" aria-checked="true" title="Mode Normal (1)">
+        <svg class="ik" aria-hidden="true"><use href="#i-book"/></svg><span class="sr">Normal</span>
       </button>
       <button type="button" role="radio" data-mode="blur" aria-checked="false" title="Tutup semua kata (2)">
-        <svg class="ik" aria-hidden="true"><use href="#i-eye-off"/></svg><span>Tutup</span>
+        <svg class="ik" aria-hidden="true"><use href="#i-eye-off"/></svg><span class="sr">Tutup</span>
       </button>
       <button type="button" role="radio" data-mode="first" aria-checked="false" title="Hanya kata pertama tiap ayat (3)">
-        <svg class="ik" aria-hidden="true"><use href="#i-type"/></svg><span>Kata awal</span>
+        <svg class="ik" aria-hidden="true"><use href="#i-type"/></svg><span class="sr">Kata awal</span>
       </button>
     </div>
 
@@ -96,12 +97,17 @@
     </div>
 
     <div class="aksi">
+      <button id="btnMoreActions" class="icon-btn" type="button" aria-expanded="false" aria-controls="actionItems" aria-label="Aksi halaman" title="Aksi halaman">
+        <svg class="ik" aria-hidden="true"><use href="#i-more"/></svg>
+      </button>
+      <div id="actionItems" class="aksi-items" role="group" aria-label="Aksi halaman" hidden>
       <button id="btnBookmark" class="icon-btn" type="button" aria-pressed="false" title="Simpan penanda halaman (B)"><svg class="ik" aria-hidden="true"><use href="#i-bookmark"/></svg><span class="sr">Penanda</span></button>
       <button id="btnBookmarks" class="icon-btn" type="button" title="Daftar penanda"><svg class="ik" aria-hidden="true"><use href="#i-list"/></svg><span class="sr">Daftar penanda</span></button>
       <button id="btnMemo" class="icon-btn" type="button" aria-pressed="false" title="Tandai halaman ini sudah hafal (M)"><svg class="ik" aria-hidden="true"><use href="#i-check"/></svg><span class="sr">Tandai hafal</span></button>
       <button id="btnProgress" class="icon-btn" type="button" title="Progres hafalan"><svg class="ik" aria-hidden="true"><use href="#i-chart"/></svg><span class="sr">Progres hafalan</span></button>
       <button id="btnTheme" class="icon-btn" type="button" title="Ganti tema"><svg class="ik" aria-hidden="true"><use id="themeIcon" href="#i-moon"/></svg><span class="sr">Ganti tema</span></button>
       <button id="btnSettings" class="icon-btn" type="button" title="Pengaturan"><svg class="ik" aria-hidden="true"><use href="#i-sliders"/></svg><span class="sr">Pengaturan</span></button>
+      </div>
     </div>
   </nav>
 

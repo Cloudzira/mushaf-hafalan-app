@@ -244,7 +244,7 @@ function persist() {
    ============================================================ */
 const els = {};
 ["teks","kSurah","kJuz","kNo","kaki","info","halaman","prev","next","navLabel","userStatus","authBtn","themeIcon",
- "btnBookmark","btnBookmarks","btnMemo","btnProgress","btnTheme","btnSettings","btnNavOpen","modeGroup",
+ "btnBookmark","btnBookmarks","btnMemo","btnProgress","btnTheme","btnSettings","btnNavOpen","btnMoreActions","actionItems","modeGroup",
  "ayatSheet","asKey","asText","asPlay","asDrill","asFrom","asClose",
  "player","plBar","plPrev","plPlay","plPlayIcon","plNext","plStop","plTitle","plSub","plMore","plPanel",
  "selQari","selMode","rngWrap","rngSurah","rngFrom","rngTo","selRepAyat","selRepRange","selSpeed","selGap",
@@ -1245,6 +1245,18 @@ async function cloudPull() {
 function bindUI() {
   // mode hafalan
   els.modeGroup.addEventListener("click", e => { const b = e.target.closest("button[data-mode]"); if (b) setHideMode(b.dataset.mode); });
+  const closeActions = () => {
+    els.actionItems.hidden = true;
+    els.btnMoreActions.setAttribute("aria-expanded", "false");
+  };
+  els.btnMoreActions.addEventListener("click", () => {
+    els.actionItems.hidden = !els.actionItems.hidden;
+    els.btnMoreActions.setAttribute("aria-expanded", String(!els.actionItems.hidden));
+  });
+  els.actionItems.addEventListener("click", e => { if (e.target.closest("button")) closeActions(); });
+  document.addEventListener("click", e => {
+    if (!els.actionItems.hidden && !els.actionItems.contains(e.target) && !els.btnMoreActions.contains(e.target)) closeActions();
+  });
 
   // halaman
   els.next.addEventListener("click", () => goto(cur.page + 1));
@@ -1317,6 +1329,7 @@ function bindUI() {
 
   // pintasan papan ketik
   document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !els.actionItems.hidden) { closeActions(); return; }
     if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
     const tag = (e.target.tagName || "").toLowerCase();
     if (["input", "select", "textarea"].includes(tag) || document.querySelector("dialog[open]")) return;
