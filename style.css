@@ -29,7 +29,7 @@
   --bayang: 0 10px 28px rgba(35, 32, 26, .08);
   --grad-judul: linear-gradient(90deg, #61523f, #887452, #a58c6b);
   --sorot-putar: rgba(138, 115, 85, .2);
-  --putar-teks: #47745a;
+  --putar-teks: #c2410c;
   --sorot-pilih: rgba(138, 115, 85, .11);
   --ok: #47745a;
   --bahaya: #b45f5c;
@@ -66,7 +66,7 @@ html[data-theme="dark"] {
   --bayang: 0 12px 32px rgba(0, 0, 0, .3);
   --grad-judul: linear-gradient(90deg, #ded1b3, #c6ad7e, #a88e65);
   --sorot-putar: rgba(196, 170, 126, .22);
-  --putar-teks: #ffb253;
+  --putar-teks: #ff8a00;
   --sorot-pilih: rgba(196, 170, 126, .12);
   --ok: #83ae8d;
   --bahaya: #d18b87;
