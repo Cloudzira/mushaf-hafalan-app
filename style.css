@@ -269,8 +269,8 @@ svg.ik.f { fill: currentColor; }
   flex: none; line-height: normal; position: relative; z-index: 1; cursor: pointer; border-radius: 8px;
   transition: filter .15s ease, opacity .15s ease, background-color .2s ease;
 }
-.kata.sel { background: var(--sorot-pilih); box-shadow: 0 0 0 2px var(--sorot-pilih); }
-.kata.putar { background: var(--sorot-putar); box-shadow: 0 0 0 2px var(--sorot-putar); }
+.kata.sel { color: var(--aksen); }
+.kata.putar { color: var(--aksen); text-shadow: 0 0 10px var(--sorot-putar); }
 .kata.is-end:focus-visible { outline-offset: 0; }
 
 .m-blur .kata:not(.is-end):not(.terbuka),
