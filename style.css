@@ -29,7 +29,7 @@
   --bayang: 0 10px 28px rgba(35, 32, 26, .08);
   --grad-judul: linear-gradient(90deg, #61523f, #887452, #a58c6b);
   --sorot-putar: rgba(138, 115, 85, .2);
-  --putar-teks: #c2410c;
+  --putar-teks: #e85d04;
   --sorot-pilih: rgba(138, 115, 85, .11);
   --ok: #47745a;
   --bahaya: #b45f5c;
@@ -66,7 +66,7 @@ html[data-theme="dark"] {
   --bayang: 0 12px 32px rgba(0, 0, 0, .3);
   --grad-judul: linear-gradient(90deg, #ded1b3, #c6ad7e, #a88e65);
   --sorot-putar: rgba(196, 170, 126, .22);
-  --putar-teks: #ff8a00;
+  --putar-teks: #e85d04;
   --sorot-pilih: rgba(196, 170, 126, .12);
   --ok: #83ae8d;
   --bahaya: #d18b87;
@@ -100,7 +100,7 @@ html[data-theme="sepia"] {
   --bayang: 0 10px 28px rgba(73, 61, 39, .1);
   --grad-judul: linear-gradient(90deg, #64563f, #887450, #a08b68);
   --sorot-putar: rgba(139, 118, 84, .2);
-  --putar-teks: #9c4a00;
+  --putar-teks: #e85d04;
   --sorot-pilih: rgba(139, 118, 84, .11);
   --opt-bg: #f5f1e7;
   --opt-fg: #3b382f;
@@ -298,7 +298,7 @@ svg.ik.f { fill: currentColor; }
   flex: none; line-height: normal; position: relative; z-index: 1; cursor: pointer; border-radius: 8px;
   transition: filter .15s ease, opacity .15s ease, background-color .2s ease;
 }
-.kata.sel { color: var(--aksen); }
+.kata.sel { color: inherit; }
 .kata.putar { color: var(--putar-teks); }
 .kata.is-end:focus-visible { outline-offset: 0; }
 
