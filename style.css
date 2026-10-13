@@ -29,7 +29,7 @@
   --bayang: 0 10px 28px rgba(35, 32, 26, .08);
   --grad-judul: linear-gradient(90deg, #61523f, #887452, #a58c6b);
   --sorot-putar: rgba(138, 115, 85, .2);
-  --putar-teks: #a44300;
+  --putar-teks: #47745a;
   --sorot-pilih: rgba(138, 115, 85, .11);
   --ok: #47745a;
   --bahaya: #b45f5c;
@@ -231,7 +231,7 @@ svg.ik.f { fill: currentColor; }
 .icon-btn:disabled { opacity: .35; }
 
 /* ------------------------------------------------------------ bingkai mushaf */
-#wrap { padding: var(--verse-space, 0px) 12px 0; }
+#wrap { padding: 0 12px; }
 .frame {
   position: relative; max-width: var(--w); margin: 0 auto;
   padding: 34px var(--pad-x) 30px;
@@ -285,7 +285,6 @@ svg.ik.f { fill: currentColor; }
 .baris.basmalah { justify-content: center; gap: .3em; }
 .baris.pendek { justify-content: flex-start; }
 #teks.rata-tengah .baris:not(.header) { justify-content: center; }
-#teks .baris.ayat-audio { justify-content: center; }
 
 .banner {
   position: relative; width: 100%; height: 76%; display: grid; place-items: center; border-radius: 12px;
@@ -514,7 +513,7 @@ html[data-theme="dark"] .toast button { color: #b45309; }
 /* ------------------------------------------------------------ responsif */
 @media (max-width: 640px) {
   :root { --pad-x: 12px; }
-  #wrap { padding: var(--verse-space, 0px) 0 0; }
+  #wrap { padding: 0; }
   .topbar { width: min(var(--w), 100%); }
   .frame { padding: 30px var(--pad-x) 26px; }
   .e-top, .e-bottom { left: 24px; right: 24px; }
