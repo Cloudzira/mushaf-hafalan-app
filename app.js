@@ -243,7 +243,7 @@ function persist() {
    Elemen & model halaman
    ============================================================ */
 const els = {};
-["teks","kSurah","kJuz","kNo","kaki","info","halaman","prev","next","navLabel","userStatus","authBtn","themeIcon",
+["teks","kSurah","kJuz","kNo","kaki","info","navLabel","userStatus","authBtn","themeIcon",
  "btnBookmark","btnBookmarks","btnMemo","btnProgress","btnTheme","btnSettings","btnNavOpen","btnMoreActions","actionItems","modeGroup",
  "ayatSheet","asKey","asText","asPlay","asDrill","asFrom","asClose",
  "player","plBar","plPrev","plPlay","plPlayIcon","plNext","plStop","plTitle","plSub","plMore","plPanel",
@@ -357,6 +357,7 @@ async function render(no, tk) {
 
   els.teks.replaceChildren(frag);
   els.teks.classList.remove("memuat");
+  els.teks.classList.toggle("rata-tengah", no <= 2);
 
   cur.page = no;
   cur.verses = verses;
@@ -447,14 +448,11 @@ new ResizeObserver(() => {
    ============================================================ */
 async function goto(no, opts = {}) {
   no = Math.round(Number(no));
-  if (!(no >= 1 && no <= PAGES)) { els.halaman.value = S.page; return false; }
+  if (!(no >= 1 && no <= PAGES)) return false;
   const tk = ++token;
   if (!opts.auto) userNavigated = true;
   if (!opts.keepAudio) hardStop(true);
   S.page = no;
-  els.halaman.value = no;
-  els.prev.disabled = no <= 1;
-  els.next.disabled = no >= PAGES;
   persist();
   const ok = await render(no, tk);
   if (ok && tk === token) prefetchNeighbours(no);
@@ -1257,12 +1255,6 @@ function bindUI() {
   document.addEventListener("click", e => {
     if (!els.actionItems.hidden && !els.actionItems.contains(e.target) && !els.btnMoreActions.contains(e.target)) closeActions();
   });
-
-  // halaman
-  els.next.addEventListener("click", () => goto(cur.page + 1));
-  els.prev.addEventListener("click", () => goto(cur.page - 1));
-  els.halaman.addEventListener("change", () => goto(parseInt(els.halaman.value, 10)));
-  els.halaman.addEventListener("keydown", e => { if (e.key === "Enter") els.halaman.blur(); });
 
   // aksi toolbar
   els.btnBookmark.addEventListener("click", toggleBookmark);
