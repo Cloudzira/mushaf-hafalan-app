@@ -124,6 +124,7 @@ svg.ik.f { fill: currentColor; }
 }
 .brand { display: flex; flex-direction: column; line-height: 1.15; }
 .brand .arab {
+  padding-right: 6px;
   font-family: var(--f-arab); font-weight: 600; font-size: 1.3rem;
   background: var(--grad-judul); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
