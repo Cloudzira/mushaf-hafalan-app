@@ -231,6 +231,8 @@ function loadState() {
 
 let S = loadState();
 let userNavigated = false;
+let deferredInstallPrompt = null;
+let appInstalled = false;
 
 const cloudQueue = debounce(() => cloudPushNow(), 2000);
 function persist() {
@@ -244,7 +246,7 @@ function persist() {
    ============================================================ */
 const els = {};
 ["teks","kSurah","kJuz","kNo","kaki","info","navLabel","userStatus","authBtn","themeIcon",
- "btnBookmark","btnBookmarks","btnMemo","btnProgress","btnTheme","btnSettings","btnNavOpen","btnMoreActions","actionItems","modeGroup",
+ "btnBookmark","btnBookmarks","btnMemo","btnProgress","btnTheme","btnSettings","btnNavOpen","btnMoreActions","actionItems","btnInstall","modeGroup",
  "ayatSheet","asKey","asText","asPlay","asDrill","asFrom","asClose",
  "player","plBar","plPrev","plPlay","plPlayIcon","plNext","plStop","plTitle","plSub","plMore","plPanel",
  "selQari","selMode","rngWrap","rngSurah","rngFrom","rngTo","selRepAyat","selRepRange","selSpeed","selGap",
@@ -252,6 +254,49 @@ const els = {};
  "dlgBm","bmList","bmAdd","dlgPrg","prgText","prgBar","prgPct","prgJuz","prgMark",
  "dlgSet","setWidth","setWidthVal","setReveal","setTrans","setWake","btnExport","btnImport","btnReset","btnDiag","fileImport","toasts","frame"
 ].forEach(id => { els[id] = $(id); });
+
+function isStandalone() {
+  return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+}
+
+function syncInstallButton() {
+  els.btnInstall.hidden = appInstalled || isStandalone();
+}
+
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  syncInstallButton();
+});
+
+window.addEventListener("appinstalled", () => {
+  appInstalled = true;
+  deferredInstallPrompt = null;
+  syncInstallButton();
+  toast("Mushaf Tahfidz Pro berhasil diinstal");
+});
+
+async function installApp() {
+  if (deferredInstallPrompt) {
+    const prompt = deferredInstallPrompt;
+    deferredInstallPrompt = null;
+    await prompt.prompt();
+    const choice = await prompt.userChoice;
+    if (choice.outcome === "accepted") toast("Permintaan instal dikirim");
+    return;
+  }
+
+  const ua = navigator.userAgent;
+  const ios = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const safari = /safari/i.test(ua) && !/chrome|chromium|crios|android/i.test(ua);
+  if (ios && safari) {
+    toast("Safari: ketuk Bagikan, lalu pilih Tambahkan ke Layar Utama.", { ms: 8000 });
+  } else if (safari) {
+    toast("Safari: pilih File, lalu Tambahkan ke Dock.", { ms: 8000 });
+  } else {
+    toast("Buka menu browser lalu pilih Instal aplikasi atau Tambahkan ke layar utama.", { ms: 8000 });
+  }
+}
 
 const cur = { page: 0, verses: [], verseSet: new Set(), words: new Map(), surahs: [], sel: null };
 let token = 0;
@@ -1265,6 +1310,7 @@ function bindUI() {
   els.prgMark.addEventListener("click", toggleMemo);
   els.btnSettings.addEventListener("click", () => els.dlgSet.showModal());
   els.btnNavOpen.addEventListener("click", () => openNav("surat"));
+  els.btnInstall.addEventListener("click", installApp);
   els.authBtn.addEventListener("click", toggleAuth);
   els.btnTheme.addEventListener("click", () => {
     const order = ["light", "dark", "sepia", "auto"];
@@ -1359,6 +1405,9 @@ function bindUI() {
    Mulai
    ============================================================ */
 function init() {
+  syncInstallButton();
+  const standaloneQuery = window.matchMedia("(display-mode: standalone)");
+  standaloneQuery.addEventListener && standaloneQuery.addEventListener("change", syncInstallButton);
   buildNavigator();
   bindPlayerSettings();
   bindUI();
