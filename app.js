@@ -365,9 +365,21 @@ async function render(no, tk) {
   const verses = [];
   const firstSeen = new Set();
 
-  data.lines.forEach(line => {
+  const lineWords = data.lines.map(line => line.words.slice());
+  lineWords.forEach((currentWords, index) => {
+    const marker = currentWords.find(w => w.type === "quarter");
+    const nextWords = lineWords[index + 1];
+    if (!marker || !nextWords) return;
+    const extraWord = nextWords[0];
+    if (extraWord && extraWord.type === "word" && extraWord.verse_key === marker.verse_key) {
+      currentWords.push(nextWords.shift());
+    }
+  });
+
+  data.lines.forEach((line, index) => {
+    const currentWords = lineWords[index];
     const baris = h("div", "baris");
-    const head = line.words.find(w => w.type === "surah_header");
+    const head = currentWords.find(w => w.type === "surah_header");
     if (head) {
       baris.classList.add("header");
       const b = h("div", "banner");
@@ -376,8 +388,8 @@ async function render(no, tk) {
       b.appendChild(h("span", null, nama));
       baris.appendChild(b);
     } else {
-      if (line.words.length && line.words.every(w => w.type === "bismillah")) baris.classList.add("basmalah");
-      line.words.forEach(w => {
+      if (currentWords.length && currentWords.every(w => w.type === "bismillah")) baris.classList.add("basmalah");
+      currentWords.forEach(w => {
         const k = h("span", "kata", w.char);
         k.style.fontFamily = `"${w.font}"`;
         const key = w.verse_key;
