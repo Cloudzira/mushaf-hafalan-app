@@ -541,7 +541,7 @@ html[data-theme="dark"] .toast button { color: #b45309; }
   .rentang label:first-child { grid-column: 1 / -1; }
 }
 @media (max-width: 640px) and (orientation: portrait) {
-  .frame { aspect-ratio: 7 / 12; }
+  .frame { aspect-ratio: 7 / 13; }
   .baris:not(.header):not(.basmalah) { justify-content: center; gap: .04em; }
 }
 @media (max-width: 380px) {
@@ -549,6 +549,9 @@ html[data-theme="dark"] .toast button { color: #b45309; }
   .topbar { padding-inline: 4px; }
   .aksi .icon-btn { width: 30px; height: 30px; }
   .grid-juz { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 380px) and (orientation: portrait) {
+  .frame { aspect-ratio: 5 / 9; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
