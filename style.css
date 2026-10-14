@@ -317,12 +317,10 @@ html[data-theme="sepia"] .frame::before { inset: 10px; border-color: rgba(91, 82
   transition: filter .15s ease, opacity .15s ease, background-color .2s ease;
 }
 .kata.sel {
-  color: var(--teks); background-color: var(--sorot-pilih);
-  box-shadow: inset 0 -0.12em 0 var(--aksen);
+  color: var(--putar-teks);
 }
 .kata.putar {
-  color: var(--putar-teks); background-color: var(--sorot-putar);
-  box-shadow: inset 0 -0.16em 0 var(--putar-teks);
+  color: var(--putar-teks); text-shadow: 0 0 .04em currentColor;
 }
 .kata.is-end:focus-visible { outline-offset: 0; }
 
@@ -543,6 +541,11 @@ input[type="range"] { width: 100%; accent-color: var(--g1); padding: 0; min-heig
   .rentang label:first-child { grid-column: 1 / -1; }
 }
 @media (max-width: 640px) and (orientation: portrait) {
+  .topbar { padding-bottom: 4px; }
+  .toolbar { margin: 2px auto 6px; }
+  .frame { padding: 18px var(--pad-x) 12px; }
+  #kepala { margin-bottom: 4px; }
+  #kaki { margin-top: 4px; }
   .frame { aspect-ratio: 7 / 13; }
   .baris:not(.header):not(.basmalah) { justify-content: center; gap: .04em; }
 }
