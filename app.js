@@ -71,10 +71,13 @@ const AUDIO_URL = "https://everyayah.com/data/";
 const API       = "https://api.quran.com/api/v4";
 const TRANSLATION_ID = 33; // Terjemahan Indonesia — Kementerian Agama RI
 const GAP_EM = 0.12;       // jarak antar kata (em), harus sama dengan CSS .baris
+const MOBILE_GAP_EM = 0.04;
 const MIN_PITCH = 2.0;
+const MOBILE_PITCH = 1.68;
 const PAGE_LINES = 15;
 const SHORT_LINE = 0.72;
 const KEY = "mushaf_v2";
+const PORTRAIT_PHONE = window.matchMedia("(max-width: 640px) and (orientation: portrait)");
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyCDU5f4iBXSwlKYYJUO6bb72r1VBVLAg3I",
@@ -451,7 +454,7 @@ function lebarAlami(baris, fs) {
     measureCtx.font = `${fs}px ${k.style.fontFamily || getComputedStyle(k).fontFamily}`;
     total += measureCtx.measureText(k.textContent).width;
   });
-  const gap = baris.classList.contains("basmalah") ? 0.3 : GAP_EM;
+  const gap = baris.classList.contains("basmalah") ? 0.3 : (PORTRAIT_PHONE.matches ? MOBILE_GAP_EM : GAP_EM);
   return total + Math.max(0, kids.length - 1) * gap * fs;
 }
 
@@ -474,10 +477,11 @@ function fit() {
   const maks = Math.max(...isi.map(b => lebarAlami(b, baseFs)));
   if (!maks) return;
   const maxByWidth = baseFs * (W / maks) * FIT_SLACK;
-  const maxByHeight = els.teks.clientHeight / (PAGE_LINES * MIN_PITCH);
+  const pitch = PORTRAIT_PHONE.matches ? MOBILE_PITCH : MIN_PITCH;
+  const maxByHeight = els.teks.clientHeight / (PAGE_LINES * pitch);
   const fs = clamp(Math.min(maxByWidth, maxByHeight || maxByWidth), 4, 96);
   els.teks.style.setProperty("--fs", fs + "px");
-  setVar("--pitch", String(MIN_PITCH));
+  setVar("--pitch", String(pitch));
   isi.forEach(b => {
     const pendek = !b.classList.contains("basmalah") && lebarAlami(b, fs) < W * SHORT_LINE;
     b.classList.toggle("pendek", pendek);

@@ -527,7 +527,7 @@ html[data-theme="dark"] .toast button { color: #b45309; }
 
 /* ------------------------------------------------------------ responsif */
 @media (max-width: 640px) {
-  :root { --pad-x: 16px; }
+  :root { --pad-x: 8px; }
   #wrap { padding: 0; }
   .topbar { width: min(var(--w), 100%); padding-inline: 8px; }
   .frame { padding: 30px var(--pad-x) 26px; }
@@ -540,8 +540,12 @@ html[data-theme="dark"] .toast button { color: #b45309; }
   .rentang { grid-template-columns: 1fr 1fr; }
   .rentang label:first-child { grid-column: 1 / -1; }
 }
+@media (max-width: 640px) and (orientation: portrait) {
+  .frame { aspect-ratio: 7 / 12; }
+  .baris:not(.header):not(.basmalah) { justify-content: center; gap: .04em; }
+}
 @media (max-width: 380px) {
-  :root { --pad-x: 12px; }
+  :root { --pad-x: 6px; }
   .topbar { padding-inline: 4px; }
   .aksi .icon-btn { width: 30px; height: 30px; }
   .grid-juz { grid-template-columns: repeat(4, 1fr); }
