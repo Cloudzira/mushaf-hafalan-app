@@ -237,7 +237,8 @@ svg.ik.f { fill: currentColor; }
 /* ------------------------------------------------------------ bingkai mushaf */
 #wrap { padding: 0 12px; }
 .frame {
-  position: relative; max-width: var(--w); margin: 0 auto;
+  position: relative; display: flex; flex-direction: column; aspect-ratio: 5 / 8;
+  max-width: var(--w); margin: 0 auto;
   padding: 34px var(--pad-x) 30px;
   background: var(--kaca); border: 1px solid var(--tepi-aksen); border-radius: 10px;
   box-shadow: 0 10px 28px rgba(0, 0, 0, .18);
@@ -257,10 +258,11 @@ html[data-theme="sepia"] .frame::before { inset: 10px; border-color: rgba(91, 82
 .c3 { bottom: 4px; left: 4px; transform: scaleY(-1); } .c4 { bottom: 4px; right: 4px; transform: scale(-1, -1); }
 
 #kepala {
+  flex: none;
   display: flex; justify-content: space-between; gap: 12px; margin: 0 4px 10px;
   font-size: .65rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--teks-lembut);
 }
-#kaki { text-align: center; margin-top: 14px; }
+#kaki { flex: none; text-align: center; margin-top: 14px; }
 #kaki span {
   display: inline-block; min-width: 52px; padding: 3px 14px; border: 1px solid var(--tepi-aksen);
   border-radius: 999px; background: var(--kaca-halus); font-size: .82rem; font-weight: 600; color: var(--teks-lembut);
@@ -272,7 +274,7 @@ html[data-theme="sepia"] .frame::before { inset: 10px; border-color: rgba(91, 82
 #teks {
   --fs: 30px; --pitch: 2.2;
   position: relative;
-  display: flex; flex-direction: column; justify-content: center;
+  display: flex; flex: 1; flex-direction: column; justify-content: center; min-height: 0;
   transition: opacity .15s ease;
 }
 #teks.memuat { opacity: .3; }
@@ -284,7 +286,7 @@ html[data-theme="sepia"] .frame::before { inset: 10px; border-color: rgba(91, 82
 @keyframes putar { to { transform: rotate(360deg); } }
 
 .baris {
-  display: flex; direction: rtl; align-items: center; justify-content: space-between; gap: .12em;
+  display: flex; flex: none; direction: rtl; align-items: center; justify-content: space-between; gap: .12em;
   height: calc(var(--fs) * var(--pitch)); font-size: var(--fs); color: var(--teks);
   margin-inline: auto; white-space: nowrap;
   background: linear-gradient(90deg, transparent, var(--garis-baris) 8%, var(--garis-baris) 92%, transparent) bottom / 100% 1px no-repeat;

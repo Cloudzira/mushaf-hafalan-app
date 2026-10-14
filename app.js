@@ -72,6 +72,7 @@ const API       = "https://api.quran.com/api/v4";
 const TRANSLATION_ID = 33; // Terjemahan Indonesia — Kementerian Agama RI
 const GAP_EM = 0.12;       // jarak antar kata (em), harus sama dengan CSS .baris
 const MIN_PITCH = 2.0;
+const PAGE_LINES = 15;
 const SHORT_LINE = 0.72;
 const KEY = "mushaf_v2";
 
@@ -365,19 +366,9 @@ async function render(no, tk) {
   const verses = [];
   const firstSeen = new Set();
 
-  const lineWords = data.lines.map(line => line.words.slice());
-  lineWords.forEach((currentWords, index) => {
-    const marker = currentWords.find(w => w.type === "quarter");
-    const nextWords = lineWords[index + 1];
-    if (!marker || !nextWords) return;
-    const extraWord = nextWords[0];
-    if (extraWord && extraWord.type === "word") currentWords.push(nextWords.shift());
-  });
-
-  data.lines.forEach((line, index) => {
-    const currentWords = lineWords[index];
+  data.lines.forEach(line => {
     const baris = h("div", "baris");
-    const head = currentWords.find(w => w.type === "surah_header");
+    const head = line.words.find(w => w.type === "surah_header");
     if (head) {
       baris.classList.add("header");
       const b = h("div", "banner");
@@ -386,8 +377,8 @@ async function render(no, tk) {
       b.appendChild(h("span", null, nama));
       baris.appendChild(b);
     } else {
-      if (currentWords.length && currentWords.every(w => w.type === "bismillah")) baris.classList.add("basmalah");
-      currentWords.forEach(w => {
+      if (line.words.length && line.words.every(w => w.type === "bismillah")) baris.classList.add("basmalah");
+      line.words.forEach(w => {
         const k = h("span", "kata", w.char);
         k.style.fontFamily = `"${w.font}"`;
         const key = w.verse_key;
@@ -482,7 +473,9 @@ function fit() {
   const baseFs = 100;
   const maks = Math.max(...isi.map(b => lebarAlami(b, baseFs)));
   if (!maks) return;
-  const fs = clamp(baseFs * (W / maks) * FIT_SLACK, 4, 96);
+  const maxByWidth = baseFs * (W / maks) * FIT_SLACK;
+  const maxByHeight = els.teks.clientHeight / (PAGE_LINES * MIN_PITCH);
+  const fs = clamp(Math.min(maxByWidth, maxByHeight || maxByWidth), 4, 96);
   els.teks.style.setProperty("--fs", fs + "px");
   setVar("--pitch", String(MIN_PITCH));
   isi.forEach(b => {
