@@ -320,7 +320,7 @@ html[data-theme="sepia"] .frame::before { inset: 10px; border-color: rgba(91, 82
   color: var(--putar-teks);
 }
 .kata.putar {
-  color: var(--putar-teks); text-shadow: 0 0 .04em currentColor;
+  color: var(--putar-teks);
 }
 .kata.is-end:focus-visible { outline-offset: 0; }
 
