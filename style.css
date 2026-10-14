@@ -149,7 +149,7 @@ svg.ik.f { fill: currentColor; }
 .topbar {
   position: relative; z-index: 800;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  width: min(var(--w), calc(100% - 24px)); margin: 0 auto; padding: 8px 0;
+  width: min(var(--w), calc(100% - 24px)); margin: 0 auto; padding: 8px 12px;
   padding-top: max(8px, env(safe-area-inset-top));
 }
 .brand { display: flex; flex-direction: column; line-height: 1.15; }
@@ -514,7 +514,7 @@ html[data-theme="dark"] .toast button { color: #b45309; }
 @media (max-width: 640px) {
   :root { --pad-x: 16px; }
   #wrap { padding: 0; }
-  .topbar { width: min(var(--w), 100%); }
+  .topbar { width: min(var(--w), 100%); padding-inline: 8px; }
   .frame { padding: 30px var(--pad-x) 26px; }
   .e-top, .e-bottom { left: 24px; right: 24px; }
   .e-left, .e-right { top: 24px; bottom: 24px; }
@@ -527,6 +527,7 @@ html[data-theme="dark"] .toast button { color: #b45309; }
 }
 @media (max-width: 380px) {
   :root { --pad-x: 12px; }
+  .topbar { padding-inline: 4px; }
   .aksi .icon-btn { width: 30px; height: 30px; }
   .grid-juz { grid-template-columns: repeat(4, 1fr); }
 }
