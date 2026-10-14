@@ -371,9 +371,7 @@ async function render(no, tk) {
     const nextWords = lineWords[index + 1];
     if (!marker || !nextWords) return;
     const extraWord = nextWords[0];
-    if (extraWord && extraWord.type === "word" && extraWord.verse_key === marker.verse_key) {
-      currentWords.push(nextWords.shift());
-    }
+    if (extraWord && extraWord.type === "word") currentWords.push(nextWords.shift());
   });
 
   data.lines.forEach((line, index) => {
@@ -403,7 +401,7 @@ async function render(no, tk) {
           k.setAttribute("role", "button");
           k.tabIndex = 0;
           k.setAttribute("aria-label", "Ayat " + (key ? parseKey(key)[1] : ""));
-        } else if (key && !firstSeen.has(key)) {
+        } else if (key && w.type !== "quarter" && !firstSeen.has(key)) {
           firstSeen.add(key);
           k.classList.add("is-first");
         }
