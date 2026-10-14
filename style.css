@@ -324,8 +324,8 @@ html[data-theme="sepia"] .frame::before { inset: 10px; border-color: rgba(91, 82
 }
 .kata.is-end:focus-visible { outline-offset: 0; }
 
-.m-blur .kata:not(.is-end):not(.terbuka):not(.sel):not(.putar),
-.m-first .kata:not(.is-end):not(.is-first):not(.terbuka):not(.sel):not(.putar) { filter: blur(7px); opacity: .15; }
+.m-blur .kata:not(.is-end):not(.terbuka),
+.m-first .kata:not(.is-end):not(.is-first):not(.terbuka) { filter: blur(7px); opacity: .15; }
 
 .galat { display: grid; place-items: center; align-content: center; gap: 10px; text-align: center; padding: 40px 16px; direction: ltr; font-family: var(--f-ui); }
 .galat p { margin: 0; font-size: .85rem; color: var(--redup); max-width: 32ch; }
